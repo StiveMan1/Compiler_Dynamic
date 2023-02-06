@@ -1,0 +1,69 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Compiler_Dynamic",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Compiler_Dynamic::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Compiler_Dynamic-Debug-288fe9a85141d43277a4.json",
+					"name" : "Compiler_Dynamic",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Compiler_Dynamic_lib::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Compiler_Dynamic_lib-Debug-927bc5e8d5b3a61674b6.json",
+					"name" : "Compiler_Dynamic_lib",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/stiveman1/Desktop/Compiler_Dynamic/cmake-build-debug",
+		"source" : "/home/stiveman1/Desktop/Compiler_Dynamic"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}
