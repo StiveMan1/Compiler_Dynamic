@@ -10,6 +10,7 @@
 #include "struct/real.h"
 #include "struct/array.h"
 #include "struct/tuple.h"
+#include "struct/token.h"
 
 
 #define POINTER_SIZE        sizeof(struct object_st *)
@@ -20,6 +21,7 @@
 #define REAL_SIZE           sizeof(struct real_st)
 #define ARRAY_SIZE          sizeof(struct array_st)
 #define TUPLE_SIZE          sizeof(struct tuple_st)
+#define TOKEN_SIZE          sizeof(struct token_st)
 
 
 #define OBJECT_OP       (struct object_op) {METHOD_NEW &object_new, METHOD_SET &object_set, METHOD_CLEAR &object_clear, METHOD_FREE &object_free, METHOD_CMP &object_cmp}
@@ -29,6 +31,7 @@
 #define REAL_OP         (struct object_op) {METHOD_NEW &real_new, METHOD_SET &real_set, METHOD_CLEAR &real_clear, METHOD_FREE &real_free, METHOD_CMP &real_cmp}
 #define ARRAY_OP        (struct object_op) {METHOD_NEW &array_new, METHOD_SET &array_set, METHOD_CLEAR &array_clear, METHOD_FREE &array_free, METHOD_CMP &array_cmp}
 #define TUPLE_OP        (struct object_op) {METHOD_NEW &tuple_new, METHOD_SET &tuple_set, METHOD_CLEAR &tuple_clear, METHOD_FREE &tuple_free, METHOD_CMP &tuple_cmp}
+#define TOKEN_OP        (struct object_op) {METHOD_NEW &token_new, METHOD_SET &token_set, METHOD_CLEAR &token_clear, METHOD_FREE &token_free, NULL}
 
 
 extern struct object_type object_type;
@@ -38,6 +41,7 @@ extern struct object_type bool_type;
 extern struct object_type real_type;
 extern struct object_type array_type;
 extern struct object_type tuple_type;
+extern struct object_type token_type;
 
 
 #define NONE_TYPE           NULL
@@ -48,6 +52,7 @@ extern struct object_type tuple_type;
 #define REAL_TYPE           &real_type
 #define ARRAY_TYPE          &array_type
 #define TUPLE_TYPE          &tuple_type
+#define TOKEN_TYPE       &token_type
 
 
 #endif //STRUCT_H
