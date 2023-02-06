@@ -46,8 +46,6 @@ short Special_OneChar(char c1) {
             return Special_COMMA;
         case '.':
             return Special_DOT;
-        case ':':
-            return Special_COLON;
         case ';':
             return Special_SEMI;
 
@@ -85,17 +83,18 @@ short Special_TwoChar(char c1, char c2) {
 
 
 void la_special(struct token_st *token, struct la_parser *parser) {
-    short result = Special_OneChar(parser->data[parser->position]);
+    short result = Special_TwoChar(parser->data[parser->position], parser->data[parser->position + 1]);
     if (result != Special_None) {
         token->type = TokenType_Special;
-
         token->subtype = result;
-        parser->position++;
+        parser->position += 2;
+        return;
+    }
 
-        result = Special_TwoChar(parser->data[parser->position - 1], parser->data[parser->position]);
-        if (result != Special_None) {
-            token->subtype = result;
-            parser->position++;
-        }
+    result = Special_OneChar(parser->data[parser->position]);
+    if (result != Special_None) {
+        token->type = TokenType_Special;
+        token->subtype = result;
+        parser->position += 1;
     }
 }

@@ -46,9 +46,8 @@
 
 #define Special_COMMA       0x01    // ,
 #define Special_DOT         0x02    // .
-#define Special_COLON       0x03    // :
-#define Special_SEMI        0x04    // ;
-#define Special_EQ          0x05    // :=
+#define Special_SEMI        0x03    // ;
+#define Special_EQ          0x04    // :=
 
 
 
