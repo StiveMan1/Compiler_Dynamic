@@ -123,4 +123,43 @@ void la_keyword(struct token_st *token, struct la_parser *parser) {
         return;
     }
 
+
+    if (la_keyword_cmp(parser, "empty", 5)) {
+        token->type = TokenType_KeyWords;
+        token->subtype = KeyWord_EMPTY;
+        parser->position += 5;
+        return;
+    }
+    if (la_keyword_cmp(parser, "false", 5)) {
+        token->type = TokenType_KeyWords;
+        token->subtype = KeyWord_FALSE;
+        parser->position += 5;
+        return;
+    }
+    if (la_keyword_cmp(parser, "print", 5)) {
+        token->type = TokenType_KeyWords;
+        token->subtype = KeyWord_PRINT;
+        parser->position += 5;
+        return;
+    }
+    if (la_keyword_cmp(parser, "while", 5)) {
+        token->type = TokenType_KeyWords;
+        token->subtype = KeyWord_WHILE;
+        parser->position += 5;
+        return;
+    }
+
+    if (la_keyword_cmp(parser, "return", 6)) {
+        token->type = TokenType_KeyWords;
+        token->subtype = KeyWord_RETURN;
+        parser->position += 6;
+        return;
+    }
+    if (la_keyword_cmp(parser, "string", 6)) {
+        token->type = TokenType_KeyWords;
+        token->subtype = KeyWord_STRING;
+        parser->position += 6;
+        return;
+    }
+
 }
