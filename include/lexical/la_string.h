@@ -1,8 +1,9 @@
-//
-// Created by stiveman1 on 2/6/23.
-//
+#ifndef LA_STRING_H
+#define LA_STRING_H
 
-#ifndef COMPILER_DYNAMIC_STRING_H
-#define COMPILER_DYNAMIC_STRING_H
+#include "struct.h"
 
-#endif //COMPILER_DYNAMIC_STRING_H
+
+void la_string(struct token_st *, struct la_parser *);
+
+#endif //LA_STRING_H

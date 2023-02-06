@@ -11,6 +11,7 @@
 #include "struct/array.h"
 #include "struct/tuple.h"
 #include "struct/token.h"
+#include "struct/la_parser.h"
 
 
 #define POINTER_SIZE        sizeof(struct object_st *)
