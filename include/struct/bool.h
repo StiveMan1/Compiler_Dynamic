@@ -18,6 +18,6 @@ int bool_cmp(const struct bool_st *obj1, const struct bool_st *obj2);
 int bool_is_null(const struct bool_st *);
 
 // Print
-void print_int(const struct bool_st *);
+void print_bool(const struct bool_st *);
 
 #endif //BOOL_H

@@ -5,7 +5,7 @@
 #include "struct.h"
 
 struct integer_st{
-    long int num;
+    long int data;
 };
 // Standard operations
 struct integer_st *integer_new();
