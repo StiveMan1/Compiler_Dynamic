@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "struct.h"
 
 struct la_parser *la_parser_new() {
