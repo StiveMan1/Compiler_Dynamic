@@ -1,7 +1,6 @@
 #ifndef BOOL_H
 #define BOOL_H
 
-#include "gmp.h"
 #include "struct.h"
 
 struct bool_st{

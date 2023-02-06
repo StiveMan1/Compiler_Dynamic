@@ -1,7 +1,6 @@
 #ifndef REAL_H
 #define REAL_H
 
-#include "gmp.h"
 #include "struct.h"
 
 struct real_st{

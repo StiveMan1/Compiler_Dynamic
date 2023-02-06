@@ -1,7 +1,6 @@
 #ifndef INTEGER_H
 #define INTEGER_H
 
-#include "gmp.h"
 #include "struct.h"
 
 struct integer_st{
