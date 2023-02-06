@@ -28,5 +28,6 @@ int real_cmp(const struct real_st *obj1, const struct real_st *obj2) {
 // Cmp methods
 int real_is_null(const struct real_st *res) {
     if (res == NULL || res->data == 0) return 1;
+    return 0;
 }
 

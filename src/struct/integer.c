@@ -27,5 +27,6 @@ int integer_cmp(const struct integer_st *obj1, const struct integer_st *obj2) {
 // Cmp methods
 int integer_is_null(const struct integer_st *res) {
     if (res == NULL || res->data == 0) return 1;
+    return 0;
 }
 
