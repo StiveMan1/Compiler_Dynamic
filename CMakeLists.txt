@@ -13,5 +13,5 @@ target_include_directories(${PROJECT_NAME}_lib PUBLIC
         PRIVATE src)
 MESSAGE(STATUS "Connected: ${PROJECT_NAME}_lib")
 
-add_executable(${PROJECT_NAME} main.c)
+add_executable(${PROJECT_NAME} main.c include/struct/string.h src/struct/string.c)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_NAME}_lib)
