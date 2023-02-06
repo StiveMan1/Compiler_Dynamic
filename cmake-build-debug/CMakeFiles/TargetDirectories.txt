@@ -1,4 +1,0 @@
-/home/stiveman1/Desktop/Compiler_Dynamic/cmake-build-debug/CMakeFiles/Compiler_Dynamic_lib.dir
-/home/stiveman1/Desktop/Compiler_Dynamic/cmake-build-debug/CMakeFiles/Compiler_Dynamic.dir
-/home/stiveman1/Desktop/Compiler_Dynamic/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/stiveman1/Desktop/Compiler_Dynamic/cmake-build-debug/CMakeFiles/rebuild_cache.dir

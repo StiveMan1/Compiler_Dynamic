@@ -1,5 +1,0 @@
-/home/stiveman1/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/223.7571.171/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/stiveman1/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/223.7571.171/bin/ninja/linux/ninja -G Ninja -S /home/stiveman1/Desktop/Compiler_Dynamic -B /home/stiveman1/Desktop/Compiler_Dynamic/cmake-build-debug
--- Connected: Compiler_Dynamic_lib
--- Configuring done
--- Generating done
--- Build files have been written to: /home/stiveman1/Desktop/Compiler_Dynamic/cmake-build-debug
