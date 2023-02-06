@@ -186,13 +186,6 @@ build CMakeFiles/Compiler_Dynamic.dir/main.c.o: C_COMPILER__Compiler_Dynamic_Deb
   OBJECT_DIR = CMakeFiles/Compiler_Dynamic.dir
   OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic.dir
 
-build CMakeFiles/Compiler_Dynamic.dir/src/lexical_analysis.c.o: C_COMPILER__Compiler_Dynamic_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/lexical_analysis.c || cmake_object_order_depends_target_Compiler_Dynamic
-  DEP_FILE = CMakeFiles/Compiler_Dynamic.dir/src/lexical_analysis.c.o.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu99
-  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include
-  OBJECT_DIR = CMakeFiles/Compiler_Dynamic.dir
-  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic.dir/src
-
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Compiler_Dynamic
@@ -201,7 +194,7 @@ build CMakeFiles/Compiler_Dynamic.dir/src/lexical_analysis.c.o: C_COMPILER__Comp
 #############################################
 # Link the executable Compiler_Dynamic
 
-build Compiler_Dynamic: C_EXECUTABLE_LINKER__Compiler_Dynamic_Debug CMakeFiles/Compiler_Dynamic.dir/main.c.o CMakeFiles/Compiler_Dynamic.dir/src/lexical_analysis.c.o | libCompiler_Dynamic_lib.a || libCompiler_Dynamic_lib.a
+build Compiler_Dynamic: C_EXECUTABLE_LINKER__Compiler_Dynamic_Debug CMakeFiles/Compiler_Dynamic.dir/main.c.o | libCompiler_Dynamic_lib.a || libCompiler_Dynamic_lib.a
   FLAGS = -g
   LINK_LIBRARIES = libCompiler_Dynamic_lib.a
   OBJECT_DIR = CMakeFiles/Compiler_Dynamic.dir

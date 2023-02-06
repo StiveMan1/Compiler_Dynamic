@@ -1,5 +1,4 @@
 #include "struct.h"
-#include <sys/time.h>
 
 struct object_type integer_type = {INTEGER_OP};
 // Standard operations

@@ -8,9 +8,6 @@
 #define METHOD_FREE       (void (*)(void *))
 #define METHOD_CMP        (int (*)(const void *, const void *))
 
-#define METHOD_GET_TLV    (void (*)(const void *, struct string_st *))
-#define METHOD_SET_TLV    (void (*)(void *, const struct string_st *))
-
 #define METHOD_MATH       (void (*)(struct object_st *, const void *, const struct object_st *))
 #define METHOD_CONVERT    (void (*)(struct object_st *, const void *))
 

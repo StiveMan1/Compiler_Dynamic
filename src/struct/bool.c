@@ -1,5 +1,4 @@
 #include "struct.h"
-#include <sys/time.h>
 
 struct object_type bool_type = {BOOL_OP};
 // Standard operations
