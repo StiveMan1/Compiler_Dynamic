@@ -49,8 +49,50 @@ cmake_ninja_workdir = /home/stiveman1/Desktop/Compiler_Dynamic/cmake-build-debug
 
 build cmake_object_order_depends_target_Compiler_Dynamic_lib: phony || CMakeFiles/Compiler_Dynamic_lib.dir
 
-build CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/arra.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/struct/arra.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
-  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/arra.c.o.d
+build CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical_analysis.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/lexical_analysis.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
+  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical_analysis.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
+  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
+  OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic_lib.dir/src
+
+build CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_identifier.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/lexical/la_identifier.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
+  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_identifier.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
+  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
+  OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical
+
+build CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_integer.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/lexical/la_integer.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
+  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_integer.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
+  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
+  OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical
+
+build CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_keyword.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/lexical/la_keyword.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
+  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_keyword.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
+  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
+  OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical
+
+build CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_special.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/lexical/la_special.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
+  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_special.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
+  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
+  OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical
+
+build CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_string.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/lexical/la_string.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
+  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_string.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
+  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
+  OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical
+
+build CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/array.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/struct/array.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
+  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/array.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
   OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
@@ -65,6 +107,13 @@ build CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/bool.c.o: C_COMPILER__Compi
 
 build CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/integer.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/struct/integer.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
   DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/integer.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
+  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
+  OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic_lib.dir/src/struct
+
+build CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/la_parser.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/struct/la_parser.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
+  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/la_parser.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
   OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
@@ -91,6 +140,13 @@ build CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/string.c.o: C_COMPILER__Com
   OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
   OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic_lib.dir/src/struct
 
+build CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/token.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/struct/token.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
+  DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/token.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
+  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include -I/home/stiveman1/Desktop/Compiler_Dynamic/src
+  OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic_lib.dir/src/struct
+
 build CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/tuple.c.o: C_COMPILER__Compiler_Dynamic_lib_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/struct/tuple.c || cmake_object_order_depends_target_Compiler_Dynamic_lib
   DEP_FILE = CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/tuple.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
@@ -106,7 +162,7 @@ build CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/tuple.c.o: C_COMPILER__Comp
 #############################################
 # Link the static library libCompiler_Dynamic_lib.a
 
-build libCompiler_Dynamic_lib.a: C_STATIC_LIBRARY_LINKER__Compiler_Dynamic_lib_Debug CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/arra.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/bool.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/integer.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/object.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/real.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/string.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/tuple.c.o
+build libCompiler_Dynamic_lib.a: C_STATIC_LIBRARY_LINKER__Compiler_Dynamic_lib_Debug CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical_analysis.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_identifier.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_integer.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_keyword.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_special.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/lexical/la_string.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/array.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/bool.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/integer.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/la_parser.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/object.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/real.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/string.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/token.c.o CMakeFiles/Compiler_Dynamic_lib.dir/src/struct/tuple.c.o
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = CMakeFiles/Compiler_Dynamic_lib.dir
   POST_BUILD = :
@@ -130,19 +186,12 @@ build CMakeFiles/Compiler_Dynamic.dir/main.c.o: C_COMPILER__Compiler_Dynamic_Deb
   OBJECT_DIR = CMakeFiles/Compiler_Dynamic.dir
   OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic.dir
 
-build CMakeFiles/Compiler_Dynamic.dir/src/struct/arra.c.o: C_COMPILER__Compiler_Dynamic_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/struct/arra.c || cmake_object_order_depends_target_Compiler_Dynamic
-  DEP_FILE = CMakeFiles/Compiler_Dynamic.dir/src/struct/arra.c.o.d
+build CMakeFiles/Compiler_Dynamic.dir/src/lexical_analysis.c.o: C_COMPILER__Compiler_Dynamic_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/lexical_analysis.c || cmake_object_order_depends_target_Compiler_Dynamic
+  DEP_FILE = CMakeFiles/Compiler_Dynamic.dir/src/lexical_analysis.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu99
   INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include
   OBJECT_DIR = CMakeFiles/Compiler_Dynamic.dir
-  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic.dir/src/struct
-
-build CMakeFiles/Compiler_Dynamic.dir/src/struct/tuple.c.o: C_COMPILER__Compiler_Dynamic_Debug /home/stiveman1/Desktop/Compiler_Dynamic/src/struct/tuple.c || cmake_object_order_depends_target_Compiler_Dynamic
-  DEP_FILE = CMakeFiles/Compiler_Dynamic.dir/src/struct/tuple.c.o.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu99
-  INCLUDES = -I/home/stiveman1/Desktop/Compiler_Dynamic/include
-  OBJECT_DIR = CMakeFiles/Compiler_Dynamic.dir
-  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic.dir/src/struct
+  OBJECT_FILE_DIR = CMakeFiles/Compiler_Dynamic.dir/src
 
 
 # =============================================================================
@@ -152,7 +201,7 @@ build CMakeFiles/Compiler_Dynamic.dir/src/struct/tuple.c.o: C_COMPILER__Compiler
 #############################################
 # Link the executable Compiler_Dynamic
 
-build Compiler_Dynamic: C_EXECUTABLE_LINKER__Compiler_Dynamic_Debug CMakeFiles/Compiler_Dynamic.dir/main.c.o CMakeFiles/Compiler_Dynamic.dir/src/struct/arra.c.o CMakeFiles/Compiler_Dynamic.dir/src/struct/tuple.c.o | libCompiler_Dynamic_lib.a || libCompiler_Dynamic_lib.a
+build Compiler_Dynamic: C_EXECUTABLE_LINKER__Compiler_Dynamic_Debug CMakeFiles/Compiler_Dynamic.dir/main.c.o CMakeFiles/Compiler_Dynamic.dir/src/lexical_analysis.c.o | libCompiler_Dynamic_lib.a || libCompiler_Dynamic_lib.a
   FLAGS = -g
   LINK_LIBRARIES = libCompiler_Dynamic_lib.a
   OBJECT_DIR = CMakeFiles/Compiler_Dynamic.dir

@@ -67,8 +67,7 @@
 			"sourceIndexes" : 
 			[
 				0,
-				2,
-				4
+				1
 			]
 		}
 	],
@@ -114,16 +113,7 @@
 			"sourceIndexes" : 
 			[
 				0,
-				2,
-				4
-			]
-		},
-		{
-			"name" : "Header Files",
-			"sourceIndexes" : 
-			[
-				1,
-				3
+				1
 			]
 		}
 	],
@@ -137,24 +127,8 @@
 		},
 		{
 			"backtrace" : 1,
-			"path" : "include/struct/array.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/struct/arra.c",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"path" : "include/struct/tuple.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/struct/tuple.c",
+			"path" : "src/lexical_analysis.c",
 			"sourceGroupIndex" : 0
 		}
 	],
