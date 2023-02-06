@@ -1,5 +1,4 @@
 #include "struct.h"
-#include <sys/time.h>
 
 struct object_type real_type = {REAL_OP};
 // Standard operations
