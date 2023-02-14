@@ -35,8 +35,9 @@ void la_parser_free(struct la_parser *res) {
 void la_parser_set_str(struct la_parser *res, char *data, size_t size) {
     la_parser_clear(res);
     res->str_size = size;
-    res->data = malloc(res->str_size);
+    res->data = malloc(res->str_size + 1);
     memcpy(res->data, data, size);
+    res->data[res->str_size] = 0;
 }
 void la_parser_set_file(struct la_parser *res, char *file_path) {
     la_parser_clear(res);
@@ -52,4 +53,8 @@ void la_parser_set_file(struct la_parser *res, char *file_path) {
         res->data[i] = (char) getc(fp);
     }
     fclose(fp);
+
+#ifdef WIN32
+    if(res->data[res->str_size - 1] == EOF) res->str_size --;
+#endif
 }

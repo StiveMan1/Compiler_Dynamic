@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "lexical_analysis.h"
 
 void la_parse(struct token_st *token, struct la_parser *parser){
@@ -34,6 +35,7 @@ void tokenize(struct la_parser *parser) {
             continue;
         }
         la_parse(token, parser);
+        print_token(token, 0);
         if (token->type == TokenType_None) goto bad_end;
         if (token->type == TokenType_Special) {
             switch (token->subtype) {
@@ -75,6 +77,7 @@ void tokenize(struct la_parser *parser) {
         token_clear(token);
     }
 
+    printf("parser->scope_pos : %d\n", parser->scope_pos);
     if (parser->scope_pos != 0) goto bad_end;
     token_free(token);
     return;

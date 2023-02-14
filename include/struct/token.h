@@ -32,7 +32,7 @@ void token_clear(struct token_st *);
 void token_free(struct token_st *);
 
 void token_resize(struct token_st *, size_t);
-
+void print_token(const struct token_st *res, int size);
 
 
 #endif //TOKEN_H
