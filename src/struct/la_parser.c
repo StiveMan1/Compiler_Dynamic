@@ -49,12 +49,12 @@ void la_parser_set_file(struct la_parser *res, char *file_path) {
 
     fseek(fp, 0, SEEK_SET);
     res->data = malloc(res->str_size);
-    for (size_t i = 0; i < res->str_size; i++) {
-        res->data[i] = (char) getc(fp);
+    memset(res->data, 0, res->str_size);
+    char c;
+    size_t i;
+    for (i = 0; i < res->str_size && (c = (char)getc(fp)) != EOF; i++) {
+        res->data[i] = c;
     }
+    res->str_size = i;
     fclose(fp);
-
-#ifdef WIN32
-    if(res->data[res->str_size - 1] == EOF) res->str_size --;
-#endif
 }

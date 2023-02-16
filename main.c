@@ -273,6 +273,8 @@ int main() {
     print_array(F_parser->list, 0);
     //            an_parser_set_list(T_parser, F_parser);
     la_parser_free(F_parser);
+
+
 }
 
 // Сделать сериализацию обектов
