@@ -22,10 +22,6 @@ struct object_op {
     int (*_cmp)(const void *, const void *);
 };
 
-struct object_tlv {
-    void (*_get_tlv)(const void *, struct string_st *);
-    void (*_set_tlv)(void *, const struct string_st *);
-};
 
 struct object_type {
     struct object_op self;
