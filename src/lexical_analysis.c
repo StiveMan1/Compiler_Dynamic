@@ -17,34 +17,45 @@ void tokenize(struct la_parser *parser) {
     parser->position = parser->current_line = 0;
     struct token_st *token = token_new();
     int comment_type = 0;
+    // comment_type:
+    //   0 - without
+    //   1 - one line
+    //   2 - multiline
     while (parser->position < parser->str_size) {
+        // Skip space symbols
         if (SpaceChar(parser->data[parser->position])) {
+            // Inc lines and finish one line comment if needed
             if (parser->data[parser->position] == '\n') {
                 if (comment_type == 1) comment_type = 0;
                 parser->current_line++;
             }
             parser->position++;
-            continue;
+            continue; // Skip
         }
+        // Skipping comments
         if (comment_type != 0) {
+            // If multiline comment finished
             if (comment_type == 2 && parser->data[parser->position] == '*' && parser->data[parser->position + 1] == '/') {
                 parser->position++;
                 comment_type = 0;
             }
             parser->position++;
-            continue;
+            continue; // Skip
         }
+        // If neither space nor comment, then parse
         la_parse(token, parser);
-        print_token(token, 0);
-        if (token->type == TokenType_None) goto bad_end;
+        // print_token(token, 0);
+        if (token->type == TokenType_None) goto bad_end; // Error detected
         if (token->type == TokenType_Special) {
             switch (token->subtype) {
+                // Comment detected
                 case Special_COM_LINE:
                     comment_type = 1;
                     break;
                 case Special_COM_STR:
                     comment_type = 2;
                     break;
+                // Left scopes
                 case Special_LSB:
                     parser->scope_buf[parser->scope_pos++] = Special_LSB;
                     if (parser->scope_pos > MaxBracketNesting) goto bad_end;
@@ -57,6 +68,7 @@ void tokenize(struct la_parser *parser) {
                     parser->scope_buf[parser->scope_pos++] = Special_LCB;
                     if (parser->scope_pos > MaxBracketNesting) goto bad_end;
                     break;
+                // Right scopes
                 case Special_RSB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LSB) goto bad_end;
                     break;
@@ -70,8 +82,9 @@ void tokenize(struct la_parser *parser) {
                     break;
             }
         }
+        // If the token is not comment
         if (comment_type == 0) {
-            array_add_new(parser->list, TOKEN_TYPE);
+            array_add_new(parser->list, TOKEN_TYPE); // Add new Object type token to the parser
             token_set(parser->list->data[parser->list->size - 1]->data, token);
         }
         token_clear(token);

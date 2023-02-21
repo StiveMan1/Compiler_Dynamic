@@ -81,8 +81,9 @@ short Special_TwoChar(char c1, char c2) {
     return Special_None;
 }
 
-
+// Parsing operations, scopes, comments, delimiters, etc
 void la_special(struct token_st *token, struct la_parser *parser) {
+    // If 2-symbol length...
     short result = Special_TwoChar(parser->data[parser->position], parser->data[parser->position + 1]);
     if (result != Special_None) {
         token->type = TokenType_Special;
@@ -91,6 +92,7 @@ void la_special(struct token_st *token, struct la_parser *parser) {
         return;
     }
 
+    // 1-symbol length...
     result = Special_OneChar(parser->data[parser->position]);
     if (result != Special_None) {
         token->type = TokenType_Special;

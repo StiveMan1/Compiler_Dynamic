@@ -18,17 +18,20 @@ void token_set(struct token_st *res, const struct token_st *a){
     token_resize(res, a->size);
     memcpy(res->data, a->data, a->size);
 }
+// Clearing data
 void token_clear(struct token_st *res){
     res->type = TokenType_None;
     res->subtype = TokenType_None;
 
     token_resize(res, 0);
 }
+// Completely deleting the object
 void token_free(struct token_st *res){
     if (res->data != NULL) free(res->data);
     free(res);
 }
 
+// Setting the size of array for the token data
 void token_resize(struct token_st *res, size_t size) {
     if (res->data == NULL && size != 0) {
         res->max_size = size;

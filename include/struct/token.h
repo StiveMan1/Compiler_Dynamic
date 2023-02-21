@@ -17,6 +17,10 @@
 #define IntType_float           0x10
 
 
+// Token object:
+//   type
+//   subtype
+//   data
 struct token_st{
     short type;
     short subtype;
