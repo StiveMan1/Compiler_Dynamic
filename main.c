@@ -267,8 +267,10 @@ void print_obj(const struct object_st *res, int size) {
 }
 
 int main() {
+    // Reading input
     struct la_parser *F_parser = la_parser_new();
     la_parser_set_file(F_parser, "text.txt");
+    // Tokenize
     tokenize(F_parser);
     if(string_is_null(F_parser->error_msg)){
         print_array(F_parser->list, 0);

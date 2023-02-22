@@ -1,8 +1,10 @@
 #include "lexical_analysis.h"
 
 void la_string(struct token_st *token, struct la_parser *parser) {
+    // Checking if string started
     if (parser->data[parser->position] != '"' && parser->data[parser->position] != '\'') return;
 
+    // Getting the string until the end token found
     size_t pos = parser->position + 1;
     if (parser->data[parser->position] == '"') {
         for (; pos < parser->str_size; pos++) {
@@ -23,6 +25,7 @@ void la_string(struct token_st *token, struct la_parser *parser) {
     }
 
     token->type = TokenType_String;
+    // Allocating space for token
     token_resize(token, pos - parser->position - 1);
     memcpy(token->data, &parser->data[parser->position + 1], token->size);
     parser->position = pos + 1;

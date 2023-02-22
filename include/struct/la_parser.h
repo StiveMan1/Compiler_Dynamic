@@ -5,6 +5,14 @@
 
 #define MaxBracketNesting 256
 
+// The actual Parser utility for Lexical Analysis.
+//   *data        -> pointer to the array of chars (the code)
+//   position     -> current processing symbol
+//   str_size     -> the total length
+//   current_line -> current line, can be useful for error detection
+//   scope_buf    -> buffer for scopes. For tracking scopes sequence
+//   scope_pos    -> position of current scope
+//   *list        -> list of resulting tokens
 struct la_parser{
     char *data;
     size_t position;
