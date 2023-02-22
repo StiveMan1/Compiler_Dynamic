@@ -277,19 +277,20 @@ int main() {
     }else {
         printf("Error : ");
         for (int i = 0; i < F_parser->error_msg->size; i++) printf("%c", F_parser->error_msg->data[i]);
-        printf("\nLine : %zu, Position : %zu\n", F_parser->current_line, F_parser->position);
-        printf("Code Line : ");
-        for(size_t pos_s = 0, line = 0;pos_s < F_parser->str_size;pos_s ++){
-            if(F_parser->data[pos_s] == '\n') line ++;
-            if(line == F_parser->current_line) printf("%c", F_parser->data[pos_s]);
+        printf("\nLine : %zu\n Position : %zu\nCode Line : \n", F_parser->current_line, F_parser->position);
+        size_t pos_s = 0;
+        for(size_t i = 0, line = 0;i < F_parser->str_size;i ++){
+            if(F_parser->data[i] == '\n'){
+                line ++;
+                if(line == F_parser->current_line) pos_s = i;
+            }
+            if(line == F_parser->current_line) printf("%c", F_parser->data[i]);
             if(line > F_parser->current_line) break;
         }
+        printf("\n");
+        for(size_t i=0; i<F_parser->position;i++) printf(" ");
+        printf("^\n");
     }
     //            an_parser_set_list(T_parser, F_parser);
     la_parser_free(F_parser);
 }
-
-// Сделать сериализацию обектов
-// У обектов будет две переменые _encode _decode
-// работать так же как с обычными обектами
-

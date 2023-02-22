@@ -84,9 +84,9 @@ void tokenize(struct la_parser *parser) {
                 // Right scopes
                 case Special_RSB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LSB) {
-                        if(parser->scope_buf[--parser->scope_pos] == Special_LSQB) {
+                        if(parser->scope_buf[parser->scope_pos] == Special_LSQB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ']' using ')'", 47);
-                        } else if (parser->scope_buf[--parser->scope_pos] == Special_LCB) {
+                        } else if (parser->scope_buf[parser->scope_pos] == Special_LCB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be '}' using ')'", 47);
                         }
                         goto bad_end;
@@ -94,9 +94,9 @@ void tokenize(struct la_parser *parser) {
                     break;
                 case Special_RSQB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LSQB) {
-                        if(parser->scope_buf[--parser->scope_pos] == Special_LSB) {
+                        if(parser->scope_buf[parser->scope_pos] == Special_LSB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ')' using ']'", 47);
-                        } else if (parser->scope_buf[--parser->scope_pos] == Special_LCB) {
+                        } else if (parser->scope_buf[parser->scope_pos] == Special_LCB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be '}' using ']'", 47);
                         }
                         goto bad_end;
@@ -104,9 +104,9 @@ void tokenize(struct la_parser *parser) {
                     break;
                 case Special_RCB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LCB) {
-                        if(parser->scope_buf[--parser->scope_pos] == Special_LSQB) {
+                        if(parser->scope_buf[parser->scope_pos] == Special_LSQB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ']' using '}'", 47);
-                        } else if (parser->scope_buf[--parser->scope_pos] == Special_LSB) {
+                        } else if (parser->scope_buf[parser->scope_pos] == Special_LSB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ')' using '}'", 47);
                         }
                         goto bad_end;
