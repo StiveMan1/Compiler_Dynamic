@@ -16,6 +16,8 @@ struct la_parser{
     size_t scope_pos;
 
     struct array_st *list;
+
+    struct string_st *error_msg;
 };
 
 struct la_parser *la_parser_new();

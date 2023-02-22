@@ -270,7 +270,19 @@ int main() {
     struct la_parser *F_parser = la_parser_new();
     la_parser_set_file(F_parser, "text.txt");
     tokenize(F_parser);
-    print_array(F_parser->list, 0);
+    if(string_is_null(F_parser->error_msg)){
+        print_array(F_parser->list, 0);
+    }else {
+        printf("Error : ");
+        for (int i = 0; i < F_parser->error_msg->size; i++) printf("%c", F_parser->error_msg->data[i]);
+        printf("\nLine : %zu, Position : %zu\n", F_parser->current_line, F_parser->position);
+        printf("Code Line : ");
+        for(size_t pos_s = 0, line = 0;pos_s < F_parser->str_size;pos_s ++){
+            if(F_parser->data[pos_s] == '\n') line ++;
+            if(line == F_parser->current_line) printf("%c", F_parser->data[pos_s]);
+            if(line > F_parser->current_line) break;
+        }
+    }
     //            an_parser_set_list(T_parser, F_parser);
     la_parser_free(F_parser);
 }
