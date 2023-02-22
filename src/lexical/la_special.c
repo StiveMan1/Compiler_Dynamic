@@ -20,7 +20,7 @@ short Special_OneChar(char c1) {
         case '|':
             return Special_OR;
 
-        // Special Chars Brackets
+            // Special Chars Brackets
         case '(':
             return Special_LSB;
         case ')':
@@ -34,7 +34,7 @@ short Special_OneChar(char c1) {
         case '}':
             return Special_RCB;
 
-        // Special Chars Compare
+            // Special Chars Compare
         case '<':
             return Special_LESS;
         case '>':
@@ -54,6 +54,7 @@ short Special_OneChar(char c1) {
     }
     return Special_None;
 }
+
 short Special_TwoChar(char c1, char c2) {
     switch (c1) {
         case '*':

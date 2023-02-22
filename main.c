@@ -17,15 +17,19 @@ void print_str(const struct string_st *res) {
     for (int i = 0; i < res->size; i++) printf("%c", res->data[i]);
     printf("\n");
 }
+
 void print_int(const struct integer_st *res) {
     printf("integer : %ld\n", res->data);
 }
+
 void print_bool(const struct bool_st *res) {
     printf("bool : %hhd\n", res->data);
 }
+
 void print_real(const struct real_st *res) {
     printf("real : %f\n", res->data);
 }
+
 void print_array(const struct array_st *res, int size) {
     printf("array (%zu):\n", res->size);
     for (int i = 0; i < res->size; i++) {
@@ -34,6 +38,7 @@ void print_array(const struct array_st *res, int size) {
         print_obj(res->data[i], size + 2);
     }
 }
+
 void print_tuple(const struct tuple_st *res, int size) {
     printf("array (%zu):\n", res->size);
     for (int i = 0; i < res->size; i++) {
@@ -42,6 +47,7 @@ void print_tuple(const struct tuple_st *res, int size) {
         print_obj(res->data[i], size + 2);
     }
 }
+
 void print_token(const struct token_st *res, int size) {
     printf("Token : ");
     switch (res->type) {
@@ -251,6 +257,7 @@ void print_token(const struct token_st *res, int size) {
         printf("\n");
     }
 }
+
 void print_obj(const struct object_st *res, int size) {
     printf("object : (%d)\n", res->counter);
     PRINT_PREF
@@ -272,18 +279,18 @@ int main() {
     la_parser_set_file(F_parser, "text.txt");
     // Tokenize
     tokenize(F_parser);
-    if(string_is_null(F_parser->error_msg)){
+    if (string_is_null(F_parser->error_msg)) {
         print_array(F_parser->list, 0);
-    }else {
+    } else {
         printf("Error : ");
         for (int i = 0; i < F_parser->error_msg->size; i++) printf("%c", F_parser->error_msg->data[i]);
         printf("\nLine %zu: \n", F_parser->current_line + 1);
-        for(size_t i = F_parser->line_pos;i < F_parser->str_size;i ++){
-            if(F_parser->data[i] == '\n') break;
+        for (size_t i = F_parser->line_pos; i < F_parser->str_size; i++) {
+            if (F_parser->data[i] == '\n') break;
             printf("%c", F_parser->data[i]);
         }
         printf("\n");
-        for(size_t i=F_parser->line_pos; i<F_parser->position; i++) printf(" ");
+        for (size_t i = F_parser->line_pos; i < F_parser->position; i++) printf(" ");
         printf("^\n");
     }
     //            an_parser_set_list(T_parser, F_parser);

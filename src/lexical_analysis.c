@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "lexical_analysis.h"
 
-void la_parse(struct token_st *token, struct la_parser *parser){
+void la_parse(struct token_st *token, struct la_parser *parser) {
     la_special(token, parser);
     if (token->type != TokenType_None) return;
     la_string(token, parser);
@@ -36,7 +36,8 @@ void tokenize(struct la_parser *parser) {
         // Skipping comments
         if (comment_type != 0) {
             // If multiline comment finished
-            if (comment_type == 2 && parser->data[parser->position] == '*' && parser->data[parser->position + 1] == '/') {
+            if (comment_type == 2 && parser->data[parser->position] == '*' &&
+                parser->data[parser->position + 1] == '/') {
                 parser->position++;
                 comment_type = 0;
             }
@@ -45,8 +46,8 @@ void tokenize(struct la_parser *parser) {
         }
         // If neither space nor comment, then parse
         la_parse(token, parser);
-        if (token->type == TokenType_None){
-            if(string_is_null(parser->error_msg)){
+        if (token->type == TokenType_None) {
+            if (string_is_null(parser->error_msg)) {
                 string_set_str(parser->error_msg, "Unrecognized token", 18);
             }
             goto bad_end;
@@ -60,7 +61,7 @@ void tokenize(struct la_parser *parser) {
                 case Special_COM_STR:
                     comment_type = 2;
                     break;
-                // Left scopes
+                    // Left scopes
                 case Special_LSB:
                     parser->scope_buf[parser->scope_pos++] = Special_LSB;
                     if (parser->scope_pos > MaxBracketNesting) {
@@ -82,10 +83,10 @@ void tokenize(struct la_parser *parser) {
                         goto bad_end;
                     }
                     break;
-                // Right scopes
+                    // Right scopes
                 case Special_RSB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LSB) {
-                        if(parser->scope_buf[parser->scope_pos] == Special_LSQB) {
+                        if (parser->scope_buf[parser->scope_pos] == Special_LSQB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ']' using ')'", 47);
                         } else if (parser->scope_buf[parser->scope_pos] == Special_LCB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be '}' using ')'", 47);
@@ -95,7 +96,7 @@ void tokenize(struct la_parser *parser) {
                     break;
                 case Special_RSQB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LSQB) {
-                        if(parser->scope_buf[parser->scope_pos] == Special_LSB) {
+                        if (parser->scope_buf[parser->scope_pos] == Special_LSB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ')' using ']'", 47);
                         } else if (parser->scope_buf[parser->scope_pos] == Special_LCB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be '}' using ']'", 47);
@@ -105,7 +106,7 @@ void tokenize(struct la_parser *parser) {
                     break;
                 case Special_RCB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LCB) {
-                        if(parser->scope_buf[parser->scope_pos] == Special_LSQB) {
+                        if (parser->scope_buf[parser->scope_pos] == Special_LSQB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ']' using '}'", 47);
                         } else if (parser->scope_buf[parser->scope_pos] == Special_LSB) {
                             string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ')' using '}'", 47);
