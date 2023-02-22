@@ -8,6 +8,7 @@ struct la_parser *la_parser_new() {
 
     res->current_line = 0;
     res->scope_pos = 0;
+    res->line_pos = 0;
     res->list = array_new();
     res->error_msg = string_new();
     return res;
@@ -22,7 +23,7 @@ void la_parser_set(struct la_parser *res, const struct la_parser *a) {
 void la_parser_clear(struct la_parser *res) {
     if (res->data != NULL) free(res->data);
     res->data = NULL;
-    res->position = res->str_size = 0;
+    res->position = res->str_size = res->line_pos = 0;
 
     res->current_line = 0;
     res->scope_pos = 0;

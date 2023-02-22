@@ -277,16 +277,13 @@ int main() {
     }else {
         printf("Error : ");
         for (int i = 0; i < F_parser->error_msg->size; i++) printf("%c", F_parser->error_msg->data[i]);
-        printf("\nLine : %zu\nPosition : %zu\nCode Line : \n", F_parser->current_line, F_parser->position);
-        size_t pos_s = 0;
-        for(size_t i = 0, line = 0;i < F_parser->str_size;i ++){
-            if(F_parser->data[i] == '\n'){
-                if(++line == F_parser->current_line) pos_s = i;
-                if(line > F_parser->current_line) break;
-            }else if(line == F_parser->current_line) printf("%c", F_parser->data[i]);
+        printf("\nLine %zu: \n", F_parser->current_line + 1);
+        for(size_t i = F_parser->line_pos;i < F_parser->str_size;i ++){
+            if(F_parser->data[i] == '\n') break;
+            printf("%c", F_parser->data[i]);
         }
         printf("\n");
-        for(size_t i=pos_s; i<F_parser->position; i++) printf(" ");
+        for(size_t i=F_parser->line_pos; i<F_parser->position; i++) printf(" ");
         printf("^\n");
     }
     //            an_parser_set_list(T_parser, F_parser);

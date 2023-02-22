@@ -28,6 +28,7 @@ void tokenize(struct la_parser *parser) {
             if (parser->data[parser->position] == '\n') {
                 if (comment_type == 1) comment_type = 0;
                 parser->current_line++;
+                parser->line_pos = parser->position + 1;
             }
             parser->position++;
             continue; // Skip

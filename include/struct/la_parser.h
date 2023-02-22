@@ -19,6 +19,7 @@ struct la_parser{
     size_t str_size;
 
     size_t current_line;
+    size_t line_pos;
 
     char scope_buf[MaxBracketNesting];
     size_t scope_pos;
