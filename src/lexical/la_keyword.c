@@ -66,13 +66,13 @@ void la_keyword(struct token_st *token, struct la_parser *parser) {
         parser->position += 3;
         return;
     }
-    if (la_keyword_cmp(parser, "var", 2)) {
+    if (la_keyword_cmp(parser, "var", 3)) {
         token->type = TokenType_KeyWords;
         token->subtype = KeyWord_VAR;
         parser->position += 3;
         return;
     }
-    if (la_keyword_cmp(parser, "xor", 2)) {
+    if (la_keyword_cmp(parser, "xor", 3)) {
         token->type = TokenType_KeyWords;
         token->subtype = KeyWord_XOR;
         parser->position += 3;

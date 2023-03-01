@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "lexical_analysis.h"
 
 void la_parse(struct token_st *token, struct la_parser *parser) {

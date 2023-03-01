@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "lexical_analysis.h"
 
 short Special_OneChar(char c1) {
