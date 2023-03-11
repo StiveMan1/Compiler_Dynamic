@@ -34,13 +34,12 @@ void for_header2_stmt(struct ast_parser *, struct node_st *);
 void for_stmt(struct ast_parser *, struct node_st *);
 void if_stmt(struct ast_parser *, struct node_st *);
 void while_stmt(struct ast_parser *, struct node_st *);
-void do_while_stmt(struct ast_parser *, struct node_st *);
 void extends_list(struct ast_parser *, struct node_st *);
 void parameter_list(struct ast_parser *, struct node_st *);
 void function_stmt(struct ast_parser *, struct node_st *);
 void compound_stmt(struct ast_parser *, struct node_st *);
 
 void statement(struct ast_parser *, struct node_st *);
-void suite(struct ast_parser *, struct node_st *);
+void suite(struct ast_parser *, struct node_st *, int);
 
 #endif //AST_STMT_H

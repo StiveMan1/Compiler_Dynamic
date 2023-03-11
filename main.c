@@ -4,12 +4,12 @@
 #include "ast_analyze.h"
 
 #define PRINT_PREF for(int _i=0;_i<size;_i++)printf("%c",prefix[_i]);
-#define PRINT_NEXT(expr) if(expr){printf("\t├- ");prefix[size + 1] = '|';}else{printf("\t└- ");prefix[size + 1] = ' ';}prefix[size] = '\t';
-//#ifdef WIN32
-//#define PRINT_NEXT(expr) if(expr){printf("\t%c- ",195);prefix[size + 1] = '|';}else{printf("\t%c- ",192);prefix[size + 1] = ' ';}prefix[size] = '\t';
-//#else
 //#define PRINT_NEXT(expr) if(expr){printf("\t├- ");prefix[size + 1] = '|';}else{printf("\t└- ");prefix[size + 1] = ' ';}prefix[size] = '\t';
-//#endif
+#ifdef WIN32
+#define PRINT_NEXT(expr) if(expr){printf("\t%c- ",195);prefix[size + 1] = '|';}else{printf("\t%c- ",192);prefix[size + 1] = ' ';}prefix[size] = '\t';
+#else
+#define PRINT_NEXT(expr) if(expr){printf("\t├- ");prefix[size + 1] = '|';}else{printf("\t└- ");prefix[size + 1] = ' ';}prefix[size] = '\t';
+#endif
 
 char prefix[100];
 

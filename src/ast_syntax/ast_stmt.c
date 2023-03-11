@@ -48,6 +48,7 @@ void annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
     end:
     analyze_end
 }
+
 void assignment_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -104,30 +105,37 @@ void return_stmt(struct ast_parser *parser, struct node_st *expr) {
         expr->main_type = MainType_Stmt;
         expr->type = StmtType_Return;
 
-        parser_end goto end;
-        parser_get
-        if (token->type == TokenType_Special && token->subtype == Special_SEMI){
-            result = 1;
-            goto end;
-        }
-
+//        parser_end goto end;
+//        parser_get
+//        if (token->type == TokenType_Special && token->subtype == Special_SEMI) {
+//            result = 1;
+//            goto end;
+//        }
+//
+//        expr_add(expr)
+//        while (parser->position < parser->list->size) {
+//            and_test_oper(parser, expr_next);
+//            if (expr_next->type == ExprType_None) goto end;
+//
+//            parser_end break;
+//            parser_get
+//            if (token->type == TokenType_Special && token->subtype == Special_SEMI) {
+//                result = 1;
+//                goto end;
+//            }
+//            if (token->type != TokenType_Special || token->subtype != Special_COMMA) break;
+//            parser->position++;
+//
+//            parser_end break;
+//            expr_add(expr)
+//        }
         expr_add(expr)
-        while (parser->position < parser->list->size) {
-            and_test_oper(parser, expr_next);
-            if (expr_next->type == ExprType_None) goto end;
-
-            parser_end break;
-            parser_get
-            if (token->type == TokenType_Special && token->subtype == Special_SEMI){
-                result = 1;
-                goto end;
-            }
-            if (token->type != TokenType_Special || token->subtype != Special_COMMA) break;
-            parser->position++;
-
-            parser_end break;
-            expr_add(expr)
-        }
+        
+        and_test_oper(parser, expr_next);
+        if (expr_next->type == ExprType_None) goto end;
+        
+        result = 1;
+        goto end;
     }
     end:
     analyze_end
@@ -196,33 +204,18 @@ void if_stmt(struct ast_parser *parser, struct node_st *expr) {
         expr->type = StmtType_If;
 
         expr_add(expr)
-        scopes_expr(parser, expr_next);
+        or_test_oper(parser, expr_next);
         if (expr_next->type == ExprType_None) goto end;
 
         expr_add(expr)
-        suite(parser, expr_next);
+        suite(parser, expr_next, KeyWord_THEN);
         if (expr_next->type == ExprType_None) goto end;
 
-        while (parser->position < parser->list->size) {
+        if (parser->list->size > parser->position) {
             parser_get
-            if (token->type != TokenType_KeyWords || token->subtype != KeyWord_ELSE) break;
-            parser->position++;
-
-            parser_end goto end;
-            parser_get
-            if (token->type == TokenType_KeyWords && token->subtype == KeyWord_IF) {
-                parser->position++;
-
+            if (token->type == TokenType_KeyWords && token->subtype == KeyWord_ELSE) {
                 expr_add(expr)
-                scopes_expr(parser, expr_next);
-                if (expr_next->type == ExprType_None) goto end;
-
-                expr_add(expr)
-                suite(parser, expr_next);
-                if (expr_next->type == ExprType_None) goto end;
-            } else {
-                expr_add(expr)
-                suite(parser, expr_next);
+                suite(parser, expr_next, KeyWord_ELSE);
                 if (expr_next->type == ExprType_None) goto end;
             }
         }
@@ -244,42 +237,12 @@ void while_stmt(struct ast_parser *parser, struct node_st *expr) {
         expr->type = StmtType_While;
 
         expr_add(expr)
-        scopes_expr(parser, expr_next);
+        or_test_oper(parser, expr_next);
         if (expr_next->type == ExprType_None) goto end;
 
         expr_add(expr)
-        suite(parser, expr_next);
+        suite(parser, expr_next, KeyWord_LOOP);
         if (expr_next->type == ExprType_None) goto end;
-        result = 1;
-    }
-    end:
-    analyze_end
-}
-
-void do_while_stmt(struct ast_parser *parser, struct node_st *expr) {
-    analyze_start
-    {
-        parser_end goto end;
-        parser_get
-        if (token->type != TokenType_KeyWords || token->subtype != KeyWord_LOOP) goto end;
-        parser->position++;
-
-        expr->main_type = MainType_Stmt;
-        expr->type = StmtType_DoWhile;
-
-        expr_add(expr)
-        suite(parser, expr_next);
-        if (expr_next->type == ExprType_None) goto end;
-
-        parser_end goto end;
-        parser_get
-        if (token->type != TokenType_KeyWords || token->subtype != KeyWord_WHILE) goto end;
-        parser->position++;
-
-        expr_add(expr)
-        scopes_expr(parser, expr_next);
-        if (expr_next->type == ExprType_None) goto end;
-
         result = 1;
     }
     end:
@@ -332,7 +295,7 @@ void function_stmt(struct ast_parser *parser, struct node_st *expr) {
         if (expr_next->type == ExprType_None) goto end;
 
         expr_add(expr)
-        suite(parser, expr_next);
+        suite(parser, expr_next, KeyWord_IS);
         if (expr_next->type == ExprType_None) goto end;
 
         result = 1;
@@ -347,8 +310,6 @@ void compound_stmt(struct ast_parser *parser, struct node_st *expr) {
     if_stmt(parser, expr);
     if (expr->type != ExprType_None) return;
     while_stmt(parser, expr);
-    if (expr->type != ExprType_None) return;
-    do_while_stmt(parser, expr);
     if (expr->type != ExprType_None) return;
     function_stmt(parser, expr);
 
@@ -371,23 +332,24 @@ void statement(struct ast_parser *parser, struct node_st *expr) {
     analyze_end
 }
 
-void suite(struct ast_parser *parser, struct node_st *expr) {
-    statement(parser, expr);
-    if (expr->type != ExprType_None) return;
+void suite(struct ast_parser *parser, struct node_st *expr, int type_scope) {
     analyze_start
     {
         parser_end goto end;
         token = parser->list->data[parser->position]->data;
-        if (token->type != TokenType_Special || token->subtype != Special_LCB) goto end;
+        if (token->type != TokenType_KeyWords || token->subtype != type_scope) goto end;
         parser->position++;
 
         expr->main_type = MainType_Stmt;
         expr->type = StmtType_List;
 
         parser_end goto end;
-        token = parser->list->data[parser->position]->data;
-        if (token->type == TokenType_Special && token->subtype == Special_RCB) {
+        parser_get
+        if (token->type == TokenType_KeyWords && token->subtype == KeyWord_END) {
             parser->position++;
+            result = 1;
+            goto end;
+        }else if (type_scope == KeyWord_THEN && token->type == TokenType_KeyWords && token->subtype == KeyWord_ELSE) {
             result = 1;
             goto end;
         }
@@ -399,8 +361,11 @@ void suite(struct ast_parser *parser, struct node_st *expr) {
 
             parser_end break;
             parser_get
-            if (token->type == TokenType_Special && token->subtype == Special_RCB) {
+            if (token->type == TokenType_KeyWords && token->subtype == KeyWord_END) {
                 parser->position++;
+                result = 1;
+                goto end;
+            }else if (type_scope == KeyWord_THEN && token->type == TokenType_KeyWords && token->subtype == KeyWord_ELSE) {
                 result = 1;
                 goto end;
             }
@@ -421,7 +386,7 @@ void token_analyzer(struct ast_parser *parser, struct node_st *expr) {
 
         expr_add(expr)
         while (parser->position < parser->list->size) {
-            suite(parser, expr_next);
+            statement(parser, expr_next);
             if (expr_next->type == ExprType_None) goto end;
             parser_end break;
             expr_add(expr)
