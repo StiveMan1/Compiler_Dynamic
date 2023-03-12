@@ -22,24 +22,24 @@
 #define StmtType_List           0x10
 #define StmtType_Extends        0x11
 
-void annotation_stmt(struct ast_parser *, struct node_st *);
-void assignment_stmt(struct ast_parser *, struct node_st *);
-void return_stmt(struct ast_parser *, struct node_st *);
-void simple_stmt(struct ast_parser *, struct node_st *);
-void stmt_list(struct ast_parser *, struct node_st *);
+char annotation_stmt(struct ast_parser *, struct node_st *);
+char assignment_stmt(struct ast_parser *, struct node_st *);
+char return_stmt(struct ast_parser *, struct node_st *);
+char simple_stmt(struct ast_parser *, struct node_st *);
+char stmt_list(struct ast_parser *, struct node_st *);
 
-void for_header1_stmt(struct ast_parser *, struct node_st *);
-void for_header2_stmt(struct ast_parser *, struct node_st *);
+char for_header1_stmt(struct ast_parser *, struct node_st *);
+char for_header2_stmt(struct ast_parser *, struct node_st *);
 
-void for_stmt(struct ast_parser *, struct node_st *);
-void if_stmt(struct ast_parser *, struct node_st *);
-void while_stmt(struct ast_parser *, struct node_st *);
-void extends_list(struct ast_parser *, struct node_st *);
-void parameter_list(struct ast_parser *, struct node_st *);
-void function_stmt(struct ast_parser *, struct node_st *);
-void compound_stmt(struct ast_parser *, struct node_st *);
+char for_stmt(struct ast_parser *, struct node_st *);
+char if_stmt(struct ast_parser *, struct node_st *);
+char while_stmt(struct ast_parser *, struct node_st *);
+char extends_list(struct ast_parser *, struct node_st *);
+char parameter_list(struct ast_parser *, struct node_st *);
+char function_stmt(struct ast_parser *, struct node_st *);
+char compound_stmt(struct ast_parser *, struct node_st *);
 
-void statement(struct ast_parser *, struct node_st *);
-void suite(struct ast_parser *, struct node_st *, int);
+char statement(struct ast_parser *, struct node_st *);
+char suite(struct ast_parser *, struct node_st *, int);
 
 #endif //AST_STMT_H

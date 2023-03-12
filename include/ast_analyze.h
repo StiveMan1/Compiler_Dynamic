@@ -5,6 +5,11 @@
 #include "ast_syntax/ast_oper.h"
 #include "ast_syntax/ast_stmt.h"
 
-void token_analyzer(struct ast_parser *, struct node_st *);
+#define SN_Status_Success   0
+#define SN_Status_Nothing   1
+#define SN_Status_EOF       2
+#define SN_Status_Error     3
+
+char token_analyzer(struct ast_parser *, struct node_st *);
 
 #endif //AST_SYNTAX_H

@@ -8,6 +8,7 @@
 
 struct ast_parser{
     size_t position;
+    size_t error_pos;
     struct array_st *list;
 };
 

@@ -6,7 +6,11 @@
 #define PRINT_PREF for(int _i=0;_i<size;_i++)printf("%c",prefix[_i]);
 //#define PRINT_NEXT(expr) if(expr){printf("\t├- ");prefix[size + 1] = '|';}else{printf("\t└- ");prefix[size + 1] = ' ';}prefix[size] = '\t';
 #ifdef WIN32
-#define PRINT_NEXT(expr) if(expr){printf("\t%c- ",195);prefix[size + 1] = '|';}else{printf("\t%c- ",192);prefix[size + 1] = ' ';}prefix[size] = '\t';
+    #ifdef DEBUG
+    #define PRINT_NEXT(expr) if(expr){printf("\t├- ");prefix[size + 1] = '|';}else{printf("\t└- ");prefix[size + 1] = ' ';}prefix[size] = '\t';
+    #else
+    #define PRINT_NEXT(expr) if(expr){printf("\t%c- ",195);prefix[size + 1] = '|';}else{printf("\t%c- ",192);prefix[size + 1] = ' ';}prefix[size] = '\t';
+    #endif
 #else
 #define PRINT_NEXT(expr) if(expr){printf("\t├- ");prefix[size + 1] = '|';}else{printf("\t└- ");prefix[size + 1] = ' ';}prefix[size] = '\t';
 #endif
@@ -428,13 +432,42 @@ void print_obj(const struct object_st *res, int size) {
 }
 
 int main() {
-    // Reading input
+    struct object_st *expr_obj = object_new();
     struct la_parser *F_parser = la_parser_new();
+    struct ast_parser *T_parser = ast_parser_new();
+
+
+    // Reading input
     la_parser_set_file(F_parser, "text.txt");
     // Tokenize
     tokenize(F_parser);
+    // Print Tokenize Result
     if (string_is_null(F_parser->error_msg)) {
 //        print_array(F_parser->list, 0);
+        // AST data init
+        object_set_type(expr_obj, NODE_TYPE);
+        ast_parser_set_list(T_parser, F_parser);
+        // AST Analyze
+        char ast_result = token_analyzer(T_parser, expr_obj->data);
+        // Print AST Analyze Result
+        if (ast_result != SN_Status_Success) {
+            if(ast_result == SN_Status_EOF) {
+                printf("Unexpected EOF\n");
+            } else {
+                printf("Syntax Error\n");
+                struct token_st *token = T_parser->list->data[T_parser->error_pos]->data;
+                printf("Line %zu: \n", token->line_num + 1);
+                for (size_t i = token->line_pos; i < F_parser->str_size; i++) {
+                    if (F_parser->data[i] == '\n') break;
+                    printf("%c", F_parser->data[i]);
+                }
+                printf("\n");
+                for (size_t i = token->line_pos; i < token->pos; i++) printf(" ");
+                printf("^\n");
+            }
+        } else {
+            print_obj(expr_obj, 0);
+        }
     } else {
         printf("Error : ");
         for (int i = 0; i < F_parser->error_msg->size; i++) printf("%c", F_parser->error_msg->data[i]);
@@ -447,14 +480,7 @@ int main() {
         for (size_t i = F_parser->line_pos; i < F_parser->position; i++) printf(" ");
         printf("^\n");
     }
-    // AST analyze
-    struct object_st *expr_obj = object_new();
-    object_set_type(expr_obj, NODE_TYPE);
-    struct ast_parser *T_parser = ast_parser_new();
-    ast_parser_set_list(T_parser, F_parser);
-    token_analyzer(T_parser, expr_obj->data);
 
-    print_obj(expr_obj, 0);
 
     ast_parser_free(T_parser);
     la_parser_free(F_parser);

@@ -28,5 +28,6 @@ void la_string(struct token_st *token, struct la_parser *parser) {
     // Allocating space for token
     token_resize(token, pos - parser->position - 1);
     memcpy(token->data, &parser->data[parser->position + 1], token->size);
+    token_set_pos(token, parser);
     parser->position = pos + 1;
 }

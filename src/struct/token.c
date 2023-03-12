@@ -9,11 +9,15 @@ struct token_st *token_new(){
 
     res->data = NULL;
     res->max_size = res->size = 0;
+    res->line_num = res->line_pos = res->pos = 0;
     return res;
 }
 void token_set(struct token_st *res, const struct token_st *a){
     res->type = a->type;
     res->subtype = a->subtype;
+    res->line_num = a->line_num;
+    res->line_pos = a->line_pos;
+    res->pos = a->pos;
 
     token_resize(res, a->size);
     memcpy(res->data, a->data, a->size);
@@ -22,6 +26,7 @@ void token_set(struct token_st *res, const struct token_st *a){
 void token_clear(struct token_st *res){
     res->type = TokenType_None;
     res->subtype = TokenType_None;
+    res->line_num = res->line_pos = res->pos = 0;
 
     token_resize(res, 0);
 }
@@ -48,4 +53,9 @@ void token_resize(struct token_st *res, size_t size) {
         }
     }
     res->size = size;
+}
+void token_set_pos(struct token_st *res, struct la_parser *parser) {
+    res->line_num = parser->current_line;
+    res->line_pos = parser->line_pos;
+    res->pos = parser->position;
 }

@@ -90,6 +90,7 @@ void la_special(struct token_st *token, struct la_parser *parser) {
     if (result != Special_None) {
         token->type = TokenType_Special;
         token->subtype = result;
+        token_set_pos(token, parser);
         parser->position += 2;
         return;
     }
@@ -99,6 +100,7 @@ void la_special(struct token_st *token, struct la_parser *parser) {
     if (result != Special_None) {
         token->type = TokenType_Special;
         token->subtype = result;
+        token_set_pos(token, parser);
         parser->position += 1;
     }
 }

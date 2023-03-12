@@ -26,6 +26,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 token->subtype = IntType_bin;
                 token_resize(token, pos - zero_end);
                 memcpy(token->data, &parser->data[zero_end], token->size);
+                token_set_pos(token, parser);
                 parser->position = pos;
             } else if (c == 'o' || c == 'O') {
                 GetChar
@@ -38,6 +39,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 token->subtype = IntType_oct;
                 token_resize(token, pos - zero_end);
                 memcpy(token->data, &parser->data[zero_end], token->size);
+                token_set_pos(token, parser);
                 parser->position = pos;
             } else if (c == 'x' || c == 'X') {
                 GetChar
@@ -50,6 +52,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 token->subtype = IntType_hex;
                 token_resize(token, pos - zero_end);
                 memcpy(token->data, &parser->data[zero_end], token->size);
+                token_set_pos(token, parser);
                 parser->position = pos;
             } else {
                 while (c == '0') GetChar
@@ -68,6 +71,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 token->type = TokenType_Int;
                 token_resize(token, pos - zero_end);
                 memcpy(token->data, &parser->data[zero_end], token->size);
+                token_set_pos(token, parser);
                 parser->position = pos;
             }
         } else {
@@ -84,6 +88,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
             token->type = TokenType_Int;
             token_resize(token, pos - parser->position);
             memcpy(token->data, &parser->data[parser->position], token->size);
+            token_set_pos(token, parser);
             parser->position = pos;
         }
     }

@@ -9,6 +9,7 @@ void la_identifier(struct token_st *token, struct la_parser *parser) {
         token->type = TokenType_Identifier;
         token_resize(token, pos - parser->position);
         memcpy(token->data, &parser->data[parser->position], token->size);
+        token_set_pos(token, parser);
         parser->position = pos;
     }
 }

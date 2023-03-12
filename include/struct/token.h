@@ -17,16 +17,14 @@
 #define IntType_float           0x10
 
 
-// Token object:
-//   type
-//   subtype
-//   data
 struct token_st{
     short type;
     short subtype;
 
     size_t size, max_size;
     char *data;
+
+    size_t pos, line_num, line_pos;
 };
 
 
@@ -36,6 +34,7 @@ void token_clear(struct token_st *);
 void token_free(struct token_st *);
 
 void token_resize(struct token_st *, size_t);
+void token_set_pos(struct token_st *, struct la_parser *);
 void print_token(const struct token_st *res, int size);
 
 
