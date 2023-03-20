@@ -340,7 +340,7 @@ char list_oper(struct ast_parser *parser, struct node_st *expr, short start, sho
     analyze_start
     {
         parser_end goto eof;
-        token = parser->list->data[parser->position]->data;
+        parser_get
         if (token->type != TokenType_Special || token->subtype != start) goto end;
         parser->position++;
 
@@ -348,7 +348,7 @@ char list_oper(struct ast_parser *parser, struct node_st *expr, short start, sho
         expr->type = PrimType_List;
 
         parser_end goto eof;
-        token = parser->list->data[parser->position]->data;
+        parser_get
         if (token->type == TokenType_Special && token->subtype == end) {
             parser->position++;
             result = SN_Status_Success;
@@ -359,7 +359,7 @@ char list_oper(struct ast_parser *parser, struct node_st *expr, short start, sho
             expr_add(expr)
             check_call(or_test_oper(parser, expr_next), goto err;)
 
-            parser_end break;
+            parser_end goto eof;
             parser_get
             if (token->type == TokenType_Special && token->subtype == end) {
                 parser->position++;
@@ -378,7 +378,7 @@ char list_ident(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         parser_end goto eof;
-        token = parser->list->data[parser->position]->data;
+        parser_get
         if (token->type != TokenType_Special || token->subtype != Special_LSB) goto end;
         parser->position++;
 
@@ -386,7 +386,7 @@ char list_ident(struct ast_parser *parser, struct node_st *expr) {
         expr->type = PrimType_List;
 
         parser_end goto eof;
-        token = parser->list->data[parser->position]->data;
+        parser_get
         if (token->type == TokenType_Special && token->subtype == Special_RSB) {
             parser->position++;
             result = SN_Status_Success;
@@ -397,7 +397,7 @@ char list_ident(struct ast_parser *parser, struct node_st *expr) {
             expr_add(expr)
             check_call(ident_new_expr(parser, expr_next), goto err;)
 
-            parser_end break;
+            parser_end goto eof;
             parser_get
             if (token->type == TokenType_Special && token->subtype == Special_RSB) {
                 parser->position++;

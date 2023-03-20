@@ -265,7 +265,7 @@ void print_token(const struct token_st *res, int size) {
 }
 
 void print_node(const struct node_st *res, int size) {
-    printf("Expr : ");
+    printf("Node : ");
     switch (res->main_type) {
         case MainType_None:
             printf("MainType_None ");
@@ -394,6 +394,9 @@ void print_node(const struct node_st *res, int size) {
                 break;
             case StmtType_Extends:
                 printf("StmtType_Extends ");
+                break;
+            case StmtType_Print:
+                printf("StmtType_Print ");
                 break;
         }
     }
