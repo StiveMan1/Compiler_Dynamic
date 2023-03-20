@@ -101,17 +101,11 @@ char return_stmt(struct ast_parser *parser, struct node_st *expr) {
 
         expr->main_type = MainType_Stmt;
         expr->type = StmtType_Return;
-
-        parser_end goto eof;
-        parser_get
-        if (token->type == TokenType_Special && token->subtype == Special_SEMI) {
-            result = SN_Status_Success;
-            goto end;
-        }
-
-        expr_add(expr)
-        check_call(or_test_oper(parser, expr_next), goto err;)
         result = SN_Status_Success;
+        expr_add(expr)
+        printf("");
+        check_call(or_test_oper(parser, expr_next), {array_resize(expr->next, expr->next->size - 1);goto end;})
+
     }
 analyze_end
 }
