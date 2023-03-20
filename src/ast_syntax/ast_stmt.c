@@ -200,6 +200,35 @@ char while_stmt(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
+char for_stmt(struct ast_parser *parser, struct node_st *expr) {
+    analyze_start
+    {
+        parser_end goto eof;
+        parser_get
+        if (token->type != TokenType_KeyWords || token->subtype != KeyWord_FOR) goto end;
+        parser->position++;
+
+        expr->main_type = MainType_Stmt;
+        expr->type = StmtType_For;
+
+        expr_add(expr)
+        check_call(ident_new_expr(parser, expr_next), goto err;)
+
+        parser_end goto eof;
+        parser_get
+        if (token->type != TokenType_KeyWords || token->subtype != KeyWord_IN) goto end;
+        parser->position++;
+
+        expr_add(expr)
+        check_call(ident_get_expr(parser, expr_next), goto err;)
+
+        expr_add(expr)
+        check_call(suite(parser, expr_next, KeyWord_LOOP), goto err;)
+        result = SN_Status_Success;
+    }
+analyze_end
+}
+
 char extends_list(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -248,9 +277,9 @@ analyze_end
 }
 
 char compound_stmt(struct ast_parser *parser, struct node_st *expr) {
-//    for_stmt(parser, expr);
-//    if (result != SN_Status_Nothing) return result;
     char result = if_stmt(parser, expr);
+    if (result != SN_Status_Nothing) return result;
+    result = for_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = while_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
