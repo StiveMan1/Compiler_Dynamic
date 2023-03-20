@@ -416,19 +416,19 @@ void print_node(const struct node_st *res, int size) {
 }
 
 void print_obj(const struct object_st *res, int size) {
-    printf("object : (%d)\n", res->counter);
-    PRINT_PREF
-    PRINT_NEXT(0)
+//    printf("object : (%d)\n", res->counter);
+//    PRINT_PREF
+//    PRINT_NEXT(0)
     if (res->type == NONE_TYPE) printf("None\n");
-    else if (res->type == OBJECT_TYPE) return print_obj(res->data, size + 2);
+    else if (res->type == OBJECT_TYPE) return print_obj(res->data, size);
     else if (res->type == STRING_TYPE) return print_str(res->data);
     else if (res->type == INTEGER_TYPE) return print_int(res->data);
     else if (res->type == BOOL_TYPE) return print_bool(res->data);
     else if (res->type == REAL_TYPE) return print_real(res->data);
-    else if (res->type == ARRAY_TYPE) return print_array(res->data, size + 2);
-    else if (res->type == TUPLE_TYPE) return print_tuple(res->data, size + 2);
-    else if (res->type == TOKEN_TYPE) return print_token(res->data, size + 2);
-    else if (res->type == NODE_TYPE) return print_node(res->data, size + 2);
+    else if (res->type == ARRAY_TYPE) return print_array(res->data, size);
+    else if (res->type == TUPLE_TYPE) return print_tuple(res->data, size);
+    else if (res->type == TOKEN_TYPE) return print_token(res->data, size);
+    else if (res->type == NODE_TYPE) return print_node(res->data, size);
 }
 
 int main() {

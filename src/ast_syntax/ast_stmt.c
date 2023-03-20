@@ -162,7 +162,7 @@ char if_stmt(struct ast_parser *parser, struct node_st *expr) {
         expr->type = StmtType_If;
 
         expr_add(expr)
-        check_call(scopes_expr(parser, expr_next), goto err;)
+        check_call(or_test_oper(parser, expr_next), goto err;)
 
         expr_add(expr)
         check_call(suite(parser, expr_next, KeyWord_THEN), goto err;)
