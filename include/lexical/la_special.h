@@ -48,6 +48,7 @@
 #define Special_DOT         0x02    // .
 #define Special_SEMI        0x03    // ;
 #define Special_EQ          0x04    // :=
+#define Special_ARROW       0x05    // =>
 
 
 

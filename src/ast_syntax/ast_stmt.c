@@ -288,7 +288,7 @@ char function_stmt(struct ast_parser *parser, struct node_st *expr) {
         check_call(parameter_list(parser, expr_next), goto err;)
 
         expr_add(expr)
-        check_call(body(parser, expr_next, KeyWord_IS), goto err;)
+        check_call(func_body(parser, expr_next), goto err;)
 
         result = SN_Status_Success;
     }
@@ -321,6 +321,30 @@ char statement(struct ast_parser *parser, struct node_st *expr) {
             else goto err;
         }
         parser->position++;
+        result = SN_Status_Success;
+    }
+analyze_end
+}
+
+
+char func_body(struct ast_parser *parser, struct node_st *expr) {
+    char res = body(parser, expr, KeyWord_IS);
+    if (res != SN_Status_Nothing) return res;
+    analyze_start
+    {
+        parser_end goto eof;
+        parser_get
+        if (token->type != TokenType_Special || token->subtype != Special_ARROW) goto end;
+        parser->position++;
+
+        expr_add(expr)
+        check_call(or_test_oper(parser, expr_next), goto err;)
+
+        parser_end goto eof;
+        parser_get
+        if (token->type != TokenType_Special || token->subtype != Special_SEMI) goto err;
+        parser->position++;
+
         result = SN_Status_Success;
     }
 analyze_end

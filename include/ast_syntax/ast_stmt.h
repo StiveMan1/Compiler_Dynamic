@@ -41,6 +41,7 @@ char function_stmt(struct ast_parser *, struct node_st *);
 char compound_stmt(struct ast_parser *, struct node_st *);
 
 char statement(struct ast_parser *, struct node_st *);
+char func_body(struct ast_parser *, struct node_st *);
 char body(struct ast_parser *, struct node_st *, int);
 
 #endif //AST_STMT_H

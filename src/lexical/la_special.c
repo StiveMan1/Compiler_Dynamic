@@ -77,6 +77,9 @@ short Special_TwoChar(char c1, char c2) {
         case ':':
             if (c2 == '=') return Special_EQ;
             break;
+        case '=':
+            if (c2 == '>') return Special_ARROW;
+            break;
         default:
             break;
     }
