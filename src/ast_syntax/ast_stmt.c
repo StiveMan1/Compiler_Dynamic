@@ -216,7 +216,7 @@ char for_stmt(struct ast_parser *parser, struct node_st *expr) {
 
         parser_end goto eof;
         parser_get
-        if (token->type != TokenType_KeyWords || token->subtype != KeyWord_IN) goto end;
+        if (token->type != TokenType_KeyWords || token->subtype != KeyWord_IN) goto err;
         parser->position++;
 
         expr_add(expr)
