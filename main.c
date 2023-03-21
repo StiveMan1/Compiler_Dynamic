@@ -282,6 +282,9 @@ void print_node(const struct node_st *res, int size) {
     }
     if (res->main_type == MainType_Expr) {
         switch (res->type) {
+            case PrimType_Tuple:
+                printf("PrimType_Tuple ");
+                break;
             case PrimType_List:
                 printf("PrimType_List ");
                 break;
@@ -465,6 +468,9 @@ int main() {
                     printf("%c", F_parser->data[i]);
                 }
                 printf("\n");
+                // TODO : errors with unclosed brackets are shown on the last token (can be on
+                //  a different line and not understandable). Consider showing the error on the
+                //  start bracket.
                 for (size_t i = token->line_pos; i < token->pos; i++) printf(" ");
                 printf("^\n");
             }

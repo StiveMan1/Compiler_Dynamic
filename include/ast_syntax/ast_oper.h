@@ -28,6 +28,7 @@ char not_test_oper(struct ast_parser *, struct node_st *);
 char and_test_oper(struct ast_parser *, struct node_st *);
 char or_test_oper(struct ast_parser *, struct node_st *);
 char list_oper(struct ast_parser *, struct node_st *, short start, short end);
+char tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, short end);
 
 char list_ident(struct ast_parser *, struct node_st *);
 

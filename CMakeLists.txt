@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.17.3)
 project(Compiler_Dynamic C)
 
 set(CMAKE_C_STANDARD 99)

@@ -35,6 +35,9 @@ char scopes_expr(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+char tuple_expr(struct ast_parser *parser, struct node_st *expr) {
+    return tuple_oper(parser, expr, Special_LCB, Special_RCB);
+}
 char list_expr(struct ast_parser *parser, struct node_st *expr) {
     return list_oper(parser, expr, Special_LSQB, Special_RSQB);
 }
@@ -127,6 +130,8 @@ char literal_expr(struct ast_parser *parser, struct node_st *expr) {
     result = bool_expr(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = list_expr(parser, expr);
+    if (result != SN_Status_Nothing) return result;
+    result = tuple_expr(parser, expr);
     return result;
 }
 char atom_expr(struct ast_parser *parser, struct node_st *expr) {

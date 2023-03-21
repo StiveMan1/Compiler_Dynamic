@@ -14,6 +14,7 @@
 #define PrimType_Attrib         0x05
 #define PrimType_Subscript      0x06
 #define PrimType_Call           0x07
+#define PrimType_Tuple           0x08
 
 char scopes_expr(struct ast_parser *, struct node_st *);
 char list_expr(struct ast_parser *, struct node_st *);

@@ -336,6 +336,51 @@ char or_test_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+char tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, short end) {
+    analyze_start
+    {
+        parser_end goto eof;
+        parser_get
+        if (token->type != TokenType_Special || token->subtype != start) goto end;
+        parser->position++;
+
+        expr->main_type = MainType_Expr;
+        expr->type = PrimType_Tuple;
+
+        parser_end goto eof;
+        parser_get
+        if (token->type == TokenType_Special && token->subtype == end) {
+            parser->position++;
+            result = SN_Status_Success;
+            goto end;
+        }
+
+        while (parser->position < parser->list->size) {
+            expr_add(expr)
+
+            // TODO : for now, new identifier has type `PrimType_Ident_get`
+            //  Consider setting it as `PrimType_Ident_set` (annotation does not work without
+            //  `var` keyword)
+            char res = assignment_stmt(parser, expr_next);
+
+            if (res == SN_Status_Nothing) {
+                check_call(ident_new_expr(parser, expr_next), goto err;)
+            }
+            parser_end goto err;
+            parser_get
+            if (token->type == TokenType_Special && token->subtype == end) {
+                parser->position++;
+                result = SN_Status_Success;
+                goto end;
+            }
+            parser_end goto err;
+            if (token->type != TokenType_Special || token->subtype != Special_COMMA) break;
+            parser->position++;
+        }
+        goto err;
+    }
+analyze_end
+}
 char list_oper(struct ast_parser *parser, struct node_st *expr, short start, short end) {
     analyze_start
     {
