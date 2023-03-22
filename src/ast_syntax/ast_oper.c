@@ -358,9 +358,6 @@ char tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, sh
         while (parser->position < parser->list->size) {
             expr_add(expr)
 
-            // TODO : for now, new identifier has type `PrimType_Ident_get`
-            //  Consider setting it as `PrimType_Ident_set` (annotation does not work without
-            //  `var` keyword)
             char res = assignment_stmt(parser, expr_next);
 
             if (res == SN_Status_Nothing) {

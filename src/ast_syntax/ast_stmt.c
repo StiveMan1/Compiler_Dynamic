@@ -121,7 +121,7 @@ char print_stmt(struct ast_parser *parser, struct node_st *expr) {
         if (token->type != TokenType_KeyWords || token->subtype != KeyWord_PRINT) goto end;
         parser->position++;
 
-        expr->main_type = MainType_Expr;
+        expr->main_type = MainType_Stmt;
         expr->type = StmtType_Print;
 
         while (parser->position < parser->list->size) {
