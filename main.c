@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "struct.h"
 #include "lexical_analysis.h"
-#include "ast_analyze.h"
+#include "ast_semantic.h"
 
 #define PRINT_PREF for(int _i=0;_i<size;_i++)printf("%c",prefix[_i]);
 //#define PRINT_NEXT(expr) if(expr){printf("\t├- ");prefix[size + 1] = '|';}else{printf("\t└- ");prefix[size + 1] = ' ';}prefix[size] = '\t';
@@ -448,36 +448,7 @@ int main() {
     // Tokenize
     tokenize(F_parser);
     // Print Tokenize Result
-    if (string_is_null(F_parser->error_msg)) {
-//        print_array(F_parser->list, 0);
-        // AST data init
-        object_set_type(expr_obj, NODE_TYPE);
-        ast_parser_set_list(T_parser, F_parser);
-        // AST Analyze
-        char ast_result = token_analyzer(T_parser, expr_obj->data);
-        // Print AST Analyze Result
-        if (ast_result != SN_Status_Success) {
-            if(ast_result == SN_Status_EOF) {
-                printf("Unexpected EOF\n");
-            } else {
-                printf("Syntax Error\n");
-                struct token_st *token = T_parser->list->data[T_parser->error_pos]->data;
-                printf("Line %zu: \n", token->line_num + 1);
-                for (size_t i = token->line_pos; i < F_parser->str_size; i++) {
-                    if (F_parser->data[i] == '\n') break;
-                    printf("%c", F_parser->data[i]);
-                }
-                printf("\n");
-                // TODO : errors with unclosed brackets are shown on the last token (can be on
-                //  a different line and not understandable). Consider showing the error on the
-                //  start bracket.
-                for (size_t i = token->line_pos; i < token->pos; i++) printf(" ");
-                printf("^\n");
-            }
-        } else {
-            print_obj(expr_obj, 0);
-        }
-    } else {
+    if (!string_is_null(F_parser->error_msg)) {
         printf("Error : ");
         for (int i = 0; i < F_parser->error_msg->size; i++) printf("%c", F_parser->error_msg->data[i]);
         printf("\nLine %zu: \n", F_parser->current_line + 1);
@@ -488,8 +459,42 @@ int main() {
         printf("\n");
         for (size_t i = F_parser->line_pos; i < F_parser->position; i++) printf(" ");
         printf("^\n");
+        exit(-1);
     }
 
+
+    object_set_type(expr_obj, NODE_TYPE);
+    ast_parser_set_list(T_parser, F_parser);
+    // AST Analyze
+    char ast_result = token_analyzer(T_parser, expr_obj->data);
+    // Print AST Analyze Result
+    if (ast_result != SN_Status_Success) {
+        if(ast_result == SN_Status_EOF) {
+            printf("Unexpected EOF\n");
+        } else {
+            printf("Syntax Error\n");
+            struct token_st *token = T_parser->list->data[T_parser->error_pos]->data;
+            printf("Line %zu: \n", token->line_num + 1);
+            for (size_t i = token->line_pos; i < F_parser->str_size; i++) {
+                if (F_parser->data[i] == '\n') break;
+                printf("%c", F_parser->data[i]);
+            }
+            printf("\n");
+            // TODO : errors with unclosed brackets are shown on the last token (can be on
+            //  a different line and not understandable). Consider showing the error on the
+            //  start bracket.
+            for (size_t i = token->line_pos; i < token->pos; i++) printf(" ");
+            printf("^\n");
+        }
+        exit(-1);
+    }
+
+
+    struct semantic_state *S_parser = semantic_state_new();
+    semantic_check(S_parser, expr_obj);
+
+
+    print_obj(expr_obj, 0);
 
     ast_parser_free(T_parser);
     la_parser_free(F_parser);
