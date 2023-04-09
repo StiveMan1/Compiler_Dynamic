@@ -385,18 +385,41 @@ void print_node(const struct node_st *res, int size) {
     printf("\n");
     if (res->data != NULL) {
         PRINT_PREF
-        PRINT_NEXT(!array_is_null(res->tokens) || !array_is_null(res->next))
+        PRINT_NEXT(!array_is_null(res->tokens) || !array_is_null(res->next) || !(res->size == 0))
         print_obj(res->data, size + 2);
     }
     if (!array_is_null(res->tokens)) {
         PRINT_PREF
-        PRINT_NEXT(!array_is_null(res->next))
+        PRINT_NEXT(!array_is_null(res->next) || !(res->size == 0))
         print_array(res->tokens, size + 2);
     }
     if (!array_is_null(res->next)) {
         PRINT_PREF
-        PRINT_NEXT(0)
+        PRINT_NEXT(!(res->size == 0))
         print_array(res->next, size + 2);
+    }
+    if(res->size != 0) {
+        PRINT_PREF
+        PRINT_NEXT(1)
+        size += 2;
+        printf("closure[0] (%zu):\n", res->size);
+        for (int i = 0; i < res->size; i++) {
+            PRINT_PREF
+            PRINT_NEXT(i + 1 < res->size)
+            print_obj(res->closure[0][i], size + 2);
+        }
+
+
+        size -= 2;
+        PRINT_PREF
+        PRINT_NEXT(0)
+        size += 2;
+        printf("closure[1] (%zu):\n", res->size);
+        for (int i = 0; i < res->size; i++) {
+            PRINT_PREF
+            PRINT_NEXT(i + 1 < res->size)
+            print_obj(res->closure[1][i], size + 2);
+        }
     }
 }
 
@@ -471,12 +494,14 @@ int main() {
 
     ast_result = semantic_scan(expr_obj);
     if(ast_result != 0) {
-        printf("Syntax Error : \n");
+        printf("Semantic Error : \n");
         switch (ast_result) {
-            case SemanticError_Ident:
+            case -SemanticError_Ident:
                 printf("Identifier not initialized\n");
-            case SemanticError_Return:
+                break;
+            case -SemanticError_Return:
                 printf("Return Statement not in Function Scopes\n");
+                break;
         }
         exit(-1);
     }

@@ -34,16 +34,15 @@ int annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
 
         expr->main_type = MainType_Stmt;
         expr->type = StmtType_Annot;
+        result = SN_Status_Success;
 
-        parser_end goto eof;
+        parser_end goto end;
         parser_get
-        if (token->type != TokenType_Special || token->subtype != Special_EQ) goto err;
+        if (token->type != TokenType_Special || token->subtype != Special_EQ) goto end;
         parser->position++;
 
         expr_add(expr)
         check_call(or_test_oper(parser, expr_next), goto err;)
-
-        result = SN_Status_Success;
     }
 analyze_end
 }

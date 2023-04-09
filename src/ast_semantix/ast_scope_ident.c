@@ -112,6 +112,7 @@ void semantic_scan_fields(struct sm_state *state, struct object_st *obj) {
 
                 state->type = ScopeType_Func;
                 break;
+            case StmtType_For:
             case StmtType_While:
                 sm_state_save_type(state, obj);
                 state->type |= ScopeType_Loop;
