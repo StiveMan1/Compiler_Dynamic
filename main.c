@@ -353,14 +353,8 @@ void print_node(const struct node_st *res, int size) {
             case StmtType_While:
                 printf("StmtType_While ");
                 break;
-            case StmtType_DoWhile:
-                printf("StmtType_DoWhile ");
-                break;
             case StmtType_For:
                 printf("StmtType_For ");
-                break;
-            case StmtType_ForHeader:
-                printf("StmtType_ForHeader ");
                 break;
             case StmtType_Try:
                 printf("StmtType_Try ");
@@ -371,9 +365,6 @@ void print_node(const struct node_st *res, int size) {
             case StmtType_Func:
                 printf("StmtType_Func ");
                 break;
-            case StmtType_Class:
-                printf("StmtType_Class ");
-                break;
             case StmtType_Annot:
                 printf("StmtType_Annot ");
                 break;
@@ -383,20 +374,8 @@ void print_node(const struct node_st *res, int size) {
             case StmtType_Return:
                 printf("StmtType_Return ");
                 break;
-            case StmtType_Break:
-                printf("StmtType_Break ");
-                break;
-            case StmtType_Continue:
-                printf("StmtType_Continue ");
-                break;
-            case StmtType_Import:
-                printf("StmtType_Import ");
-                break;
             case StmtType_List:
                 printf("StmtType_List ");
-                break;
-            case StmtType_Extends:
-                printf("StmtType_Extends ");
                 break;
             case StmtType_Print:
                 printf("StmtType_Print ");
@@ -449,7 +428,7 @@ int main() {
     tokenize(F_parser);
     // Print Tokenize Result
     if (!string_is_null(F_parser->error_msg)) {
-        printf("Error : ");
+        printf("Tokenize Error : ");
         for (int i = 0; i < F_parser->error_msg->size; i++) printf("%c", F_parser->error_msg->data[i]);
         printf("\nLine %zu: \n", F_parser->current_line + 1);
         for (size_t i = F_parser->line_pos; i < F_parser->str_size; i++) {
@@ -466,13 +445,13 @@ int main() {
     object_set_type(expr_obj, NODE_TYPE);
     ast_parser_set_list(T_parser, F_parser);
     // AST Analyze
-    char ast_result = token_analyzer(T_parser, expr_obj->data);
+    int ast_result = token_analyzer(T_parser, expr_obj->data);
     // Print AST Analyze Result
     if (ast_result != SN_Status_Success) {
         if(ast_result == SN_Status_EOF) {
             printf("Unexpected EOF\n");
         } else {
-            printf("Syntax Error\n");
+            printf("Syntax Error : ");
             struct token_st *token = T_parser->list->data[T_parser->error_pos]->data;
             printf("Line %zu: \n", token->line_num + 1);
             for (size_t i = token->line_pos; i < F_parser->str_size; i++) {
@@ -490,9 +469,17 @@ int main() {
     }
 
 
-    struct semantic_state *S_parser = semantic_state_new();
-    semantic_check(S_parser, expr_obj);
-
+    ast_result = semantic_scan(expr_obj);
+    if(ast_result != 0) {
+        printf("Syntax Error : \n");
+        switch (ast_result) {
+            case SemanticError_Ident:
+                printf("Identifier not initialized\n");
+            case SemanticError_Return:
+                printf("Return Statement not in Function Scopes\n");
+        }
+        exit(-1);
+    }
 
     print_obj(expr_obj, 0);
 

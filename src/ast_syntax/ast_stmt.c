@@ -11,7 +11,7 @@ node_set(obj->data, expr); node_clear(expr); array_append((expr)->next, obj); ob
 array_append((expr)->next, obj); expr_next = obj->data; object_free(obj);}
 #define parser_end if (parser->list->size <= parser->position)
 #define parser_get token_ptr = parser->list->data[parser->position];token = parser->list->data[parser->position]->data;
-#define analyze_start size_t current_pointing = parser->position;struct node_st *expr_next = expr; struct token_st *token = NULL;struct object_st *token_ptr = NULL;char result = SN_Status_Nothing, sub_result;
+#define analyze_start size_t current_pointing = parser->position;struct node_st *expr_next = expr; struct token_st *token = NULL;struct object_st *token_ptr = NULL;int result = SN_Status_Nothing, sub_result;
 #define analyze_end \
 end:    if (result != SN_Status_Success) {node_clear(expr);parser->position = current_pointing;} return result; \
 sub:    result = sub_result; goto end; \
@@ -20,7 +20,7 @@ err:    result = SN_Status_Error; parser->error_pos = parser->position; goto end
 
 #define check_call(call, check) {sub_result = call; if (sub_result == SN_Status_Nothing) check if (sub_result != SN_Status_Success) goto sub;}
 
-char annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
+int annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         parser_end goto eof;
@@ -48,7 +48,7 @@ char annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char assignment_stmt(struct ast_parser *parser, struct node_st *expr) {
+int assignment_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         expr_add(expr)
@@ -91,7 +91,7 @@ char assignment_stmt(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char return_stmt(struct ast_parser *parser, struct node_st *expr) {
+int return_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         parser_end goto eof;
@@ -113,7 +113,7 @@ char return_stmt(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char print_stmt(struct ast_parser *parser, struct node_st *expr) {
+int print_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         parser_end goto eof;
@@ -138,8 +138,8 @@ char print_stmt(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char simple_stmt(struct ast_parser *parser, struct node_st *expr) {
-    char result = return_stmt(parser, expr);
+int simple_stmt(struct ast_parser *parser, struct node_st *expr) {
+    int result = return_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = annotation_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
@@ -151,7 +151,7 @@ char simple_stmt(struct ast_parser *parser, struct node_st *expr) {
     return result;
 }
 
-char stmt_list(struct ast_parser *parser, struct node_st *expr) {
+int stmt_list(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -180,7 +180,7 @@ char stmt_list(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char if_stmt(struct ast_parser *parser, struct node_st *expr) {
+int if_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         parser_end goto eof;
@@ -209,7 +209,7 @@ char if_stmt(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char while_stmt(struct ast_parser *parser, struct node_st *expr) {
+int while_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         parser_end goto eof;
@@ -230,7 +230,7 @@ char while_stmt(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char for_stmt(struct ast_parser *parser, struct node_st *expr) {
+int for_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         parser_end goto eof;
@@ -259,7 +259,7 @@ char for_stmt(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char parameter_list(struct ast_parser *parser, struct node_st *expr) {
+int parameter_list(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         check_call(list_ident(parser, expr), goto end;)
@@ -270,7 +270,7 @@ char parameter_list(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char function_stmt(struct ast_parser *parser, struct node_st *expr) {
+int function_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         parser_end goto eof;
@@ -295,8 +295,8 @@ char function_stmt(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char compound_stmt(struct ast_parser *parser, struct node_st *expr) {
-    char result = if_stmt(parser, expr);
+int compound_stmt(struct ast_parser *parser, struct node_st *expr) {
+    int result = if_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = for_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
@@ -306,8 +306,8 @@ char compound_stmt(struct ast_parser *parser, struct node_st *expr) {
     return result;
 }
 
-char statement(struct ast_parser *parser, struct node_st *expr) {
-    char res = compound_stmt(parser, expr);
+int statement(struct ast_parser *parser, struct node_st *expr) {
+    int res = compound_stmt(parser, expr);
     if (res != SN_Status_Nothing) return res;
     analyze_start
     {
@@ -327,8 +327,8 @@ analyze_end
 }
 
 
-char func_body(struct ast_parser *parser, struct node_st *expr) {
-    char res = body(parser, expr, KeyWord_IS);
+int func_body(struct ast_parser *parser, struct node_st *expr) {
+    int res = body(parser, expr, KeyWord_IS);
     if (res != SN_Status_Nothing) return res;
     analyze_start
     {
@@ -350,7 +350,7 @@ char func_body(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char body(struct ast_parser *parser, struct node_st *expr, int type_scope) {
+int body(struct ast_parser *parser, struct node_st *expr, int type_scope) {
     analyze_start
     {
         parser_end goto eof;
@@ -393,7 +393,7 @@ char body(struct ast_parser *parser, struct node_st *expr, int type_scope) {
 analyze_end
 }
 
-char token_analyzer(struct ast_parser *parser, struct node_st *expr) {
+int token_analyzer(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         expr->main_type = MainType_Stmt;

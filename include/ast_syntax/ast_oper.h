@@ -15,21 +15,21 @@
 #define ExprType_AndTest        0x0a
 #define ExprType_OrTest         0x0b
 
-char u_oper(struct ast_parser *, struct node_st *);
-char m_oper(struct ast_parser *, struct node_st *);
-char a_oper(struct ast_parser *, struct node_st *);
-char shift_oper(struct ast_parser *, struct node_st *);
-char and_oper(struct ast_parser *, struct node_st *);
-char xor_oper(struct ast_parser *, struct node_st *);
-char or_oper(struct ast_parser *, struct node_st *);
+int u_oper(struct ast_parser *, struct node_st *);
+int m_oper(struct ast_parser *, struct node_st *);
+int a_oper(struct ast_parser *, struct node_st *);
+int shift_oper(struct ast_parser *, struct node_st *);
+int and_oper(struct ast_parser *, struct node_st *);
+int xor_oper(struct ast_parser *, struct node_st *);
+int or_oper(struct ast_parser *, struct node_st *);
 
-char comp_oper(struct ast_parser *, struct node_st *);
-char not_test_oper(struct ast_parser *, struct node_st *);
-char and_test_oper(struct ast_parser *, struct node_st *);
-char or_test_oper(struct ast_parser *, struct node_st *);
-char list_oper(struct ast_parser *, struct node_st *, short start, short end);
-char tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, short end);
+int comp_oper(struct ast_parser *, struct node_st *);
+int not_test_oper(struct ast_parser *, struct node_st *);
+int and_test_oper(struct ast_parser *, struct node_st *);
+int or_test_oper(struct ast_parser *, struct node_st *);
+int list_oper(struct ast_parser *, struct node_st *, short start, short end);
+int tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, short end);
 
-char list_ident(struct ast_parser *, struct node_st *);
+int list_ident(struct ast_parser *, struct node_st *);
 
 #endif //AST_OPER_H

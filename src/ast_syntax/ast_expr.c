@@ -14,10 +14,10 @@ err:    result = SN_Status_Error; parser->error_pos = parser->position; goto end
 
 #define check_call(call, check) {sub_result = call; if (sub_result == SN_Status_Nothing) check if (sub_result != SN_Status_Success) goto sub;}
 
-char scopes_expr(struct ast_parser *parser, struct node_st *expr) {
+int scopes_expr(struct ast_parser *parser, struct node_st *expr) {
     size_t current_pointing = parser->position;
     struct token_st *token = NULL;
-    char result = SN_Status_Nothing, sub_result;
+    int result = SN_Status_Nothing, sub_result;
     {
         parser_end goto eof;
         token = parser->list->data[parser->position]->data;
@@ -35,13 +35,13 @@ char scopes_expr(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char tuple_expr(struct ast_parser *parser, struct node_st *expr) {
+int tuple_expr(struct ast_parser *parser, struct node_st *expr) {
     return tuple_oper(parser, expr, Special_LCB, Special_RCB);
 }
-char list_expr(struct ast_parser *parser, struct node_st *expr) {
+int list_expr(struct ast_parser *parser, struct node_st *expr) {
     return list_oper(parser, expr, Special_LSQB, Special_RSQB);
 }
-char ident_new_expr(struct ast_parser *parser, struct node_st *expr) {
+int ident_new_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
     if (token->type != TokenType_Identifier) return SN_Status_Nothing;
@@ -53,7 +53,7 @@ char ident_new_expr(struct ast_parser *parser, struct node_st *expr) {
     string_set_str(expr->data->data, token->data, token->size);
     return SN_Status_Success;
 }
-char ident_get_expr(struct ast_parser *parser, struct node_st *expr) {
+int ident_get_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
     if (token->type != TokenType_Identifier) return SN_Status_Nothing;
@@ -65,7 +65,7 @@ char ident_get_expr(struct ast_parser *parser, struct node_st *expr) {
     string_set_str(expr->data->data, token->data, token->size);
     return SN_Status_Success;
 }
-char bool_expr(struct ast_parser *parser, struct node_st *expr) {
+int bool_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
     if (token->type != TokenType_KeyWords || (token->subtype != KeyWord_FALSE && token->subtype != KeyWord_TRUE))
@@ -79,7 +79,7 @@ char bool_expr(struct ast_parser *parser, struct node_st *expr) {
     else ((struct bool_st *)expr->data->data)->data = 1;
     return SN_Status_Success;
 }
-char number_expr(struct ast_parser *parser, struct node_st *expr) {
+int number_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
     if (token->type != TokenType_Int) return SN_Status_Nothing;
@@ -98,7 +98,7 @@ char number_expr(struct ast_parser *parser, struct node_st *expr) {
         ((struct integer_st *)expr->data->data)->data = strtol(token->data, NULL, 10);
     return SN_Status_Success;
 }
-char string_expr(struct ast_parser *parser, struct node_st *expr) {
+int string_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
     if (token->type != TokenType_String) return SN_Status_Nothing;
@@ -110,7 +110,7 @@ char string_expr(struct ast_parser *parser, struct node_st *expr) {
     string_set_str(expr->data->data, token->data, token->size);
     return SN_Status_Success;
 }
-char null_expr(struct ast_parser *parser, struct node_st *expr) {
+int null_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
     if (token->type != TokenType_KeyWords || token->subtype != KeyWord_EMPTY) return SN_Status_Nothing;
@@ -120,8 +120,8 @@ char null_expr(struct ast_parser *parser, struct node_st *expr) {
     expr->data = object_new();
     return SN_Status_Success;
 }
-char literal_expr(struct ast_parser *parser, struct node_st *expr) {
-    char result = null_expr(parser, expr);
+int literal_expr(struct ast_parser *parser, struct node_st *expr) {
+    int result = null_expr(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = string_expr(parser, expr);
     if (result != SN_Status_Nothing) return result;
@@ -134,19 +134,19 @@ char literal_expr(struct ast_parser *parser, struct node_st *expr) {
     result = tuple_expr(parser, expr);
     return result;
 }
-char atom_expr(struct ast_parser *parser, struct node_st *expr) {
-    char result = ident_get_expr(parser, expr);
+int atom_expr(struct ast_parser *parser, struct node_st *expr) {
+    int result = ident_get_expr(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = literal_expr(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = scopes_expr(parser, expr);
     return result;
 }
-char primary_expr(struct ast_parser *parser, struct node_st *expr) {
+int primary_expr(struct ast_parser *parser, struct node_st *expr) {
     size_t current_pointing = parser->position;
     struct node_st *expr_next = expr;
     struct token_st *token = NULL;
-    char result = SN_Status_Nothing, sub_result;
+    int result = SN_Status_Nothing, sub_result;
     {
         check_call(atom_expr(parser, expr_next), goto end;)
         while(parser->position < parser->list->size){

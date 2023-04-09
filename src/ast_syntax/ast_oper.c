@@ -7,7 +7,7 @@ node_set(obj->data, expr); node_clear(expr); array_append((expr)->next, obj); ob
 array_append((expr)->next, obj); expr_next = obj->data; object_free(obj);}
 #define parser_end if (parser->list->size <= parser->position)
 #define parser_get token_ptr = parser->list->data[parser->position];token = parser->list->data[parser->position]->data;
-#define analyze_start size_t current_pointing = parser->position;struct node_st *expr_next = expr; struct token_st *token = NULL;struct object_st *token_ptr = NULL;char result = SN_Status_Nothing, sub_result;
+#define analyze_start size_t current_pointing = parser->position;struct node_st *expr_next = expr; struct token_st *token = NULL;struct object_st *token_ptr = NULL;int result = SN_Status_Nothing, sub_result;
 #define analyze_end \
 end:    if (result != SN_Status_Success) {node_clear(expr);parser->position = current_pointing;} return result; \
 sub:    result = sub_result; goto end; \
@@ -16,7 +16,7 @@ err:    result = SN_Status_Error; parser->error_pos = parser->position; goto end
 
 #define check_call(call, check) {sub_result = call; if (sub_result == SN_Status_Nothing) check if (sub_result != SN_Status_Success) goto sub;}
 
-char u_oper(struct ast_parser *parser, struct node_st *expr) {
+int u_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         while (parser->position < parser->list->size) {
@@ -42,7 +42,7 @@ char u_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char m_oper(struct ast_parser *parser, struct node_st *expr) {
+int m_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -74,7 +74,7 @@ char m_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char a_oper(struct ast_parser *parser, struct node_st *expr) {
+int a_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -105,7 +105,7 @@ char a_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char shift_oper(struct ast_parser *parser, struct node_st *expr) {
+int shift_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -136,7 +136,7 @@ char shift_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char and_oper(struct ast_parser *parser, struct node_st *expr) {
+int and_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -165,7 +165,7 @@ char and_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char xor_oper(struct ast_parser *parser, struct node_st *expr) {
+int xor_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -194,7 +194,7 @@ char xor_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char or_oper(struct ast_parser *parser, struct node_st *expr) {
+int or_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -224,7 +224,7 @@ char or_oper(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 
-char comp_oper(struct ast_parser *parser, struct node_st *expr) {
+int comp_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -257,7 +257,7 @@ char comp_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char not_test_oper(struct ast_parser *parser, struct node_st *expr) {
+int not_test_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         while (parser->position < parser->list->size) {
@@ -280,7 +280,7 @@ char not_test_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char and_test_oper(struct ast_parser *parser, struct node_st *expr) {
+int and_test_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -308,7 +308,7 @@ char and_test_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char or_test_oper(struct ast_parser *parser, struct node_st *expr) {
+int or_test_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         int times = 0;
@@ -336,7 +336,7 @@ char or_test_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-char tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, short end) {
+int tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, short end) {
     analyze_start
     {
         parser_end goto eof;
@@ -358,7 +358,7 @@ char tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, sh
         while (parser->position < parser->list->size) {
             expr_add(expr)
 
-            char res = assignment_stmt(parser, expr_next);
+            int res = assignment_stmt(parser, expr_next);
 
             if (res == SN_Status_Nothing) {
                 check_call(ident_new_expr(parser, expr_next), goto err;)
@@ -378,7 +378,7 @@ char tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, sh
     }
 analyze_end
 }
-char list_oper(struct ast_parser *parser, struct node_st *expr, short start, short end) {
+int list_oper(struct ast_parser *parser, struct node_st *expr, short start, short end) {
     analyze_start
     {
         parser_end goto eof;
@@ -416,7 +416,7 @@ char list_oper(struct ast_parser *parser, struct node_st *expr, short start, sho
 analyze_end
 }
 
-char list_ident(struct ast_parser *parser, struct node_st *expr) {
+int list_ident(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         parser_end goto eof;
