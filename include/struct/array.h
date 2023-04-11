@@ -20,6 +20,8 @@ void array_resize(struct array_st *, size_t);
 void array_append(struct array_st *, struct object_st* );
 void array_concat(struct array_st *, const struct array_st *);
 void array_add_new(struct array_st *, struct object_type *);
+void array_remove_last(struct array_st *);
+struct object_st *array_get_last(struct array_st *);
 
 void array_sort(struct array_st *);
 

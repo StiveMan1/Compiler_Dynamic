@@ -381,44 +381,60 @@ void print_node(const struct node_st *res, int size) {
     printf("\n");
     if (res->data != NULL) {
         PRINT_PREF
-        PRINT_NEXT(!array_is_null(res->tokens) || !array_is_null(res->next) || !(res->size == 0))
+        PRINT_NEXT(!array_is_null(res->tokens) || !array_is_null(res->next) || res->closure != NULL)
         print_obj(res->data, size + 2);
     }
     if (!array_is_null(res->tokens)) {
         PRINT_PREF
-        PRINT_NEXT(!array_is_null(res->next) || !(res->size == 0))
+        PRINT_NEXT(!array_is_null(res->next) || res->closure != NULL)
         print_array(res->tokens, size + 2);
     }
     if (!array_is_null(res->next)) {
         PRINT_PREF
-        PRINT_NEXT(!(res->size == 0))
+        PRINT_NEXT(res->closure != NULL)
         print_array(res->next, size + 2);
     }
-    if(res->size != 0) {
-        PRINT_PREF
-        PRINT_NEXT(1)
-        size += 2;
-        printf("closure[0] (%zu):\n", res->size);
-        for (int i = 0; i < res->size; i++) {
-            PRINT_PREF
-            PRINT_NEXT(i + 1 < res->size)
-            print_obj(res->closure[0][i], size + 2);
-        }
-
-
-        size -= 2;
+    if (res->closure != NULL) {
         PRINT_PREF
         PRINT_NEXT(0)
-        size += 2;
-        printf("closure[1] (%zu):\n", res->size);
-        for (int i = 0; i < res->size; i++) {
-            PRINT_PREF
-            PRINT_NEXT(i + 1 < res->size)
-            print_obj(res->closure[1][i], size + 2);
-        }
+        print_obj(res->closure, size + 2);
     }
 }
 
+void print_op_closure(const struct op_closure *res, int size) {
+    printf("op closure (%zu):\n", res->size);
+    if(res->size != 0){
+        PRINT_PREF
+        PRINT_NEXT(1)
+        printf("[0] :\n");
+        size += 2;
+        for (int i = 0; i < res->size; i++) {
+            PRINT_PREF
+            PRINT_NEXT(i + 1 < res->size)
+            print_obj(res->data[0][i], size + 2);
+        }
+        size -= 2;
+        PRINT_PREF
+        PRINT_NEXT(0)
+        printf("[1] :\n");
+        size += 2;
+        for (int i = 0; i < res->size; i++) {
+            PRINT_PREF
+            PRINT_NEXT(i + 1 < res->size)
+            print_obj(res->data[1][i], size + 2);
+        }
+    }
+
+}
+void print_op_attrib(const struct op_attrib *res, int size) {
+    printf("Attrib : ");
+    print_str(res->name);
+    if (res->data != NULL) {
+        PRINT_PREF
+        PRINT_NEXT(0)
+        print_obj(res->data, size + 2);
+    }
+}
 void print_obj(const struct object_st *res, int size) {
 //    printf("object : (%d)\n", res->counter);
 //    PRINT_PREF
@@ -432,6 +448,8 @@ void print_obj(const struct object_st *res, int size) {
     else if (res->type == ARRAY_TYPE) return print_array(res->data, size);
     else if (res->type == TOKEN_TYPE) return print_token(res->data, size);
     else if (res->type == NODE_TYPE) return print_node(res->data, size);
+    else if (res->type == OP_ATTRIB_TYPE) return print_op_attrib(res->data, size + 2);
+    else if (res->type == OP_CLOSURE_TYPE) return print_op_closure(res->data, size + 2);
 }
 
 int main() {

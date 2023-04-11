@@ -15,12 +15,10 @@ struct node_st{
     short type;
 
     struct object_st *data;
+    struct object_st *closure;
 
     struct array_st *next;
     struct array_st *tokens;
-
-    struct object_st **closure[2];
-    size_t max_size, size;
 };
 
 
@@ -28,8 +26,5 @@ struct node_st *node_new();
 void node_set(struct node_st *, const struct node_st *);
 void node_clear(struct node_st *);
 void node_free(struct node_st *);
-
-void node_closure_resize(struct node_st *, size_t);
-void node_closure_append(struct node_st *, struct object_st *, struct object_st *);
 
 #endif //AST_NODE_H

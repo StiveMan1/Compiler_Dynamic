@@ -57,7 +57,7 @@ void array_resize(struct array_st *res, size_t size) {
     res->size = size;
 }
 void array_append(struct array_st *res, struct object_st *obj) {
-    if (res == NULL || obj == NULL) return;
+    if (res == NULL) return;
 
     array_resize(res, res->size + 1);
     res->data[res->size - 1] = object_copy(obj);
@@ -77,6 +77,14 @@ void array_add_new(struct array_st *res, struct object_type *type) {
     array_resize(res, res->size + 1);
     res->data[res->size - 1] = object_new();
     object_set_type(res->data[res->size - 1], type);
+}
+void array_remove_last(struct array_st *res) {
+    if(res->size <= 0) return;
+    array_resize(res, res->size - 1);
+}
+struct object_st *array_get_last(struct array_st *res) {
+    if(res->size <= 0) return NULL;
+    return res->data[res->size - 1];
 }
 
 

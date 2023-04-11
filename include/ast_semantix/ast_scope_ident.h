@@ -21,7 +21,7 @@ struct sm_state {
 };
 struct sm_state *sm_state_new();
 void sm_state_free(struct sm_state *);
-void sm_state_save_type(struct sm_state *, struct object_st *);
+void sm_state_save_type(struct sm_state *, struct node_st *);
 void sm_state_remove_frame(struct sm_state *);
 
 struct object_st *sm_state_set_ident(struct sm_state *, struct object_st *);
