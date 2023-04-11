@@ -10,6 +10,7 @@
 #define StmtType_Try            0x06
 #define StmtType_Params         0x07
 #define StmtType_Func           0x08
+#define StmtType_Func_Body      0x09
 #define StmtType_Annot          0x0a
 #define StmtType_Assign         0x0b
 #define StmtType_Return         0x0c

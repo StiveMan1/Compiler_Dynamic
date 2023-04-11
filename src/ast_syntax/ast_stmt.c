@@ -284,9 +284,6 @@ int function_stmt(struct ast_parser *parser, struct node_st *expr) {
         check_call(ident_new_expr(parser, expr_next), goto err;)
 
         expr_add(expr)
-        check_call(parameter_list(parser, expr_next), goto err;)
-
-        expr_add(expr)
         check_call(func_body(parser, expr_next), goto err;)
 
         result = SN_Status_Success;
@@ -326,7 +323,7 @@ analyze_end
 }
 
 
-int func_body(struct ast_parser *parser, struct node_st *expr) {
+int __func_body(struct ast_parser *parser, struct node_st *expr) {
     int res = body(parser, expr, KeyWord_IS);
     if (res != SN_Status_Nothing) return res;
     analyze_start
@@ -343,6 +340,22 @@ int func_body(struct ast_parser *parser, struct node_st *expr) {
         parser_get
         if (token->type != TokenType_Special || token->subtype != Special_SEMI) goto err;
         parser->position++;
+
+        result = SN_Status_Success;
+    }
+analyze_end
+}
+int func_body(struct ast_parser *parser, struct node_st *expr) {
+    analyze_start
+    {
+        expr->main_type = MainType_Stmt;
+        expr->type = StmtType_Func_Body;
+
+        expr_add(expr)
+        check_call(parameter_list(parser, expr_next), goto err;)
+
+        expr_add(expr)
+        check_call(__func_body(parser, expr_next), goto err;)
 
         result = SN_Status_Success;
     }
