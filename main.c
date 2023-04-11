@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include "struct.h"
 #include "lexical_analysis.h"
 #include "ast_semantic.h"
@@ -45,14 +46,6 @@ void print_array(const struct array_st *res, int size) {
     }
 }
 
-void print_tuple(const struct tuple_st *res, int size) {
-    printf("array (%zu):\n", res->size);
-    for (int i = 0; i < res->size; i++) {
-        PRINT_PREF
-        PRINT_NEXT(i + 1 < res->size)
-        print_obj(res->data[i], size + 2);
-    }
-}
 
 void print_token(const struct token_st *res, int size) {
     printf("Token : ");
@@ -365,6 +358,9 @@ void print_node(const struct node_st *res, int size) {
             case StmtType_Func:
                 printf("StmtType_Func ");
                 break;
+            case StmtType_Decl:
+                printf("StmtType_Decl ");
+                break;
             case StmtType_Annot:
                 printf("StmtType_Annot ");
                 break;
@@ -434,7 +430,6 @@ void print_obj(const struct object_st *res, int size) {
     else if (res->type == BOOL_TYPE) return print_bool(res->data);
     else if (res->type == REAL_TYPE) return print_real(res->data);
     else if (res->type == ARRAY_TYPE) return print_array(res->data, size);
-    else if (res->type == TUPLE_TYPE) return print_tuple(res->data, size);
     else if (res->type == TOKEN_TYPE) return print_token(res->data, size);
     else if (res->type == NODE_TYPE) return print_node(res->data, size);
 }

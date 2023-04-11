@@ -1,5 +1,4 @@
 #include "ast_analyze.h"
-#include "lexical_analysis.h"
 
 #define expr_cast(expr) { struct object_st *obj = object_new(); object_set_type(obj, NODE_TYPE); \
 node_set(obj->data, expr); node_clear(expr); array_append((expr)->next, obj); object_free(obj); }

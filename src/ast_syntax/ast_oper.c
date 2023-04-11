@@ -1,5 +1,4 @@
 #include "ast_analyze.h"
-#include "lexical_analysis.h"
 
 #define expr_cast(expr) { struct object_st *obj = object_new(); object_set_type(obj, NODE_TYPE); \
 node_set(obj->data, expr); node_clear(expr); array_append((expr)->next, obj); object_free(obj); }
@@ -358,11 +357,7 @@ int tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, sho
         while (parser->position < parser->list->size) {
             expr_add(expr)
 
-            int res = assignment_stmt(parser, expr_next);
-
-            if (res == SN_Status_Nothing) {
-                check_call(ident_new_expr(parser, expr_next), goto err;)
-            }
+            check_call(annotation_stmt(parser, expr_next), goto err;)
             parser_end goto err;
             parser_get
             if (token->type == TokenType_Special && token->subtype == end) {

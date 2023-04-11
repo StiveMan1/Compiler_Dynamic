@@ -10,7 +10,6 @@
 #include "struct/real.h"
 #include "struct/array.h"
 #include "struct/tuple.h"
-#include "struct/tuplehash.h"
 #include "struct/la_parser.h"
 #include "struct/token.h"
 #include "struct/ast_node.h"

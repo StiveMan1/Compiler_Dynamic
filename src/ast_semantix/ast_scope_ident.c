@@ -91,6 +91,7 @@ void semantic_scan_fields(struct sm_state *state, struct object_st *obj) {
                 return;
             }
             case PrimType_Ident_new: {
+                print_obj(node->data, 0);
                 struct object_st *res = sm_state_set_ident(state, node->data);
                 object_free(node->data);
                 node->data = res;

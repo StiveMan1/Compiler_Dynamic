@@ -1,9 +1,5 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "misc-no-recursion"
-
 #include <stdio.h>
 #include "ast_analyze.h"
-#include "lexical_analysis.h"
 
 #define expr_cast(expr) { struct object_st *obj = object_new(); object_set_type(obj, NODE_TYPE); \
 node_set(obj->data, expr); node_clear(expr); array_append((expr)->next, obj); object_free(obj); }
@@ -23,6 +19,27 @@ err:    result = SN_Status_Error; parser->error_pos = parser->position; goto end
 int annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
+        expr_add(expr)
+        check_call(ident_new_expr(parser, expr_next), goto end;)
+
+        expr->main_type = MainType_Stmt;
+        expr->type = StmtType_Annot;
+        result = SN_Status_Success;
+
+        parser_end goto end;
+        parser_get
+        if (token->type != TokenType_Special || token->subtype != Special_EQ) goto end;
+        parser->position++;
+
+        expr_add(expr)
+        check_call(or_test_oper(parser, expr_next), goto err;)
+    }
+analyze_end
+}
+
+int declaration_stmt(struct ast_parser *parser, struct node_st *expr) {
+    analyze_start
+    {
         parser_end goto eof;
         parser_get
         if (token->type != TokenType_KeyWords || token->subtype != KeyWord_VAR)
@@ -33,7 +50,7 @@ int annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
         check_call(ident_new_expr(parser, expr_next), goto err;)
 
         expr->main_type = MainType_Stmt;
-        expr->type = StmtType_Annot;
+        expr->type = StmtType_Decl;
         result = SN_Status_Success;
 
         parser_end goto end;
@@ -140,7 +157,7 @@ analyze_end
 int simple_stmt(struct ast_parser *parser, struct node_st *expr) {
     int result = return_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
-    result = annotation_stmt(parser, expr);
+    result = declaration_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = assignment_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
@@ -419,5 +436,3 @@ int token_analyzer(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
-#pragma clang diagnostic pop

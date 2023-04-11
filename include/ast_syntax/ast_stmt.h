@@ -6,6 +6,7 @@
 
 #define StmtType_If             0x01
 #define StmtType_While          0x02
+#define StmtType_Decl           0x03
 #define StmtType_For            0x04
 #define StmtType_Try            0x06
 #define StmtType_Params         0x07
@@ -18,6 +19,7 @@
 #define StmtType_Print          0x12
 
 int annotation_stmt(struct ast_parser *, struct node_st *);
+int declaration_stmt(struct ast_parser *, struct node_st *);
 int assignment_stmt(struct ast_parser *, struct node_st *);
 int return_stmt(struct ast_parser *, struct node_st *);
 int print_stmt(struct ast_parser *, struct node_st *);
