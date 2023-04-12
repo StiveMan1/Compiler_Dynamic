@@ -1,5 +1,5 @@
-#ifndef COMPILER_DYNAMIC_AST_SCOPE_IDENT_H
-#define COMPILER_DYNAMIC_AST_SCOPE_IDENT_H
+#ifndef AST_SCOPE_IDENT_H
+#define AST_SCOPE_IDENT_H
 
 #include "struct.h"
 
@@ -29,4 +29,4 @@ struct object_st *sm_state_get_ident(struct sm_state *, struct object_st *);
 
 int semantic_scan(struct object_st *);
 
-#endif //COMPILER_DYNAMIC_AST_SCOPE_IDENT_H
+#endif //AST_SCOPE_IDENT_H

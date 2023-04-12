@@ -5,7 +5,7 @@
 #ifndef TUPLEHASH_H
 #define TUPLEHASH_H
 
-#include "struct.h"
+#include "basic.h"
 
 #include <stdbool.h>
 #include <stddef.h>

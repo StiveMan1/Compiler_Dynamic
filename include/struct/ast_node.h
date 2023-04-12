@@ -1,7 +1,7 @@
 #ifndef AST_NODE_H
 #define AST_NODE_H
 
-#include "struct.h"
+#include "basic.h"
 
 #define ExprType_None           0x00
 

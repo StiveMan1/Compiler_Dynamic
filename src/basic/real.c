@@ -1,4 +1,4 @@
-#include "struct.h"
+#include "basic.h"
 
 struct object_type real_type = {REAL_OP};
 // Standard operations

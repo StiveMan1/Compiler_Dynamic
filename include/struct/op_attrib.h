@@ -1,7 +1,7 @@
 #ifndef OP_ATTRIB_H
 #define OP_ATTRIB_H
 
-#include "struct.h"
+#include "basic.h"
 
 struct op_attrib {
     struct string_st *name;

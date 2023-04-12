@@ -1,4 +1,4 @@
-#include "struct.h"
+#include "basic.h"
 
 struct object_type bool_type = {BOOL_OP};
 // Standard operations

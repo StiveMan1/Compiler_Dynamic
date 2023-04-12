@@ -1,7 +1,7 @@
 #ifndef REAL_H
 #define REAL_H
 
-#include "struct.h"
+#include "basic.h"
 
 struct real_st{
     double data;

@@ -1,4 +1,4 @@
-#include "struct.h"
+#include "basic.h"
 
 struct object_type integer_type = {INTEGER_OP};
 // Standard operations

@@ -1,7 +1,7 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
-#include "struct.h"
+#include "basic.h"
 
 struct array_st{
     struct object_st **data;

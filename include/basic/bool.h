@@ -1,7 +1,7 @@
 #ifndef BOOL_H
 #define BOOL_H
 
-#include "struct.h"
+#include "basic.h"
 
 struct bool_st{
     char data;

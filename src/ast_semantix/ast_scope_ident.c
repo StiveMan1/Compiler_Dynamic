@@ -42,7 +42,7 @@ struct object_st *sm_state_set_ident(struct sm_state *res, struct object_st *obj
 }
 struct object_st *sm_state_get_ident(struct sm_state *res, struct object_st *obj) {
     struct array_st *array;
-    struct op_closure *closure;
+    struct darray_st *closure;
 
     size_t i = res->memory_frame->size;
     struct object_st *ptr = NULL;
@@ -69,7 +69,7 @@ struct object_st *sm_state_get_ident(struct sm_state *res, struct object_st *obj
         object_set_type(new_obj, OP_ATTRIB_TYPE);
         op_attrib_set_name(new_obj->data, obj->data);
 
-        op_closure_append(closure, new_obj, ptr);
+        darray_append(closure, new_obj, ptr);
         array_append(array, new_obj);
 
         object_free(ptr);
@@ -113,7 +113,8 @@ void semantic_scan_fields(struct sm_state *state, struct object_st *obj) {
                 break;
             case StmtType_Func_Body:
                 sm_state_save_type(state, node);
-
+                object_set_type(node->closure, DARRAY_TYPE);
+                sm_state_save_type(state, node);
                 state->type = ScopeType_Func;
                 break;
             case StmtType_For:
@@ -151,6 +152,7 @@ int semantic_scan(struct object_st *expr_obj) {
 
         object_free(obj);
     }
+    int err = state->error;
     sm_state_free(state);
-    return state->error;
+    return err;
 }

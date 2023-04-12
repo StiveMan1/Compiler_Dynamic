@@ -1,4 +1,4 @@
-#include "struct.h"
+#include "basic.h"
 
 
 struct object_type object_type = {OBJECT_OP};

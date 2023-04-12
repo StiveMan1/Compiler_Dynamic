@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include "struct.h"
+#include "basic.h"
 
 static void *(*_malloc)(size_t) = NULL;
 static void *(*_realloc)(void *, size_t) = NULL;

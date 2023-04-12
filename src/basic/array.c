@@ -1,4 +1,4 @@
-#include "struct.h"
+#include "basic.h"
 
 struct object_type array_type = {ARRAY_OP};
 // Standard operations

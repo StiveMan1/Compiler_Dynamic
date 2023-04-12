@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include "struct.h"
+#include "basic.h"
 
 #define TokenType_None         0x00
 #define TokenType_KeyWords     0x01

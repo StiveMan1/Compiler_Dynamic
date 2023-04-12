@@ -1,34 +1,51 @@
-#include "struct.h"
+#include "basic.h"
 
-struct object_type op_closure_type = {OP_CLOSURE_OP};
+struct object_type darray_type = {DARRAY_OP};
 
-struct op_closure *op_closure_new(){
-    struct op_closure *res = malloc(OP_CLOSURE_SIZE);
+struct darray_st *darray_new() {
+    struct darray_st *res = malloc(DARRAY_SIZE);
     res->data[0] = res->data[1] = NULL;
     res->size = res->max_size = 0;
     return res;
 }
-void op_closure_set(struct op_closure *res, const struct op_closure *a){
-    op_closure_closure_resize(res, 0);
-    op_closure_closure_resize(res, a->size);
+void darray_set(struct darray_st *res, const struct darray_st *a) {
+    darray_resize(res, 0);
+    darray_resize(res, a->size);
     for (size_t i = 0; i < a->size; i++) {
         res->data[0][i] = object_copy(a->data[0][i]);
         res->data[1][i] = object_copy(a->data[1][i]);
     }
 }
-void op_closure_clear(struct op_closure *res){
-    op_closure_closure_resize(res, 0);
+void darray_clear(struct darray_st *res) {
+    darray_resize(res, 0);
 }
-void op_closure_free(struct op_closure *res){
-    op_closure_closure_resize(res, 0);
-    if(res->max_size != 0) {
+void darray_free(struct darray_st *res) {
+    darray_resize(res, 0);
+    if (res->max_size != 0) {
         free(res->data[0]);
         free(res->data[1]);
     }
     free(res);
 }
+int darray_cmp(const struct darray_st *obj1, const struct darray_st *obj2) {
+    if (obj1->size > obj2->size) return 1;
+    if (obj1->size < obj2->size) return -1;
+    int res_cmp_sub;
+    for (size_t i = 0; i < obj1->size; i++) {
+        res_cmp_sub = object_cmp(obj1->data[0][i], obj2->data[0][i]);
+        if (res_cmp_sub == -1) return -1;
+        if (res_cmp_sub == 1) return 1;
+        res_cmp_sub = object_cmp(obj1->data[1][i], obj2->data[1][i]);
+        if (res_cmp_sub == -1) return -1;
+        if (res_cmp_sub == 1) return 1;
+    }
+    return 0;
+}
+int darray_is_null(const struct darray_st *res) {
+    return (res == NULL || res->size == 0);
+}
 
-void op_closure_closure_resize(struct op_closure *res, size_t size) {
+void darray_resize(struct darray_st *res, size_t size) {
     if (res->data[0] == NULL && size != 0) {
         res->max_size = size;
         res->data[0] = malloc(POINTER_SIZE * size);
@@ -56,11 +73,11 @@ void op_closure_closure_resize(struct op_closure *res, size_t size) {
     }
     res->size = size;
 }
-void op_closure_append(struct op_closure *res, struct object_st *ptr, struct object_st *ref) {
+void darray_append(struct darray_st *res, struct object_st *ptr, struct object_st *ref) {
     if (res == NULL || ptr == NULL || ref == NULL) return;
 
     size_t pos = res->size;
-    op_closure_closure_resize(res, pos + 1);
+    darray_resize(res, pos + 1);
     res->data[0][pos] = object_copy(ptr);
     res->data[1][pos] = object_copy(ref);
 }

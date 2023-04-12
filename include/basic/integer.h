@@ -1,7 +1,7 @@
 #ifndef INTEGER_H
 #define INTEGER_H
 
-#include "struct.h"
+#include "basic.h"
 
 struct integer_st{
     long int data;

@@ -1,4 +1,4 @@
-#include "struct.h"
+#include "basic.h"
 
 struct object_type string_type = {STRING_OP};
 // Standard operations
