@@ -22,6 +22,16 @@ void string_resize(struct string_st *, size_t);
 void string_set_str(struct string_st *, const char *, size_t);
 void string_concat(struct string_st *, const struct string_st *);
 
+// Math Methods
+void string__mul(struct object_st *, const struct string_st *, const struct object_st *);
+void string__add(struct object_st *, const struct string_st *, const struct object_st *);
+
+// Convert Methods
+void string__bool(struct object_st *, const struct string_st *);
+void string__int(struct object_st *, const struct string_st *);
+void string__float(struct object_st *, const struct string_st *);
+void string__str(struct object_st *, const struct string_st *);
+
 // Print
 void print_str(const struct string_st *);
 

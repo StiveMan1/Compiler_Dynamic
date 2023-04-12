@@ -32,6 +32,10 @@ void op_attrib_new_data(struct op_attrib *res) {
     if (res->data != NULL) object_free(res->data);
     res->data = object_new();
 }
+void op_attrib_set_data(struct op_attrib *res, struct object_st *data) {
+    if (res->data != NULL) object_free(res->data);
+    res->data = object_copy(data);
+}
 int op_attrib_cmp_name(struct op_attrib *res, struct string_st *name) {
     return string_cmp(res->name, name);
 }

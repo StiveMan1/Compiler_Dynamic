@@ -1,6 +1,9 @@
 #include "basic.h"
 
-struct object_type string_type = {STRING_OP};
+struct object_math_op string_math = {NULL, NULL, METHOD_MATH & string__mul, METHOD_MATH & string__add};
+struct object_convert string_convert = {METHOD_CONVERT & string__bool, METHOD_CONVERT & string__int,
+                                        METHOD_CONVERT & string__float, METHOD_CONVERT & string__str};
+struct object_type string_type = {STRING_OP, &string_math, &string_convert};
 // Standard operations
 struct string_st *string_new() {
     struct string_st *res = malloc(STRING_SIZE);
@@ -59,4 +62,37 @@ void string_concat(struct string_st *res, const struct string_st *a) {
     size_t _size = res->size;
     string_resize(res, res->size + a->size);
     memcpy(res->data + _size, a->data, a->size);
+}
+
+// Math Methods
+void string__mul(struct object_st *res, const struct string_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
+    if (obj2 == NULL || obj2->type != INTEGER_TYPE) return;
+    object_set_type(res, STRING_TYPE);
+    unsigned int count = ((struct integer_st *)obj2->data)->data;
+    for (unsigned int i = 0; i < count; i++)
+        string_concat(res->data, obj1);
+}
+void string__add(struct object_st *res, const struct string_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
+    if (obj2 == NULL || obj2->type != STRING_TYPE) return;
+    object_set_type(res, STRING_TYPE);
+    string_set(res->data, obj1);
+    string_concat(res->data, obj2->data);
+}
+
+// Convert Methods
+void string__bool(struct object_st *res, const struct string_st *obj) {
+    object_set_type(res, BOOL_TYPE);
+    ((struct bool_st *)res->data)->data = (obj->size != 0);
+}
+void string__int(struct object_st *res, const struct string_st *obj) {
+    // TODO
+}
+void string__float(struct object_st *res, const struct string_st *obj) {
+    // TODO
+}
+void string__str(struct object_st *res, const struct string_st *obj) {
+    object_set_type(res, STRING_TYPE);
+    string_set(res->data, obj);
 }

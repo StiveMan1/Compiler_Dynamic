@@ -1,7 +1,7 @@
 #ifndef AST_PARSER_H
 #define AST_PARSER_H
 
-#include "basic.h"
+#include "struct.h"
 #include "la_parser.h"
 
 #define MaxBracketNesting 256

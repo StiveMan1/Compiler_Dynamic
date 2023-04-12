@@ -1,6 +1,8 @@
 #include "basic.h"
 
-struct object_type array_type = {ARRAY_OP};
+struct object_math_op array_math = {NULL, NULL, METHOD_MATH &array__mul, METHOD_MATH &array__add};
+struct object_convert array_convert = {NULL, NULL, NULL, METHOD_CONVERT &array__str};
+struct object_type array_type = {ARRAY_OP, &array_math,  &array_convert};
 // Standard operations
 struct array_st *array_new() {
     struct array_st *res = malloc(ARRAY_SIZE);
@@ -123,4 +125,26 @@ void array_sort(struct array_st *res) {
     array_resize(temp, res->size);
     array_sort_split(0, res->size, res->data, temp->data);
     array_free(temp);
+}
+
+// Math Methods
+void array__mul(struct object_st *res, const struct array_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
+    if (obj2 == NULL || obj2->type != INTEGER_TYPE) return;
+    object_set_type(res, STRING_TYPE);
+    unsigned int count = ((struct integer_st *)obj2->data)->data;
+    for (unsigned int i = 0; i < count; i++)
+        array_concat(res->data, obj1);
+}
+void array__add(struct object_st *res, const struct array_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
+    if (obj2 == NULL || obj2->type != ARRAY_TYPE) return;
+    object_set_type(res, ARRAY_TYPE);
+    array_set(res->data, obj1);
+    array_concat(res->data, obj2->data);
+}
+
+// Convert Methods
+void array__str(struct object_st *res, const struct array_st *obj){
+    //TODO
 }
