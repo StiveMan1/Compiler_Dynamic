@@ -24,10 +24,11 @@
 #define BlockType_Delete_Scope  0x23
 #define BlockType_Return        0x33
 
-#define BlockType_array          0x41
+#define BlockType_List          0x41
 #define BlockType_Attr          0x42
 #define BlockType_Subs          0x43
 #define BlockType_Call          0x44
+#define BlockType_Print         0x45
 
 
 void run_an(struct op_state *state, struct object_st *object) {
@@ -42,7 +43,7 @@ void run_an(struct op_state *state, struct object_st *object) {
             case PrimType_List: {
                 array_add_new(code_operations, OP_BLOCK_TYPE);
                 new_block = array_get_last(code_operations)->data;
-                new_block->type = BlockType_array;
+                new_block->type = BlockType_List;
                 new_block->count = temp_array->size;
 
                 for (size_t i = 0; i < temp_array->size; i++) {
@@ -52,7 +53,7 @@ void run_an(struct op_state *state, struct object_st *object) {
             }
             case PrimType_Ident_get: {
                 attrib = node->data->data;
-                print_obj(attrib->data, 0);
+//                print_obj(attrib->data, 0);
                 array_append(state->temp_memory, attrib->data);
                 break;
             }
@@ -68,14 +69,15 @@ void run_an(struct op_state *state, struct object_st *object) {
                 break;
             }
             case PrimType_Attrib: {
-                array_add_new(code_operations, OP_BLOCK_TYPE);
-                new_block = array_get_last(code_operations)->data;
-                new_block->type = BlockType_Attr;
-                new_block->data1 = object_copy(node->data);
-
-                for (size_t i = 0; i < temp_array->size; i++) {
-                    array_append(code_operations, temp_array->data[i]);
-                }
+                printf("PrimType_Attrib\n");
+//                array_add_new(code_operations, OP_BLOCK_TYPE);
+//                new_block = array_get_last(code_operations)->data;
+//                new_block->type = BlockType_Attr;
+//                new_block->data1 = object_copy(node->data);
+//
+//                for (size_t i = 0; i < temp_array->size; i++) {
+//                    array_append(code_operations, temp_array->data[i]);
+//                }
                 break;
             }
             case PrimType_Subscript: {
@@ -166,13 +168,14 @@ void run_an(struct op_state *state, struct object_st *object) {
                 break;
             }
             case StmtType_While: {
-                array_add_new(code_operations, OP_BLOCK_TYPE);
-                new_block = array_get_last(code_operations)->data;
-                new_block->type = BlockType_If_del;
-                new_block->data1 = object_copy(object);
-                new_block->data2 = object_copy(temp_array->data[1]);
-
-                array_append(code_operations, temp_array->data[0]);
+                printf("StmtType_While\n");
+//                array_add_new(code_operations, OP_BLOCK_TYPE);
+//                new_block = array_get_last(code_operations)->data;
+//                new_block->type = BlockType_If_del;
+//                new_block->data1 = object_copy(object);
+//                new_block->data2 = object_copy(temp_array->data[1]);
+//
+//                array_append(code_operations, temp_array->data[0]);
                 break;
             }
             case StmtType_Func_Body: {
@@ -180,22 +183,7 @@ void run_an(struct op_state *state, struct object_st *object) {
                 op_object_set_function(array_get_last(state->temp_memory)->data, node);
                 break;
             }
-            case StmtType_Assign: {
-                temp_array = node->tokens;
-                size_t count = 2;
-                for (size_t i = 0; i < temp_array->size; i++) {
-                    array_add_new(code_operations, OP_BLOCK_TYPE);
-                    new_block = array_get_last(code_operations)->data;
-                    new_block->type = BlockType_Arithmetic;
-                    new_block->subtype = ((struct token_st *) temp_array->data[i]->data)->subtype;
-                    new_block->count = count;
-                }
-                temp_array = node->next;
-                for (size_t i = temp_array->size; i > 0; i--) {
-                    array_append(code_operations, temp_array->data[i - 1]);
-                }
-                break;
-            }
+            case StmtType_Assign:
             case StmtType_Func:
             case StmtType_Decl: {
                 temp_array = node->next;
@@ -247,6 +235,21 @@ void run_an(struct op_state *state, struct object_st *object) {
                 }
                 break;
             }
+            case StmtType_Print: {
+                {
+                    array_add_new(state->stack_memory, DARRAY_TYPE);
+
+                    array_add_new(code_operations, OP_BLOCK_TYPE);
+                    new_block = array_get_last(code_operations)->data;
+                    new_block->type = BlockType_Print;
+                    new_block->count = temp_array->size;
+                }
+                temp_array = node->next;
+                for (size_t i = temp_array->size; i > 0; i--) {
+                    array_append(code_operations, temp_array->data[i - 1]);
+                }
+                break;
+            }
         }
     }
 }
@@ -279,8 +282,8 @@ void run_op(struct op_state *state, struct object_st *object) {
             if (res) {
                 if (block->type == BlockType_If_not_del || block->type == BlockType_If_del)
                     array_remove_last(state->temp_memory);
-                array_append(code_operations, block->data1);
-                array_append(code_operations, block->data2);
+                if (block->data1 != NULL) array_append(code_operations, block->data1);
+                if (block->data2 != NULL) array_append(code_operations, block->data2);
             }
         }
         object_free(obj);
@@ -386,7 +389,8 @@ void run_op(struct op_state *state, struct object_st *object) {
                     object_free(obj2);
                     object_free(obj1);
                     break;
-                } else if ((block->subtype & 0xF0) == 0x40) {
+                }
+                else if ((block->subtype & 0xF0) == 0x40) {
                     struct object_st *temp = NULL;
                     struct object_st *obj2 = object_copy(array_get_last(state->temp_memory));
                     array_remove_last(state->temp_memory);
@@ -448,7 +452,8 @@ void run_op(struct op_state *state, struct object_st *object) {
                     object_free(obj2);
                     object_free(obj1);
                     break;
-                } else if ((block->subtype & 0xF0) == 0x50) {
+                }
+                else if ((block->subtype & 0xF0) == 0x50) {
                     struct object_st *obj2 = object_copy(array_get_last(state->temp_memory));
                     array_remove_last(state->temp_memory);
                     struct object_st *obj1 = object_copy(array_get_last(state->temp_memory));
@@ -539,8 +544,8 @@ void run_op(struct op_state *state, struct object_st *object) {
         }
 
         case BlockType_Put: {
-            array_append(code_operations, block->data1);
-            array_append(code_operations, block->data2);
+            if (block->data1 != NULL) array_append(code_operations, block->data1);
+            if (block->data2 != NULL) array_append(code_operations, block->data2);
             break;
         }
         case BlockType_Delete_Temp: {
@@ -597,7 +602,7 @@ void run_op(struct op_state *state, struct object_st *object) {
             break;
         }
 
-        case BlockType_array: {
+        case BlockType_List: {
             struct object_st *obj = object_new();
             object_set_type(obj, ARRAY_TYPE);
             for (size_t i = 0; i < block->count; i++) {
@@ -711,11 +716,13 @@ void run_op(struct op_state *state, struct object_st *object) {
                 }
                 if (res != NULL && ok) {
                     struct darray_st *temp_array = res->data;
-
-                    for (int i = 0; i < temp_array->size; i++) {
-                        attrib = temp_array->data[0][i]->data;
-                        darray_append(array_get_last(state->stack_memory)->data, temp_array->data[0][i], attrib->data);
-                        op_attrib_set_data(attrib, temp_array->data[1][i]);
+                    if (temp_array != NULL) {
+                        for (int i = 0; i < temp_array->size; i++) {
+                            attrib = temp_array->data[0][i]->data;
+                            darray_append(array_get_last(state->stack_memory)->data, temp_array->data[0][i],
+                                          attrib->data);
+                            op_attrib_set_data(attrib, temp_array->data[1][i]);
+                        }
                     }
                 }
                 object_free(res);
@@ -730,49 +737,19 @@ void run_op(struct op_state *state, struct object_st *object) {
                     array_append(code_operations, res);
                 }
                 object_free(res);
-            } else {
-//                struct object_st *_res = NULL;
-//                struct object_st *elm = NULL;
-//                if (res->type == MAP_TYPE) {
-//                    string_set_str(ind_str, "__params__", 10);
-//                    _res = op_object_get_attrib(res->data, ind_str);
-//                }
-//                if (res != NULL) {
-//                    struct string_st *ind_temp = NULL;
-//                    struct array_st *temp_array = ((struct node_st *) _res->data)->next;
-//                    if (temp_array->size == block->count + 1) {
-//                        ind_temp = ((struct node_st *) temp_array->data[0]->data)->data->data;
-//                        elm = map_set_elm(state->memory->top->data->data, ind_temp->data, ind_temp->size);
-//                        state->return_obj = object_copy(elm);
-//                        object_set(elm, func);
-//                        object_free(elm);
-//                    }
-//
-//                    if (temp_array->size == block->count + 1) {
-//                        ok = 1;
-//                        for (int i = 1; i < temp_array->size; i++) {
-//                            ind_temp = ((struct node_st *) temp_array->data[i]->data)->data->data;
-//                            elm = map_set_elm(state->memory->top->data->data, ind_temp->data, ind_temp->size);
-//                            object_set(elm, array_get_last(state->temp_memory));
-//                            array_remove_last(state->temp_memory);
-//                            object_free(elm);
-//                        }
-//                    }
-//                }
-//                object_free(_res);
-//                _res = NULL;
-//                if (res->type == MAP_TYPE && ok) {
-//                    string_set_str(ind_str, "__call__", 7);
-//                    sha256_code._code(ind_str, ind_str);
-//                    _res = op_object_get_attrib(res->data, ind_str->data, ind_str->size);
-//                    array_append(code_operations, _res);
-//                }
-//                object_free(_res);
-//                object_free(res);
             }
 
             string_free(ind_str);
             object_free(func);
+            break;
+        }
+        case BlockType_Print: {
+            struct object_st *obj;
+            for (size_t i = 0; i < block->count; i++) {
+                obj = object_copy(array_get_last(state->temp_memory));
+                array_remove_last(state->temp_memory);
+                print_obj(obj, 0);
+            }
             break;
         }
 
@@ -785,7 +762,7 @@ void run_smart_contract(struct object_st *expr_obj) {
     {
         struct array_st *code_operations = state->code_operations;
         struct object_st *current_object = NULL;
-        while (code_operations->size) {
+        while (code_operations->size > 0) {
             current_object = object_copy(array_get_last(code_operations));
             array_remove_last(code_operations);
 

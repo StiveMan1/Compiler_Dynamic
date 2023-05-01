@@ -63,7 +63,7 @@ void op_object_set_function(struct op_object *res, struct node_st *node) {
     string_set_str(attr_name, "__closure__", 11);
     obj = map_set_elm(res->attr, attr_name->data, attr_name->size);
     object_set(obj, node->closure);
-    {
+    if (obj->data != NULL) {
         struct darray_st *closure = obj->data;
         struct object_st *temp = NULL;
         for (size_t i = 0 ; i < closure->size; i++) {

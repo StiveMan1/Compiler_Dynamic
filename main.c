@@ -385,6 +385,9 @@ void print_node(const struct node_st *res, int size) {
             case StmtType_Func:
                 printf("StmtType_Func ");
                 break;
+            case StmtType_Func_Body:
+                printf("StmtType_Func_Body ");
+                break;
             case StmtType_Decl:
                 printf("StmtType_Decl ");
                 break;
@@ -424,6 +427,7 @@ void print_node(const struct node_st *res, int size) {
     if (res->closure != NULL) {
         PRINT_PREF
         PRINT_NEXT(0)
+        printf("Closure : ");
         print_obj(res->closure, size + 2);
     }
 }
