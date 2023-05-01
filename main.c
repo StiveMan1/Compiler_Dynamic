@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include <time.h>
 #include "struct.h"
 #include "lexical_analysis.h"
 #include "ast_semantic.h"
@@ -453,6 +454,8 @@ void print_obj(const struct object_st *res, int size) {
     else if (res->type == OP_ATTRIB_TYPE) return print_op_attrib(res->data, size + 2);
 }
 
+
+void run_smart_contract(struct object_st *expr_obj);
 int main() {
     struct object_st *expr_obj = object_new();
     struct la_parser *F_parser = la_parser_new();
@@ -521,6 +524,14 @@ int main() {
     }
 
     print_obj(expr_obj, 0);
+
+    clock_t begin = clock();
+
+    run_smart_contract(expr_obj);
+
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("Time : %f\n", time_spent);
 
     ast_parser_free(T_parser);
     la_parser_free(F_parser);

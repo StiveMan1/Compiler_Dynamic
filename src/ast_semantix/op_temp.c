@@ -261,7 +261,7 @@ void run_op(struct op_state *state, struct object_st *object) {
         struct object_st *temp = object_new();
         struct object_st *obj = object_copy(array_get_last(state->temp_memory));
 
-        if (obj->type != INTEGER_TYPE) {
+        if (obj->type != BOOL_TYPE) {
             array_append(code_operations, object);
 
             array_add_new(code_operations, OP_BLOCK_TYPE);
@@ -271,9 +271,9 @@ void run_op(struct op_state *state, struct object_st *object) {
         } else {
             int res = 0;
             if ((block->type == BlockType_If_not || block->type == BlockType_If_not_del) &&
-                integer_is_null(obj->data))
+                bool_is_null(obj->data))
                 res = 1;
-            if ((block->type == BlockType_If || block->type == BlockType_If_del) && !integer_is_null(obj->data))
+            if ((block->type == BlockType_If || block->type == BlockType_If_del) && !bool_is_null(obj->data))
                 res = 1;
 
             if (res) {
@@ -417,7 +417,7 @@ void run_op(struct op_state *state, struct object_st *object) {
                             array_add_new(code_operations, OP_BLOCK_TYPE);
                             new_block = array_get_last(code_operations)->data;
                             new_block->type = BlockType_Arithmetic;
-                            new_block->subtype = Special_NOT;
+                            new_block->subtype = KeyWord_NOT;
                             new_block->count = 1;
                         }
 
@@ -429,7 +429,7 @@ void run_op(struct op_state *state, struct object_st *object) {
                         int cmp_res = object_cmp(obj1, obj2);
 
                         struct object_st *res = object_new();
-                        object_set_type(res, INTEGER_TYPE);
+                        object_set_type(res, BOOL_TYPE);
 
                         if (
                                 (block->subtype == Special_LESS && cmp_res < 0) ||
@@ -438,8 +438,8 @@ void run_op(struct op_state *state, struct object_st *object) {
                                 (block->subtype == Special_EQ_GREATER && cmp_res != 2 && cmp_res >= 0) ||
                                 (block->subtype == Special_EQ_NOT && cmp_res != 0) ||
                                 (block->subtype == Special_EQ_EQ && cmp_res == 0))
-                            integer_set_ui(res->data, 1);
-                        else integer_set_ui(res->data, 0);
+                            ((struct bool_st *)res->data)->data = 1;
+                        else ((struct bool_st *)res->data)->data = 0;
 
                         array_append(state->temp_memory, res);
                         object_free(res);
@@ -455,16 +455,16 @@ void run_op(struct op_state *state, struct object_st *object) {
                     array_remove_last(state->temp_memory);
 
                     int bool1 = 1;
-                    if (obj1->type == INTEGER_TYPE && integer_is_null(obj1->data)) bool1 = 0;
+                    if (obj1->type == BOOL_TYPE && bool_is_null(obj1->data)) bool1 = 0;
                     int bool2 = 1;
-                    if (obj2->type == INTEGER_TYPE && integer_is_null(obj2->data)) bool2 = 0;
+                    if (obj2->type == BOOL_TYPE && bool_is_null(obj2->data)) bool2 = 0;
                     object_free(obj2);
                     object_free(obj1);
 
                     struct object_st *res = object_new();
-                    object_set_type(res, INTEGER_TYPE);
-                    if (block->subtype == Special_AND_AND) integer_set_ui(res->data, bool1 && bool2);
-                    if (block->subtype == Special_OR_OR) integer_set_ui(res->data, bool1 || bool2);
+                    object_set_type(res, BOOL_TYPE);
+                    if (block->subtype == KeyWord_AND) ((struct bool_st *)res->data)->data = (bool1 && bool2);
+                    if (block->subtype == KeyWord_OR) ((struct bool_st *)res->data)->data = (bool1 || bool2);
 
                     array_append(state->temp_memory, res);
                     object_free(res);
@@ -644,7 +644,7 @@ void run_op(struct op_state *state, struct object_st *object) {
                 object_free(res);
             } else if(obj1->type == ARRAY_TYPE) {
                 // TODO error if not integer
-                int pos = integer_get_si(obj2->data);
+                int pos = ((struct integer_st *)obj2->data)->data;
                 struct array_st *array = obj1->data;
                 array_append(state->temp_memory, array->data[pos % array->size]);
             } else if(obj1->type == MAP_TYPE) {
