@@ -69,15 +69,14 @@ void run_an(struct op_state *state, struct object_st *object) {
                 break;
             }
             case PrimType_Attrib: {
-                printf("PrimType_Attrib\n");
-//                array_add_new(code_operations, OP_BLOCK_TYPE);
-//                new_block = array_get_last(code_operations)->data;
-//                new_block->type = BlockType_Attr;
-//                new_block->data1 = object_copy(node->data);
-//
-//                for (size_t i = 0; i < temp_array->size; i++) {
-//                    array_append(code_operations, temp_array->data[i]);
-//                }
+                array_add_new(code_operations, OP_BLOCK_TYPE);
+                new_block = array_get_last(code_operations)->data;
+                new_block->type = BlockType_Attr;
+                new_block->data1 = object_copy(node->data);
+
+                for (size_t i = 0; i < temp_array->size; i++) {
+                    array_append(code_operations, temp_array->data[i]);
+                }
                 break;
             }
             case PrimType_Subscript: {
@@ -168,14 +167,13 @@ void run_an(struct op_state *state, struct object_st *object) {
                 break;
             }
             case StmtType_While: {
-                printf("StmtType_While\n");
-//                array_add_new(code_operations, OP_BLOCK_TYPE);
-//                new_block = array_get_last(code_operations)->data;
-//                new_block->type = BlockType_If_del;
-//                new_block->data1 = object_copy(object);
-//                new_block->data2 = object_copy(temp_array->data[1]);
-//
-//                array_append(code_operations, temp_array->data[0]);
+                array_add_new(code_operations, OP_BLOCK_TYPE);
+                new_block = array_get_last(code_operations)->data;
+                new_block->type = BlockType_If_del;
+                new_block->data1 = object_copy(object);
+                new_block->data2 = object_copy(temp_array->data[1]);
+
+                array_append(code_operations, temp_array->data[0]);
                 break;
             }
             case StmtType_Func_Body: {
