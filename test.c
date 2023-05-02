@@ -72,22 +72,26 @@ void perform_interpretation(struct error* error, struct object_st *expr_obj){
     // TODO : check errors for interpretation
 }
 
+char* concat(char* s1, char* s2){
+    char* name_with_extension;
+    printf("%s %s", s1, s2);
+    name_with_extension = malloc(strlen(s1) + 1 + strlen(s2));
+    strcpy(name_with_extension, s1);
+    strcat(name_with_extension, s2);
+    return name_with_extension;
+}
+
 // Function that tests execution of all interpreter modules
-int main() {
-    DIR *d;
-    struct dirent *dir;
-    d = opendir(".");
-    if (d) {
-        while ((dir = readdir(d)) != NULL) {
-            printf("%s\n", dir->d_name);
-        }
-        closedir(d);
-    }
+int main(int argc, char *argv[]) {
+    if (argc == 0)
+        return -1;
+
+    char* path = argv[1];
 
     struct la_parser *F_parser = la_parser_new();
     struct ast_parser *T_parser = ast_parser_new();
     struct object_st *expr_obj = object_new();
-    la_parser_set_file(F_parser, "text.txt"); // Reading input
+    la_parser_set_file(F_parser, concat(path, "code.txt"));
 
     struct error* error = malloc(sizeof(struct error));
 
