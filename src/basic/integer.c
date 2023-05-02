@@ -179,8 +179,7 @@ void integer__float(struct object_st *res, struct error_st *err, struct integer_
     ((struct real_st *)res->data)->data = obj->data;
 }
 void integer__str(struct object_st *res, struct error_st *err, struct integer_st *obj){
-    // TODO
-    object_set_type(res->data, STRING_TYPE);
+    object_set_type(res, STRING_TYPE);
     char buf[32];
     memset(buf, 0, 32);
     sprintf(buf, "%ld", obj->data);

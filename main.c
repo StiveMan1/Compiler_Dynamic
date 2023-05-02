@@ -22,12 +22,11 @@ int main() {
     la_parser_get_error(F_parser, error);
     // Print Tokenize Result
     if (error->present) {
-        printf("Tokenize Error : ");
         printf("%s\n", error->type->data);
         printf("%s\n", error->message->data);
-        printf("%d\n", error->pos);
-        printf("%d\n", error->line_num);
-        printf("%d\n", error->line_pos);
+        printf("%zu\n", error->pos);
+        printf("%zu\n", error->line_num);
+        printf("%zu\n", error->line_pos);
         exit(-1);
     }
 
@@ -39,24 +38,22 @@ int main() {
     ast_parser_get_error(T_parser, error);
     // Print AST Analyze Result
     if (error->present) {
-        printf("Tokenize Error : ");
         printf("%s\n", error->type->data);
         printf("%s\n", error->message->data);
-        printf("%d\n", error->pos);
-        printf("%d\n", error->line_num);
-        printf("%d\n", error->line_pos);
+        printf("%zu\n", error->pos);
+        printf("%zu\n", error->line_num);
+        printf("%zu\n", error->line_pos);
         exit(-1);
     }
 
 
     semantic_scan(expr_obj, error);
     if (error->present) {
-        printf("Tokenize Error : ");
         printf("%s\n", error->type->data);
         printf("%s\n", error->message->data);
-        printf("%d\n", error->pos);
-        printf("%d\n", error->line_num);
-        printf("%d\n", error->line_pos);
+        printf("%zu\n", error->pos);
+        printf("%zu\n", error->line_num);
+        printf("%zu\n", error->line_pos);
         exit(-1);
     }
 
@@ -64,12 +61,11 @@ int main() {
 
     interpretation(expr_obj,error);
     if (error->present) {
-        printf("Tokenize Error : ");
         printf("%s\n", error->type->data);
         printf("%s\n", error->message->data);
-        printf("%d\n", error->pos);
-        printf("%d\n", error->line_num);
-        printf("%d\n", error->line_pos);
+        printf("%zu\n", error->pos);
+        printf("%zu\n", error->line_num);
+        printf("%zu\n", error->line_pos);
         exit(-1);
     }
 

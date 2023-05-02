@@ -160,7 +160,7 @@ void array__add(struct object_st *res, struct error_st *err, const struct array_
 void array__str(struct object_st *res, struct error_st *err, const struct array_st *obj){
     object_set_type(res, STRING_TYPE);
     string_set_str(res->data, "[", 1);
-    struct object_st *temp = NULL;
+    struct object_st *temp = object_new();
     for(size_t i = 0; i < obj->size; i++){
         object__str(temp, err, obj->data[i]);
         if (err->present) {

@@ -100,9 +100,8 @@ void string__bool(struct object_st *res, struct error_st *err, const struct stri
     ((struct bool_st *)res->data)->data = (obj->size != 0);
 }
 void string__int(struct object_st *res, struct error_st *err, const struct string_st *obj) {
-    // TODO
-    object_set_type(res->data, INTEGER_TYPE);
-    struct  integer_st *result = NULL;
+    object_set_type(res, INTEGER_TYPE);
+    struct  integer_st *result = integer_new();
     result->data = 0;
     for(size_t i = 0; i < obj->size; i++){
         if('0' <= obj->data[i] && obj->data[i] <= '9'){
@@ -116,16 +115,12 @@ void string__int(struct object_st *res, struct error_st *err, const struct strin
     }
     integer_set(res->data, result);
     integer_free(result);
-//    err->present = 1;
-//    string_set_str(err->type, INTERPRETER_ERROR, 15);
-//    string_set_str(err->message, "Not implemented", 15);
-
 }
 void string__float(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     // TODO
 
-    object_set_type(res->data, REAL_TYPE);
-    struct  real_st *result = NULL;
+    object_set_type(res, REAL_TYPE);
+    struct  real_st *result = real_new();
     short dot = 0;
     for(size_t i = 0; i < obj->size; i++){
         if('0' <= obj->data[i] && obj->data[i] <= '9') {

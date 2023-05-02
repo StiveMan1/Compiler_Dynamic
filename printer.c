@@ -436,9 +436,9 @@ void print_op_attrib(const struct op_attrib *res, int size) {
 }
 void print_obj(const struct object_st *res, int size) {
     if(res == NULL) return;
-//    printf("object : (%d)\n", res->counter);
-//    PRINT_PREF
-//    PRINT_NEXT(0)
+    printf("object : (%p)\n", res);
+    PRINT_PREF
+    PRINT_NEXT(0)
     if (res->type == NONE_TYPE) printf("None\n");
     else if (res->type == OBJECT_TYPE) return print_obj(res->data, size);
     else if (res->type == STRING_TYPE) return print_str(res->data);

@@ -187,14 +187,11 @@ void bool__float(struct object_st *res, struct error_st *err, struct bool_st *ob
 }
 void bool__str(struct object_st *res, struct error_st *err, struct bool_st *obj){
     // TODO
-    object_set_type(res->data, STRING_TYPE);
+    object_set_type(res, STRING_TYPE);
     if(obj->data == 0){
-        string_set_str(res, "false", 5);
+        string_set_str(res->data, "false", 5);
     } else {
-        string_set_str(res, "true", 4);
+        string_set_str(res->data, "true", 4);
     }
-//    err->present = 1;
-//    string_set_str(err->type, INTERPRETER_ERROR, 15);
-//    string_set_str(err->message, "Not implemented", 15);
 }
 
