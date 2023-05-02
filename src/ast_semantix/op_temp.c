@@ -799,7 +799,7 @@ void run_op(struct op_state *state, struct object_st *object) {
     }
 }
 
-void run_interpreter(struct object_st *expr_obj) {
+void interpretation(struct object_st *expr_obj) {
     struct op_state *state = op_state_new();
     array_append(state->code_operations, expr_obj);
     {
