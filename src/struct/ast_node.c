@@ -13,6 +13,10 @@ struct node_st *node_new(){
 
     res->next = array_new();
     res->tokens = array_new();
+
+    res->pos = 0;
+    res->line_num = 0;
+    res->line_pos = 0;
     return res;
 }
 void node_set(struct node_st *res, const struct node_st *a){
@@ -26,6 +30,10 @@ void node_set(struct node_st *res, const struct node_st *a){
 
     array_set(res->next, a->next);
     array_set(res->tokens, a->tokens);
+
+    res->pos = a->pos;
+    res->line_num = a->line_num;
+    res->line_pos = a->line_pos;
 }
 void node_clear(struct node_st *res){
     res->main_type = MainType_None;
@@ -38,6 +46,10 @@ void node_clear(struct node_st *res){
 
     array_clear(res->next);
     array_clear(res->tokens);
+
+    res->pos = 0;
+    res->line_num = 0;
+    res->line_pos = 0;
 }
 void node_free(struct node_st *res){
     if(res->data != NULL) object_free(res->data);
@@ -46,4 +58,10 @@ void node_free(struct node_st *res){
     array_free(res->next);
     array_free(res->tokens);
     free(res);
+}
+
+void node_set_position(struct node_st *res, struct token_st *token) {
+    res->pos = token->pos;
+    res->line_num = token->line_num;
+    res->line_pos = token->line_pos;
 }

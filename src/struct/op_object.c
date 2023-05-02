@@ -120,7 +120,7 @@ void op_object__and(struct object_st *res, struct error_st *err, const struct op
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__add__", 7);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -146,7 +146,7 @@ void op_object__mul(struct object_st *res, struct error_st *err, const struct op
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__mul__", 7);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -172,7 +172,7 @@ void op_object__add(struct object_st *res, struct error_st *err, const struct op
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__add__", 7);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -198,7 +198,7 @@ void op_object__sub(struct object_st *res, struct error_st *err, const struct op
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__sub__", 7);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -224,7 +224,7 @@ void op_object__div(struct object_st *res, struct error_st *err, const struct op
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__div__", 7);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -250,7 +250,7 @@ void op_object__xor(struct object_st *res, struct error_st *err, const struct op
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__xor__", 7);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -276,7 +276,7 @@ void op_object__or(struct object_st *res, struct error_st *err, const struct op_
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__or__", 6);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -302,7 +302,7 @@ void op_object__ls(struct object_st *res, struct error_st *err, const struct op_
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__ls__", 6);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -328,7 +328,7 @@ void op_object__rs(struct object_st *res, struct error_st *err, const struct op_
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__rs__", 6);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -354,7 +354,7 @@ void op_object__neg(struct object_st *res, struct error_st *err, const struct op
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__neg__", 7);
         func = op_object_get_attrib(obj1, function_name);
         string_free(function_name);
     }
@@ -381,7 +381,7 @@ void op_object__bool(struct object_st *res, struct error_st *err, const struct o
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__bool__", 8);
         func = op_object_get_attrib(obj, function_name);
         string_free(function_name);
     }
@@ -405,7 +405,7 @@ void op_object__int(struct object_st *res, struct error_st *err, const struct op
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__int__", 7);
         func = op_object_get_attrib(obj, function_name);
         string_free(function_name);
     }
@@ -430,7 +430,7 @@ void op_object__float(struct object_st *res, struct error_st *err, const struct 
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__real__", 8);
         func = op_object_get_attrib(obj, function_name);
         string_free(function_name);
     }
@@ -455,7 +455,7 @@ void op_object__str(struct object_st *res, struct error_st *err, const struct op
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
-        string_set_str(function_name, "__mod__", 7);
+        string_set_str(function_name, "__str__", 7);
         func = op_object_get_attrib(obj, function_name);
         string_free(function_name);
     }

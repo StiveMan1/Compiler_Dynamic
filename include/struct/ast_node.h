@@ -19,6 +19,8 @@ struct node_st{
 
     struct array_st *next;
     struct array_st *tokens;
+
+    size_t pos, line_num, line_pos;
 };
 
 
