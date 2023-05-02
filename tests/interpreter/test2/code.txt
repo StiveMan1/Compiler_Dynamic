@@ -1,0 +1,9 @@
+func fib(x) is
+    if x < 2 then
+        return 1;
+    end
+    return fib(x - 1) + fib(x+1);
+end
+
+var x := 10
+print fib(x)

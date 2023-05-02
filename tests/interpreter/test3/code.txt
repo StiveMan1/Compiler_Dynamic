@@ -1,0 +1,28 @@
+
+func ok(v, x, y) is
+    if v * y <= x then
+        return true
+    else
+        return false
+    end
+
+func binarySearch(x, y) is
+    var l, r := 0, 10000
+    while r - l > 1 loop
+        var mid := (l + r)  / 2;
+        if ok(mid, x, y) then
+            mid = l
+        else
+            mid = r
+        end
+    end
+    if ok(r) then
+        return r
+    else
+        return l
+    end
+end
+
+var a, b := 10, 20
+
+print binarySearch(a, b)
