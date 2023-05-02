@@ -356,7 +356,6 @@ void run_op(struct op_state *state, struct object_st *object) {
 
                     array_append(state->temp_memory, res);
                     object_free(res);
-                    object_free(state->error_obj);
                     object_free(temp);
                     object_free(obj2);
                     object_free(obj1);
@@ -425,7 +424,6 @@ void run_op(struct op_state *state, struct object_st *object) {
 
                 array_append(state->temp_memory, res);
                 object_free(res);
-                object_free(state->error_obj);
                 object_free(temp);
                 object_free(obj);
                 break;
@@ -544,7 +542,6 @@ void run_op(struct op_state *state, struct object_st *object) {
             array_append(state->temp_memory, res);
 
             object_free(res);
-            object_free(state->error_obj);
             object_free(obj);
             break;
         }
@@ -558,7 +555,6 @@ void run_op(struct op_state *state, struct object_st *object) {
             array_append(state->temp_memory, res);
 
             object_free(res);
-            object_free(state->error_obj);
             object_free(obj1);
             object_free(obj2);
             break;
@@ -654,7 +650,7 @@ void run_op(struct op_state *state, struct object_st *object) {
     }
 }
 
-void function_call(struct object_st *res, struct object_st *err, struct object_st *func, struct array_st *args) {
+void function_call(struct object_st *res, struct error_st *err, struct object_st *func, struct array_st *args) {
     struct object_st *temp = NULL;
     struct op_state *state = op_state_new();
     struct string_st *ind_str = string_new();
@@ -731,7 +727,7 @@ void function_call(struct object_st *res, struct object_st *err, struct object_s
     string_free(ind_str);
 }
 
-void interpretation(struct object_st *expr_obj) {
+void interpretation(struct object_st *expr_obj, struct error_st *err) {
     struct op_state *state = op_state_new();
     array_append(state->code_operations, expr_obj);
     {

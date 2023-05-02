@@ -9,7 +9,7 @@
 #define FLAG_RETURN     0x03
 
 struct op_state{
-    struct object_st *error_obj;
+    struct error_st *error_obj;
     struct object_st *return_obj;
 
     short flag;
