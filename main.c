@@ -456,10 +456,12 @@ void print_obj(const struct object_st *res, int size) {
     else if (res->type == TOKEN_TYPE) return print_token(res->data, size);
     else if (res->type == NODE_TYPE) return print_node(res->data, size);
     else if (res->type == OP_ATTRIB_TYPE) return print_op_attrib(res->data, size + 2);
+    else if (res->type == OP_BLOCK_TYPE) printf("block\n");
+    else if (res->type == MAP_TYPE) printf("map\n");
 }
 
 
-void run_smart_contract(struct object_st *expr_obj);
+void run_interpreter(struct object_st *expr_obj);
 int main() {
     struct object_st *expr_obj = object_new();
     struct la_parser *F_parser = la_parser_new();
@@ -531,7 +533,7 @@ int main() {
 
     clock_t begin = clock();
 
-    run_smart_contract(expr_obj);
+    run_interpreter(expr_obj);
 
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

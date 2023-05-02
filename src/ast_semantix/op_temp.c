@@ -24,6 +24,7 @@
 #define BlockType_Delete_Scope  0x23
 #define BlockType_Return        0x33
 
+#define BlockType_Tuple         0x40
 #define BlockType_List          0x41
 #define BlockType_Attr          0x42
 #define BlockType_Subs          0x43
@@ -47,6 +48,15 @@ void run_an(struct op_state *state, struct object_st *object) {
                 new_block->count = temp_array->size;
 
                 for (size_t i = 0; i < temp_array->size; i++) {
+                    array_append(code_operations, temp_array->data[i]);
+                }
+                break;
+            }
+            case PrimType_Tuple: {
+                array_add_new(state->temp_memory, MAP_TYPE);
+                for (size_t i = 0; i < temp_array->size; i++) {
+                    // temp_array will store StmtType_Annot
+                    //  created during AST build
                     array_append(code_operations, temp_array->data[i]);
                 }
                 break;
@@ -246,6 +256,20 @@ void run_an(struct op_state *state, struct object_st *object) {
                 for (size_t i = temp_array->size; i > 0; i--) {
                     array_append(code_operations, temp_array->data[i - 1]);
                 }
+                break;
+            }
+            case StmtType_Annot: {
+                array_add_new(code_operations, OP_BLOCK_TYPE);
+                new_block = array_get_last(code_operations)->data;
+                new_block->type = BlockType_Tuple;
+                new_block->data1 = object_copy(node->data);
+
+                if (node->next->size == 1) {
+                    array_append(code_operations, node->next->data[0]);
+                } else {
+                    array_add_new(state->temp_memory, NONE_TYPE);
+                }
+
                 break;
             }
         }
@@ -611,6 +635,17 @@ void run_op(struct op_state *state, struct object_st *object) {
             object_free(obj);
             break;
         }
+        case BlockType_Tuple: {
+            struct object_st *obj = object_copy(array_get_last(state->temp_memory));
+            array_remove_last(state->temp_memory);
+            struct object_st *map = array_get_last(state->temp_memory);
+            struct object_st *temp = map_set_elm(map->data, ((struct string_st *)block->data1->data)->data, ((struct string_st *)block->data1->data)->size);
+            object_set(temp, obj);
+
+            object_free(temp);
+            object_free(obj);
+            break;
+        }
         case BlockType_Attr: {
             struct string_st *ind_str = block->data1->data;
             struct object_st *obj = object_copy(array_get_last(state->temp_memory));
@@ -625,6 +660,10 @@ void run_op(struct op_state *state, struct object_st *object) {
 
             if (obj->type == OP_OBJECT_TYPE) {
                 struct object_st *res = op_object_set_attrib(obj->data, ind_str);
+                array_append(state->temp_memory, res);
+                object_free(res);
+            } else if (obj->type == MAP_TYPE) {
+                struct object_st *res = map_set_elm(obj->data, ind_str->data, ind_str->size);
                 array_append(state->temp_memory, res);
                 object_free(res);
             } else {
@@ -754,7 +793,7 @@ void run_op(struct op_state *state, struct object_st *object) {
     }
 }
 
-void run_smart_contract(struct object_st *expr_obj) {
+void run_interpreter(struct object_st *expr_obj) {
     struct op_state *state = op_state_new();
     array_append(state->code_operations, expr_obj);
     {

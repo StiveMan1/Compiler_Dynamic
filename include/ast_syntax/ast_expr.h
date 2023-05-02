@@ -10,7 +10,7 @@
 #define PrimType_Attrib         0x05
 #define PrimType_Subscript      0x06
 #define PrimType_Call           0x07
-#define PrimType_Tuple           0x08
+#define PrimType_Tuple          0x08
 
 int scopes_expr(struct ast_parser *, struct node_st *);
 int list_expr(struct ast_parser *, struct node_st *);

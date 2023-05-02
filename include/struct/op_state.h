@@ -14,9 +14,9 @@ struct op_state{
 
     short flag;
 
-    struct object_st *frame_memory;
-    struct array_st *stack_memory;
-    struct array_st *temp_memory;
+    struct object_st *frame_memory; // Not used. For recursion
+    struct array_st *stack_memory;  // Stack of variables
+    struct array_st *temp_memory;   // Temporary objects
 
     struct array_st *code_operations;
 };

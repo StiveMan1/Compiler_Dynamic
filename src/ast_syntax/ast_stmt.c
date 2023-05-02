@@ -19,12 +19,18 @@ err:    result = SN_Status_Error; parser->error_pos = parser->position; goto end
 int annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
-        expr_add(expr)
-        check_call(ident_new_expr(parser, expr_next), goto end;)
+        parser_end goto eof;
+        parser_get
+        if (token->type != TokenType_Identifier) goto end;
+        parser->position++;
 
         expr->main_type = MainType_Stmt;
         expr->type = StmtType_Annot;
         result = SN_Status_Success;
+
+        expr->data = object_new();
+        object_set_type(expr->data, STRING_TYPE);
+        string_set_str(expr->data->data, token->data, token->size);
 
         parser_end goto end;
         parser_get
