@@ -43,6 +43,18 @@ int error_cmp(const struct error_st *obj1, const struct error_st *obj2) {
     int res_cmp_sub = string_cmp(obj1->type, obj2->type);
     if (res_cmp_sub == 0)
         res_cmp_sub = string_cmp(obj1->message, obj2->message);
+    if (res_cmp_sub == 0){
+        if (obj1->pos > obj2->pos) return 1;
+        else if (obj1->pos < obj2->pos) return -1;
+    }
+    if (res_cmp_sub == 0){
+        if (obj1->line_num > obj2->line_num) return 1;
+        else if (obj1->line_num < obj2->line_num) return -1;
+    }
+    if (res_cmp_sub == 0){
+        if (obj1->line_pos > obj2->line_pos) return 1;
+        else if (obj1->line_pos < obj2->line_pos) return -1;
+    }
     return res_cmp_sub;
 }
 int error_is_null(const struct error_st *res) {
