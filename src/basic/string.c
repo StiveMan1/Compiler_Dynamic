@@ -102,14 +102,14 @@ void string__bool(struct object_st *res, struct error_st *err, const struct stri
 void string__int(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     // TODO
     err->present = 1;
-    string_set_str(err->type, "Execution Error", 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 15);
     string_set_str(err->message, "Not implemented", 15);
 
 }
 void string__float(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     // TODO
     err->present = 1;
-    string_set_str(err->type, "Execution Error", 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 15);
     string_set_str(err->message, "Not implemented", 15);
 }
 void string__str(struct object_st *res, struct error_st *err, const struct string_st *obj) {

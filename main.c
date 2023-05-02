@@ -6,7 +6,7 @@
 #include "ast_semantic.h"
 #include "printer.c"
 
-void interpretation(struct object_st *expr_obj);
+void interpretation(struct object_st *expr_obj, struct error_st *);
 
 int main() {
     struct error_st *error = error_new();
@@ -62,7 +62,16 @@ int main() {
 
     clock_t begin = clock();
 
-    interpretation(expr_obj);
+    interpretation(expr_obj,error);
+    if (error->present) {
+        printf("Tokenize Error : ");
+        printf("%s\n", error->type->data);
+        printf("%s\n", error->message->data);
+        printf("%d\n", error->pos);
+        printf("%d\n", error->line_num);
+        printf("%d\n", error->line_pos);
+        exit(-1);
+    }
 
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

@@ -3,6 +3,11 @@
 
 #include "basic.h"
 
+#define LEXICAL_ANALYSIS_ERROR      "Lexical error"
+#define SYNTAX_ANALYSIS_ERROR       "Syntactical error"
+#define SEMANTIC_ANALYSIS_ERROR     "Semantic error"
+#define INTERPRETER_ERROR           "Interpreter error"
+
 struct error_st {
     int present;
     struct string_st* type;
@@ -24,9 +29,5 @@ void print_error(const struct error_st *, int);
 // Class functions
 void error_fill_in(struct error_st *res, char* type, char* message, size_t line_start, size_t line, size_t line_pos);
 
-#define LEXICAL_ANALYSIS_ERROR      "Lexical error"
-#define SYNTAX_ANALYSIS_ERROR       "Syntactical error"
-#define SEMANTIC_ANALYSIS_ERROR     "Semantic error"
-#define INTERPRETER_ERROR           "Interpreter error"
 
 #endif //ERROR_H

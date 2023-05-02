@@ -46,6 +46,7 @@ void run_an(struct op_state *state, struct object_st *object) {
                 new_block = array_get_last(code_operations)->data;
                 new_block->type = BlockType_List;
                 new_block->count = temp_array->size;
+                op_block_set_position_node(new_block, node);
 
                 for (size_t i = 0; i < temp_array->size; i++) {
                     array_append(code_operations, temp_array->data[i]);
@@ -83,6 +84,7 @@ void run_an(struct op_state *state, struct object_st *object) {
                 new_block = array_get_last(code_operations)->data;
                 new_block->type = BlockType_Attr;
                 new_block->data1 = object_copy(node->data);
+                op_block_set_position_node(new_block, node);
 
                 for (size_t i = 0; i < temp_array->size; i++) {
                     array_append(code_operations, temp_array->data[i]);
@@ -93,6 +95,7 @@ void run_an(struct op_state *state, struct object_st *object) {
                 array_add_new(code_operations, OP_BLOCK_TYPE);
                 new_block = array_get_last(code_operations)->data;
                 new_block->type = BlockType_Subs;
+                op_block_set_position_node(new_block, node);
 
                 for (size_t i = temp_array->size; i > 0; i--) {
                     array_append(code_operations, temp_array->data[i - 1]);
@@ -104,6 +107,7 @@ void run_an(struct op_state *state, struct object_st *object) {
                 new_block = array_get_last(code_operations)->data;
                 new_block->type = BlockType_Call;
                 new_block->count = (((struct node_st *) temp_array->data[1]->data)->next)->size;
+                op_block_set_position_node(new_block, node);
 
                 array_append(code_operations, temp_array->data[0]);
                 temp_array = ((struct node_st *) temp_array->data[1]->data)->next;
@@ -125,6 +129,7 @@ void run_an(struct op_state *state, struct object_st *object) {
             new_block->type = BlockType_Arithmetic;
             new_block->subtype = ((struct token_st *) temp_array->data[i]->data)->subtype;
             new_block->count = count;
+            op_block_set_position_token(new_block, temp_array->data[i]->data);
 
             if (((struct token_st *) temp_array->data[i]->data)->type == TokenType_KeyWords)
                 is_bool = 1;
@@ -137,6 +142,7 @@ void run_an(struct op_state *state, struct object_st *object) {
                 new_block = array_get_last(code_operations)->data;
                 new_block->type = BlockType_Convert;
                 new_block->subtype = Convert_Bool;
+                op_block_set_position_node(new_block, temp_array->data[i - 1]->data);
             }
             array_append(code_operations, temp_array->data[i - 1]);
         }
@@ -293,6 +299,7 @@ void run_op(struct op_state *state, struct object_st *object) {
             new_block = array_get_last(code_operations)->data;
             new_block->type = BlockType_Convert;
             new_block->subtype = Convert_Bool;
+            op_block_set_position_block(new_block, block);
         } else {
             int res = 0;
             if ((block->type == BlockType_If_not || block->type == BlockType_If_not_del) &&
@@ -326,6 +333,12 @@ void run_op(struct op_state *state, struct object_st *object) {
             else if (block->subtype == Convert_Float) object__float(res, state->error_obj, obj);
             else if (block->subtype == Convert_Str) object__str(res, state->error_obj, obj);
 
+            if (state->error_obj->present) {
+                state->error_obj->pos = block->pos;
+                state->error_obj->line_num = block->line_num;
+                state->error_obj->line_pos = block->line_pos;
+            }
+
             array_append(state->temp_memory, res);
             object_free(res);
             object_free(obj);
@@ -353,6 +366,12 @@ void run_op(struct op_state *state, struct object_st *object) {
                     else if (block->subtype == Special_OR) object__or(res, state->error_obj, obj1, obj2);
                     else if (block->subtype == Special_LSHIFT) object__ls(res, state->error_obj, obj1, obj2);
                     else if (block->subtype == Special_RSHIFT) object__rs(res, state->error_obj, obj1, obj2);
+
+                    if (state->error_obj->present) {
+                        state->error_obj->pos = block->pos;
+                        state->error_obj->line_num = block->line_num;
+                        state->error_obj->line_pos = block->line_pos;
+                    }
 
                     array_append(state->temp_memory, res);
                     object_free(res);
@@ -421,6 +440,12 @@ void run_op(struct op_state *state, struct object_st *object) {
                 struct object_st *res = object_new();
 
                 object__neg(res, state->error_obj, obj);
+
+                if (state->error_obj->present) {
+                    state->error_obj->pos = block->pos;
+                    state->error_obj->line_num = block->line_num;
+                    state->error_obj->line_pos = block->line_pos;
+                }
 
                 array_append(state->temp_memory, res);
                 object_free(res);
@@ -539,6 +564,12 @@ void run_op(struct op_state *state, struct object_st *object) {
             }
 
             struct object_st *res = object_attrib(state->error_obj, obj, ind_str);
+
+            if (state->error_obj->present) {
+                state->error_obj->pos = block->pos;
+                state->error_obj->line_num = block->line_num;
+                state->error_obj->line_pos = block->line_pos;
+            }
             array_append(state->temp_memory, res);
 
             object_free(res);
@@ -552,6 +583,12 @@ void run_op(struct op_state *state, struct object_st *object) {
             array_remove_last(state->temp_memory);
 
             struct object_st *res = object_subscript(state->error_obj, obj1, obj2);
+
+            if (state->error_obj->present) {
+                state->error_obj->pos = block->pos;
+                state->error_obj->line_num = block->line_num;
+                state->error_obj->line_pos = block->line_pos;
+            }
             array_append(state->temp_memory, res);
 
             object_free(res);
@@ -727,7 +764,7 @@ void function_call(struct object_st *res, struct error_st *err, struct object_st
     string_free(ind_str);
 }
 
-void interpretation(struct object_st *expr_obj, struct error_st *err) {
+void interpretation(struct object_st *expr_obj, struct error_st *error) {
     struct op_state *state = op_state_new();
     array_append(state->code_operations, expr_obj);
     {
@@ -747,6 +784,7 @@ void interpretation(struct object_st *expr_obj, struct error_st *err) {
             }
             object_free(current_object);
         }
+        error_set(error, state->error_obj);
     }
     op_state_free(state);
 }

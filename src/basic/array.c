@@ -137,7 +137,7 @@ void array__mul(struct object_st *res, struct error_st *err, const struct array_
         object_free(temp);
         return;
     }
-    object_set_type(res, STRING_TYPE);
+    object_set_type(res, ARRAY_TYPE);
     unsigned int count = ((struct integer_st *)temp->data)->data;
     for (unsigned int i = 0; i < count; i++)
         array_concat(res->data, obj1);
@@ -147,7 +147,7 @@ void array__add(struct object_st *res, struct error_st *err, const struct array_
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
     if (obj2 == NULL || obj2->type != ARRAY_TYPE) {
         err->present = 1;
-        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->type, INTERPRETER_ERROR, 15);
         string_set_str(err->message, "list dont have operation add with non list type", 47);
         return;
     }
