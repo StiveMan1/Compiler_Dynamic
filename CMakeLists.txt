@@ -15,3 +15,16 @@ MESSAGE(STATUS "Connected: ${PROJECT_NAME}_lib")
 
 add_executable(${PROJECT_NAME} main.c)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_NAME}_lib)
+
+#[[
+FILE(GLOB ILL_TEST_FILES "tests/*/test*")
+foreach(FILE_PATH IN LISTS ILL_TEST_FILES)
+    add_test(NAME ${FILE_PATH} COMMAND stella-interpreter typecheck ${FILE_PATH})
+endforeach()
+
+set_tests_properties(${ILL_TEST_FILES} PROPERTIES WILL_FAIL TRUE)
+
+FILE(GLOB WELL_TEST_FILES "tests/*/well-typed/*")
+foreach(FILE_PATH IN LISTS WELL_TEST_FILES)
+    add_test(NAME ${FILE_PATH} COMMAND stella-interpreter typecheck ${FILE_PATH})
+endforeach()]]
