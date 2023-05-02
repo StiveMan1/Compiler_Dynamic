@@ -47,7 +47,7 @@ void tokenize(struct la_parser *parser) {
         la_parse(token, parser);
         if (token->type == TokenType_None) {
             if (error_is_null(parser->error_obj)) {
-                string_set_str(parser->error_obj->message, "Unrecognized token", 18);
+                error_fill_in(parser->error_obj, "Lexical error", "Unrecognized token", parser->line_pos, parser->current_line, parser->position);
             }
             goto bad_end;
         }
@@ -64,14 +64,14 @@ void tokenize(struct la_parser *parser) {
                 case Special_LSB:
                     parser->scope_buf[parser->scope_pos++] = Special_LSB;
                     if (parser->scope_pos > MaxBracketNesting) {
-                        string_set_str(parser->error_obj->message, "Scope length more then max scopes nesting", 41);
+                        error_fill_in(parser->error_obj, "Lexical error", "Scope length more then max scopes nesting", parser->line_pos, parser->current_line, parser->position);
                         goto bad_end;
                     }
                     break;
                 case Special_LSQB:
                     parser->scope_buf[parser->scope_pos++] = Special_LSQB;
                     if (parser->scope_pos > MaxBracketNesting) {
-                        string_set_str(parser->error_obj->message, "Scope length more then max scopes nesting", 41);
+                        error_fill_in(parser->error_obj, "Lexical error", "Scope length more then max scopes nesting", parser->line_pos, parser->current_line, parser->position);
                         goto bad_end;
                     }
                     break;
