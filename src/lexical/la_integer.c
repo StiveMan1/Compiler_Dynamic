@@ -5,7 +5,8 @@
 #define CharInt_dec(c) ((c) >= '0' && (c) <= '9')
 #define CharInt_hex(c) (((c) >= '0' && (c) <= '9') || ((c) >= 'a' && (c) <= 'f') || ((c) >= 'A' && (c) <= 'F'))
 
-#define ErrInt {string_set_str(parser->error_msg, "Error while parsing integer", 27); return;}
+#define set_error_lexical(message) error_fill_in(parser->error_obj, LEXICAL_ANALYSIS_ERROR, message, parser->position, parser->current_line, parser->line_pos);
+#define ErrInt {set_error_lexical("Error while parsing integer") return;}
 
 #define GetChar {pos++;if (pos == parser->str_size) ErrInt c = parser->data[pos];}
 
@@ -20,7 +21,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 while (c == '_') GetChar
                 size_t zero_end = pos;
                 while (CharInt_bin(c)) GetChar
-                if (IdentifierStart(c)) ErrInt;
+                if (IdentifierStart(c)) ErrInt
 
                 token->type = TokenType_Int;
                 token->subtype = IntType_bin;
@@ -33,7 +34,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 while (c == '_') GetChar
                 size_t zero_end = pos;
                 while (CharInt_oct(c)) GetChar
-                if (IdentifierStart(c)) ErrInt;
+                if (IdentifierStart(c)) ErrInt
 
                 token->type = TokenType_Int;
                 token->subtype = IntType_oct;
@@ -46,7 +47,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 while (c == '_') GetChar
                 size_t zero_end = pos;
                 while (CharInt_hex(c)) GetChar
-                if (IdentifierStart(c)) ErrInt;
+                if (IdentifierStart(c)) ErrInt
 
                 token->type = TokenType_Int;
                 token->subtype = IntType_hex;
@@ -66,7 +67,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 } else {
                     token->subtype = IntType_dec;
                 }
-                if (IdentifierStart(c)) ErrInt;
+                if (IdentifierStart(c)) ErrInt
 
                 token->type = TokenType_Int;
                 token_resize(token, pos - zero_end);
@@ -83,7 +84,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
             } else {
                 token->subtype = IntType_dec;
             }
-            if (IdentifierStart(c)) ErrInt;
+            if (IdentifierStart(c)) ErrInt
 
             token->type = TokenType_Int;
             token_resize(token, pos - parser->position);

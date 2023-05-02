@@ -3,7 +3,7 @@
 struct ast_parser *ast_parser_new(){
     struct ast_parser *res = malloc(sizeof(struct ast_parser));
     res->position = 0;
-    error_clear(res->error_obj);
+    res->error_obj = error_new();
     res->list = array_new();
     return res;
 }

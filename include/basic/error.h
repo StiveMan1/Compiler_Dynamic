@@ -7,9 +7,8 @@ struct error_st {
     int present;
     struct string_st* type;
     struct string_st* message;
-    int line_start;
-    int line;
-    int line_pos;
+
+    size_t pos, line_num, line_pos;
 };
 // Standard operations
 struct error_st *error_new();

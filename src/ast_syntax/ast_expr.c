@@ -1,6 +1,7 @@
 #include "ast_analyze.h"
 
-#define set_error_syntactical(message) error_fill_in(parser->error_obj, SYNTAX_ANALYSIS_ERROR, message, expr->line_pos, expr->line_num, expr->pos);
+#define token_pos_err ((struct token_st *)parser->list[parser->position].data)
+#define set_error_syntactical(message) error_fill_in(parser->error_obj, SYNTAX_ANALYSIS_ERROR, message, token_pos_err->line_pos, token_pos_err->line_num, token_pos_err->pos);
 
 #define expr_cast(expr) { struct object_st *obj = object_new(); object_set_type(obj, NODE_TYPE); \
 node_set(obj->data, expr); node_clear(expr); array_append((expr)->next, obj); object_free(obj); }
