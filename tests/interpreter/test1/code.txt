@@ -1,10 +1,10 @@
 func F(x) is
     print(x);
     return true;
-end;
+end
 
 var a := {__bool__ := F};
 
 if a then
     print(a.__bool__());
-end;
+end

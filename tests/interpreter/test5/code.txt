@@ -3,7 +3,7 @@ func log(a, b) is
     var res := 0
     while a > b loop
         a := a / b;
-        res++;
+        res := res + 1;
     end
 
     return res;
