@@ -60,13 +60,13 @@ int main() {
         exit(-1);
     }
 
-//    clock_t begin = clock();
-//
-//    interpretation(expr_obj);
-//
-//    clock_t end = clock();
-//    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-//    printf("Time : %f\n", time_spent);
+    clock_t begin = clock();
+
+    interpretation(expr_obj);
+
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("Time : %f\n", time_spent);
 
     ast_parser_free(T_parser);
     la_parser_free(F_parser);

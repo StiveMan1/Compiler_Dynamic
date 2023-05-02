@@ -41,7 +41,7 @@ void integer__mod(struct object_st *res, struct error_st *err, const struct inte
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data % ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
@@ -53,7 +53,7 @@ void integer__and(struct object_st *res, struct error_st *err, const struct inte
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data & ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
@@ -65,7 +65,7 @@ void integer__mul(struct object_st *res, struct error_st *err, const struct inte
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data * ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
@@ -77,7 +77,7 @@ void integer__add(struct object_st *res, struct error_st *err, const struct inte
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data + ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
@@ -89,7 +89,7 @@ void integer__sub(struct object_st *res, struct error_st *err, const struct inte
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data - ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
@@ -108,7 +108,7 @@ void integer__div(struct object_st *res, struct error_st *err, const struct inte
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data / ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
@@ -120,7 +120,7 @@ void integer__xor(struct object_st *res, struct error_st *err, const struct inte
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data ^ ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
@@ -132,7 +132,7 @@ void integer__or(struct object_st *res, struct error_st *err, const struct integ
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data | ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
@@ -144,7 +144,7 @@ void integer__ls(struct object_st *res, struct error_st *err, const struct integ
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data << ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
@@ -156,12 +156,12 @@ void integer__rs(struct object_st *res, struct error_st *err, const struct integ
         object_free(temp);
         return;
     }
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (obj1->data >> ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
 void integer__neg(struct object_st *res, struct error_st *err, const struct integer_st *obj1) {
-    object_set_type(res, BOOL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = - obj1->data;
 }
 
