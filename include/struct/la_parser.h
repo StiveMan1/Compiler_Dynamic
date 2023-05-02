@@ -26,7 +26,7 @@ struct la_parser{
 
     struct array_st *list;
 
-    struct string_st *error_msg;
+    struct error_st *error_obj;
 };
 
 struct la_parser *la_parser_new();

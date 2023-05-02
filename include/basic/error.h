@@ -5,8 +5,8 @@
 
 struct error_st {
     int present;
-    char *type;
-    char *message;
+    struct string_st* type;
+    struct string_st* message;
     int line;
     int line_pos;
 };
