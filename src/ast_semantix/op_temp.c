@@ -341,14 +341,16 @@ void run_op(struct op_state *state, struct object_st *object) {
                 new_block->count = 1;
             } else {
                 struct object_st *res = object_new();
+                struct object_st *err = object_new();
 
-                if (block->subtype == Convert_Bool) object__bool(res, obj);
-                else if (block->subtype == Convert_Int) object__int(res, obj);
-                else if (block->subtype == Convert_Float) object__float(res, obj);
-                else if (block->subtype == Convert_Str) object__str(res, obj);
+                if (block->subtype == Convert_Bool) object__bool(res, err, obj);
+                else if (block->subtype == Convert_Int) object__int(res, err, obj);
+                else if (block->subtype == Convert_Float) object__float(res, err, obj);
+                else if (block->subtype == Convert_Str) object__str(res, err, obj);
 
                 array_append(state->temp_memory, res);
                 object_free(res);
+                object_free(err);
             }
             object_free(obj);
             object_free(temp);
@@ -392,20 +394,22 @@ void run_op(struct op_state *state, struct object_st *object) {
                         new_block->count = 2;
                     } else {
                         struct object_st *res = object_new();
+                        struct object_st *err = object_new();
 
-                        if (block->subtype == Special_MOD) object__mod(res, obj1, obj2);
-                        else if (block->subtype == Special_AND) object__and(res, obj1, obj2);
-                        else if (block->subtype == Special_MUL) object__mul(res, obj1, obj2);
-                        else if (block->subtype == Special_ADD) object__add(res, obj1, obj2);
-                        else if (block->subtype == Special_SUB) object__sub(res, obj1, obj2);
-                        else if (block->subtype == Special_DIV) object__div(res, obj1, obj2);
-                        else if (block->subtype == Special_XOR) object__xor(res, obj1, obj2);
-                        else if (block->subtype == Special_OR) object__or(res, obj1, obj2);
-                        else if (block->subtype == Special_LSHIFT) object__ls(res, obj1, obj2);
-                        else if (block->subtype == Special_RSHIFT) object__rs(res, obj1, obj2);
+                        if (block->subtype == Special_MOD) object__mod(res, err, obj1, obj2);
+                        else if (block->subtype == Special_AND) object__and(res, err, obj1, obj2);
+                        else if (block->subtype == Special_MUL) object__mul(res, err, obj1, obj2);
+                        else if (block->subtype == Special_ADD) object__add(res, err, obj1, obj2);
+                        else if (block->subtype == Special_SUB) object__sub(res, err, obj1, obj2);
+                        else if (block->subtype == Special_DIV) object__div(res, err, obj1, obj2);
+                        else if (block->subtype == Special_XOR) object__xor(res, err, obj1, obj2);
+                        else if (block->subtype == Special_OR) object__or(res, err, obj1, obj2);
+                        else if (block->subtype == Special_LSHIFT) object__ls(res, err, obj1, obj2);
+                        else if (block->subtype == Special_RSHIFT) object__rs(res, err, obj1, obj2);
 
                         array_append(state->temp_memory, res);
                         object_free(res);
+                        object_free(err);
                     }
                     object_free(temp);
                     object_free(obj2);
@@ -521,11 +525,13 @@ void run_op(struct op_state *state, struct object_st *object) {
                     new_block->count = 1;
                 } else {
                     struct object_st *res = object_new();
+                    struct object_st *err = object_new();
 
-                    object__neg(res, obj);
+                    object__neg(res, err, obj);
 
                     array_append(state->temp_memory, res);
                     object_free(res);
+                    object_free(err);
                 }
                 object_free(temp);
                 object_free(obj);

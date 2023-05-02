@@ -65,34 +65,51 @@ void string_concat(struct string_st *res, const struct string_st *a) {
 }
 
 // Math Methods
-void string__mul(struct object_st *res, const struct string_st *obj1, const struct object_st *obj2) {
-    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
-    if (obj2 == NULL || obj2->type != INTEGER_TYPE) return;
+void string__mul(struct object_st *res, struct object_st *err, const struct string_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    struct object_st *temp = object_new();
+    object__int(temp, err, obj2);
+    if(err->type != NONE_TYPE) {
+        object_free(temp);
+        return;
+    }
     object_set_type(res, STRING_TYPE);
-    unsigned int count = ((struct integer_st *)obj2->data)->data;
+    unsigned int count = ((struct integer_st *)temp->data)->data;
     for (unsigned int i = 0; i < count; i++)
         string_concat(res->data, obj1);
+    object_free(temp);
 }
-void string__add(struct object_st *res, const struct string_st *obj1, const struct object_st *obj2) {
-    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
-    if (obj2 == NULL || obj2->type != STRING_TYPE) return;
+void string__add(struct object_st *res, struct object_st *err, const struct string_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    struct object_st *temp = object_new();
+    object__str(temp, err, obj2);
+    if(err->type != NONE_TYPE) {
+        object_free(temp);
+        return;
+    }
     object_set_type(res, STRING_TYPE);
     string_set(res->data, obj1);
-    string_concat(res->data, obj2->data);
+    string_concat(res->data, temp->data);
+    object_free(temp);
 }
 
 // Convert Methods
-void string__bool(struct object_st *res, const struct string_st *obj) {
+void string__bool(struct object_st *res, struct object_st *err, const struct string_st *obj) {
     object_set_type(res, BOOL_TYPE);
     ((struct bool_st *)res->data)->data = (obj->size != 0);
 }
-void string__int(struct object_st *res, const struct string_st *obj) {
+void string__int(struct object_st *res, struct object_st *err, const struct string_st *obj) {
     // TODO
+    object_set_type(err, STRING_TYPE);
+    string_set_str(err->data, "Not implemented", 15);
+
 }
-void string__float(struct object_st *res, const struct string_st *obj) {
+void string__float(struct object_st *res, struct object_st *err, const struct string_st *obj) {
     // TODO
+    object_set_type(err, STRING_TYPE);
+    string_set_str(err->data, "Not implemented", 15);
 }
-void string__str(struct object_st *res, const struct string_st *obj) {
+void string__str(struct object_st *res, struct object_st *err, const struct string_st *obj) {
     object_set_type(res, STRING_TYPE);
     string_set(res->data, obj);
 }

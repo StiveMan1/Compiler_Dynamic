@@ -2,7 +2,7 @@
 
 struct object_math_op array_math = {NULL, NULL, METHOD_MATH &array__mul, METHOD_MATH &array__add};
 struct object_convert array_convert = {NULL, NULL, NULL, METHOD_CONVERT &array__str};
-struct object_type array_type = {ARRAY_OP, &array_math,  &array_convert};
+struct object_type array_type = {ARRAY_OP, NULL,  &array_convert, &array_math};
 // Standard operations
 struct array_st *array_new() {
     struct array_st *res = malloc(ARRAY_SIZE);
@@ -128,23 +128,33 @@ void array_sort(struct array_st *res) {
 }
 
 // Math Methods
-void array__mul(struct object_st *res, const struct array_st *obj1, const struct object_st *obj2) {
+void array__mul(struct object_st *res, struct object_st *err, const struct array_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
-    if (obj2 == NULL || obj2->type != INTEGER_TYPE) return;
+    struct object_st *temp = object_new();
+    object__int(temp, err, obj2);
+    if(err->type != NONE_TYPE) {
+        object_free(temp);
+        return;
+    }
     object_set_type(res, STRING_TYPE);
-    unsigned int count = ((struct integer_st *)obj2->data)->data;
+    unsigned int count = ((struct integer_st *)temp->data)->data;
     for (unsigned int i = 0; i < count; i++)
         array_concat(res->data, obj1);
+    object_free(temp);
 }
-void array__add(struct object_st *res, const struct array_st *obj1, const struct object_st *obj2) {
+void array__add(struct object_st *res, struct object_st *err, const struct array_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
-    if (obj2 == NULL || obj2->type != ARRAY_TYPE) return;
+    if (obj2 == NULL || obj2->type != ARRAY_TYPE) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "list dont have operation add with non list type", 47);
+        return;
+    }
     object_set_type(res, ARRAY_TYPE);
     array_set(res->data, obj1);
     array_concat(res->data, obj2->data);
 }
 
 // Convert Methods
-void array__str(struct object_st *res, const struct array_st *obj){
+void array__str(struct object_st *res, struct object_st *err, const struct array_st *obj){
     //TODO
 }
