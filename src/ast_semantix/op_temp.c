@@ -615,6 +615,9 @@ void run_op(struct op_state *state, struct object_st *object) {
             if (func->type == OP_OBJECT_TYPE) {
                 string_set_str(ind_str, "__init__", 8);
                 res = op_object_get_attrib(func->data, ind_str);
+            } else {
+                error_fill_in(state->error_obj, INTERPRETER_ERROR, "variable is not callable", block->pos, block->line_num, block->line_pos);
+                goto end;
             }
             int ok = 0;
             if (res == NULL) {
@@ -636,6 +639,9 @@ void run_op(struct op_state *state, struct object_st *object) {
                             object_set(attrib->data, array_get_last(state->temp_memory));
                             array_remove_last(state->temp_memory);
                         }
+                    } else {
+                        error_fill_in(state->error_obj, INTERPRETER_ERROR, "Miss match arguments", block->pos, block->line_num, block->line_pos);
+                        goto end;
                     }
                 }
                 object_free(res);
@@ -669,7 +675,8 @@ void run_op(struct op_state *state, struct object_st *object) {
                 }
                 object_free(res);
             }
-
+            end:
+            object_free(res);
             string_free(ind_str);
             object_free(func);
             break;
@@ -694,9 +701,22 @@ void function_call(struct object_st *res, struct error_st *err, struct object_st
     struct op_attrib *attrib = NULL;
     int ok = 0;
 
+    {
+        array_add_new(state->stack_memory, DARRAY_TYPE);
+
+        array_add_new(state->code_operations, OP_BLOCK_TYPE);
+        struct op_block *new_block = array_get_last(state->code_operations)->data;
+        new_block->type = BlockType_Delete_Scope;
+        new_block->subtype = Delete_Scope_None;
+    }
+
+
     if (func->type == OP_OBJECT_TYPE) {
         string_set_str(ind_str, "__params__", 10);
         temp = op_object_get_attrib(func->data, ind_str);
+    } else {
+        error_fill_in(err, INTERPRETER_ERROR, "variable is not callable", 0, 0, 0);
+        goto end;
     }
     if (temp != NULL) {
         struct array_st *temp_array = ((struct node_st *) temp->data)->next;
@@ -711,6 +731,9 @@ void function_call(struct object_st *res, struct error_st *err, struct object_st
                 op_attrib_new_data(attrib);
                 object_set(attrib->data, args->data[i]);
             }
+        } else {
+            error_fill_in(err, INTERPRETER_ERROR, "Miss match arguments", 0, 0, 0);
+            goto end;
         }
     }
     object_free(temp);
@@ -738,11 +761,11 @@ void function_call(struct object_st *res, struct error_st *err, struct object_st
         string_set_str(ind_str, "__call__", 7);
         temp = op_object_get_attrib(func->data, ind_str);
     }
-
     if (temp != NULL && ok) {
         array_append(state->code_operations, temp);
     }
     object_free(temp);
+    temp = NULL;
 
     {
         struct array_st *code_operations = state->code_operations;
@@ -759,7 +782,11 @@ void function_call(struct object_st *res, struct error_st *err, struct object_st
             }
             object_free(current_object);
         }
+        object_set(res, state->return_obj);
+        error_set(err, state->error_obj);
     }
+    end:
+    object_free(temp);
     op_state_free(state);
     string_free(ind_str);
 }
