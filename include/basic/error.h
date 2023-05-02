@@ -22,7 +22,7 @@ int error_is_null(const struct error_st *);
 void print_error(const struct error_st *, int);
 
 // Class functions
-void error_fill_in(struct error_st *res, char* type, char* message, int line_start, int line, int line_pos);
+void error_fill_in(struct error_st *res, char* type, char* message, size_t line_start, size_t line, size_t line_pos);
 
 #define LEXICAL_ANALYSIS_ERROR      "Lexical error"
 #define SYNTAX_ANALYSIS_ERROR       "Syntactical error"

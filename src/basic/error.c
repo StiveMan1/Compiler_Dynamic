@@ -54,7 +54,7 @@ int error_is_null(const struct error_st *res) {
 }
 
 // Class methods
-void error_fill_in(struct error_st *res, char* type, char* message, int pos, int line_num, int line_pos) {
+void error_fill_in(struct error_st *res, char* type, char* message, size_t pos, size_t line_num, size_t line_pos) {
     if(res == NULL) return;
     res->present = 1;
     string_set_str(res->type, type, strlen(type));

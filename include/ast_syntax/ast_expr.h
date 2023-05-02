@@ -12,6 +12,8 @@
 #define PrimType_Call           0x07
 #define PrimType_Tuple          0x08
 
+void set_error(struct ast_parser *, size_t, char *);
+
 int scopes_expr(struct ast_parser *, struct node_st *);
 int list_expr(struct ast_parser *, struct node_st *);
 int ident_get_expr(struct ast_parser *, struct node_st *);
