@@ -108,8 +108,11 @@ void real__float(struct object_st *res, struct error_st *err, struct real_st *ob
 }
 void real__str(struct object_st *res, struct error_st *err, struct real_st *obj){
     // TODO
-    err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
-    string_set_str(err->message, "Not implemented", 15);
+    object_set_type(res->data, STRING_TYPE);
+    char buf[32];
+    memset(buf, 0, 32);
+    sprintf(buf, "%f", obj->data);
+    string_resize(res->data, strlen(buf));
+    memcpy(((struct string_st *)res->data)->data, buf, strlen(buf));
 }
 

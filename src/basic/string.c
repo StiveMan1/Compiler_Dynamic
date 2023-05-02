@@ -101,16 +101,62 @@ void string__bool(struct object_st *res, struct error_st *err, const struct stri
 }
 void string__int(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     // TODO
-    err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
-    string_set_str(err->message, "Not implemented", 15);
+    object_set_type(res->data, INTEGER_TYPE);
+    struct  integer_st *result = NULL;
+    result->data = 0;
+    for(size_t i = 0; i < obj->size; i++){
+        if('0' <= obj->data[i] && obj->data[i] <= '9'){
+            result->data = result->data * 10 + (obj->data[i] - '0');
+        } else {
+            err->present = 1;
+            string_set_str(err->type, INTERPRETER_ERROR, 15);
+            string_set_str(err->message, "Not implemented", 15);
+            return ;
+        }
+    }
+    integer_set(res->data, result);
+    integer_free(result);
+//    err->present = 1;
+//    string_set_str(err->type, INTERPRETER_ERROR, 15);
+//    string_set_str(err->message, "Not implemented", 15);
 
 }
 void string__float(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     // TODO
-    err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
-    string_set_str(err->message, "Not implemented", 15);
+
+    object_set_type(res->data, REAL_TYPE);
+    struct  real_st *result = NULL;
+    short dot = 0;
+    for(size_t i = 0; i < obj->size; i++){
+        if('0' <= obj->data[i] && obj->data[i] <= '9') {
+            result->data = result->data * 10 + (obj->data[i] - '0');
+
+        } else if(obj->data[i] == '.') {
+            dot = 1;
+        } else {
+            err->present = 1;
+            string_set_str(err->type, INTERPRETER_ERROR, 15);
+            string_set_str(err->message, "Not implemented", 15);
+            return ;
+        }
+    }
+    if(dot == 0 || obj->data[obj->size - 1] == '.'){
+        err->present = 1;
+        string_set_str(err->type, INTERPRETER_ERROR, 15);
+        string_set_str(err->message, "Not implemented", 15);
+        return ;
+    }
+    for(size_t i = obj->size; i > 0; i--){
+        if(obj->data[i-1] == '.'){
+            break;
+        }
+        result->data /= 10;
+    }
+    real_set(res->data, result);
+    real_free(result);
+//    err->present = 1;
+//    string_set_str(err->type, INTERPRETER_ERROR, 15);
+//    string_set_str(err->message, "Not implemented", 15);
 }
 void string__str(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     object_set_type(res, STRING_TYPE);

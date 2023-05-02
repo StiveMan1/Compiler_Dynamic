@@ -180,9 +180,12 @@ void integer__float(struct object_st *res, struct error_st *err, struct integer_
 }
 void integer__str(struct object_st *res, struct error_st *err, struct integer_st *obj){
     // TODO
-    err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
-    string_set_str(err->message, "Not implemented", 15);
+    object_set_type(res->data, STRING_TYPE);
+    char buf[32];
+    memset(buf, 0, 32);
+    sprintf(buf, "%ld", obj->data);
+    string_resize(res->data, strlen(buf));
+    memcpy(((struct string_st *)res->data)->data, buf, strlen(buf));
 }
 
 // Cmp methods

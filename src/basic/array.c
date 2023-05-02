@@ -158,7 +158,24 @@ void array__add(struct object_st *res, struct error_st *err, const struct array_
 
 // Convert Methods
 void array__str(struct object_st *res, struct error_st *err, const struct array_st *obj){
-    //TODO
+    object_set_type(res, STRING_TYPE);
+    string_set_str(res->data, "[", 1);
+    struct object_st *temp = NULL;
+    for(size_t i = 0; i < obj->size; i++){
+        object__str(temp, err, obj->data[i]);
+        if (err->present) {
+            object_free(temp);
+            return;
+        }
+        string_concat(res->data, temp->data);
+        if (i + 1 < obj->size) {
+            string_set_str(temp->data, ", ", 2);
+            string_concat(res->data, temp->data);
+        }
+    }
+    string_set_str(temp->data, "]", 1);
+    string_concat(res->data, temp->data);
+    object_free(temp);
 }
 
 // Convert Methods

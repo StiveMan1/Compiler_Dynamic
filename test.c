@@ -12,11 +12,11 @@ void lexical_analysis(struct la_parser *F_parser) {
     tokenize(F_parser);
     // Print Tokenize Result
     if (!error_is_null(F_parser->error_obj)) {
-        error->present = 1;
-        error->type = "Tokenize Error";
-        error->message = F_parser->error_msg->data;
-        error->line = F_parser->current_line + 1;
-        error->line_pos = F_parser->line_pos;
+            error->present = 1;
+            error->type = "Tokenize Error";
+            error->message = F_parser->error_msg->data;
+            error->line = F_parser->current_line + 1;
+            error->line_pos = F_parser->line_pos;
     }
 }
 
