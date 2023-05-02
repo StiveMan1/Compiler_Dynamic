@@ -66,11 +66,11 @@ void string_concat(struct string_st *res, const struct string_st *a) {
 }
 
 // Math Methods
-void string__mul(struct object_st *res, struct object_st *err, const struct string_st *obj1, const struct object_st *obj2) {
+void string__mul(struct object_st *res, struct error_st *err, const struct string_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__int(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -80,11 +80,11 @@ void string__mul(struct object_st *res, struct object_st *err, const struct stri
         string_concat(res->data, obj1);
     object_free(temp);
 }
-void string__add(struct object_st *res, struct object_st *err, const struct string_st *obj1, const struct object_st *obj2) {
+void string__add(struct object_st *res, struct error_st *err, const struct string_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__str(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -95,33 +95,35 @@ void string__add(struct object_st *res, struct object_st *err, const struct stri
 }
 
 // Convert Methods
-void string__bool(struct object_st *res, struct object_st *err, const struct string_st *obj) {
+void string__bool(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     object_set_type(res, BOOL_TYPE);
     ((struct bool_st *)res->data)->data = (obj->size != 0);
 }
-void string__int(struct object_st *res, struct object_st *err, const struct string_st *obj) {
+void string__int(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     // TODO
-    object_set_type(err, STRING_TYPE);
-    string_set_str(err->data, "Not implemented", 15);
+    err->present = 1;
+    string_set_str(err->type, "Execution Error", 15);
+    string_set_str(err->message, "Not implemented", 15);
 
 }
-void string__float(struct object_st *res, struct object_st *err, const struct string_st *obj) {
+void string__float(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     // TODO
-    object_set_type(err, STRING_TYPE);
-    string_set_str(err->data, "Not implemented", 15);
+    err->present = 1;
+    string_set_str(err->type, "Execution Error", 15);
+    string_set_str(err->message, "Not implemented", 15);
 }
-void string__str(struct object_st *res, struct object_st *err, const struct string_st *obj) {
+void string__str(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     object_set_type(res, STRING_TYPE);
     string_set(res->data, obj);
 }
 
 
 // Convert Methods
-struct object_st *string_subscript(struct object_st *err, struct string_st *str, const struct object_st *obj) {
+struct object_st *string_subscript(struct error_st *err, struct string_st *str, const struct object_st *obj) {
     while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
     struct object_st *temp = object_new();
     object__int(temp, err, obj);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return NULL;
     }

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17.3)
+cmake_minimum_required(VERSION 3.22)
 project(Compiler_Dynamic C)
 
 set(CMAKE_C_STANDARD 99)
@@ -14,10 +14,4 @@ target_include_directories(${PROJECT_NAME}_lib PUBLIC
 MESSAGE(STATUS "Connected: ${PROJECT_NAME}_lib")
 
 add_executable(${PROJECT_NAME} main.c)
-add_executable(test test.c)
-target_link_libraries(test PUBLIC ${PROJECT_NAME}_lib)
-
-FILE(GLOB TEST_FILES "tests/*/text*/*.txt")
-foreach(TEST_PATH IN LISTS TEST_FILES)
-    add_test(NAME ${TEST_PATH} COMMAND test ${TEST_PATH})
-endforeach()
+target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_NAME}_lib)

@@ -162,11 +162,11 @@ struct object_st *map_get_elm(struct map_st *res, char *name, size_t size) {
 }
 
 // Sub method
-struct object_st *map_subscript(struct object_st *err, struct map_st *map, const struct object_st *obj) {
+struct object_st *map_subscript(struct error_st *err, struct map_st *map, const struct object_st *obj) {
     while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
     struct object_st *temp = object_new();
     object__str(temp, err, obj);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return NULL;
     }
@@ -175,6 +175,6 @@ struct object_st *map_subscript(struct object_st *err, struct map_st *map, const
     object_free(temp);
     return res;
 }
-struct object_st *map_attrib(struct object_st *err, struct map_st *map, const struct string_st *obj) {
+struct object_st *map_attrib(struct error_st *err, struct map_st *map, const struct string_st *obj) {
     return map_set_elm(map, obj->data, obj->size);
 }

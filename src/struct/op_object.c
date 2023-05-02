@@ -88,9 +88,9 @@ struct object_st *op_object_set_attrib(const struct op_object *res, const struct
     return map_set_elm(res->attr, name->data, name->size);
 }
 
-void function_call(struct object_st *res, struct object_st *err, struct object_st *func, struct array_st *args);
+void function_call(struct object_st *res, struct error_st *err, struct object_st *func, struct array_st *args);
 // Math Methods
-void op_object__mod(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__mod(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -99,8 +99,9 @@ void op_object__mod(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __mod__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __mod__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -115,7 +116,7 @@ void op_object__mod(struct object_st *res, struct object_st *err, const struct o
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__and(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__and(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -124,8 +125,9 @@ void op_object__and(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __and__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __and__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -140,7 +142,7 @@ void op_object__and(struct object_st *res, struct object_st *err, const struct o
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__mul(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__mul(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -149,8 +151,9 @@ void op_object__mul(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __mul__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __mul__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -165,7 +168,7 @@ void op_object__mul(struct object_st *res, struct object_st *err, const struct o
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__add(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__add(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -174,8 +177,9 @@ void op_object__add(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __add__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __add__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -190,7 +194,7 @@ void op_object__add(struct object_st *res, struct object_st *err, const struct o
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__sub(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__sub(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -199,8 +203,9 @@ void op_object__sub(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __sub__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __sub__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -215,7 +220,7 @@ void op_object__sub(struct object_st *res, struct object_st *err, const struct o
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__div(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__div(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -224,8 +229,9 @@ void op_object__div(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __div__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __div__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -240,7 +246,7 @@ void op_object__div(struct object_st *res, struct object_st *err, const struct o
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__xor(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__xor(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -249,8 +255,9 @@ void op_object__xor(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __xor__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __xor__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -265,7 +272,7 @@ void op_object__xor(struct object_st *res, struct object_st *err, const struct o
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__or(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__or(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -274,8 +281,9 @@ void op_object__or(struct object_st *res, struct object_st *err, const struct op
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __or__ operation", 37);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __or__ operation", 37);
         return;
     }
     struct array_st *args = array_new();
@@ -290,7 +298,7 @@ void op_object__or(struct object_st *res, struct object_st *err, const struct op
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__ls(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__ls(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -299,8 +307,9 @@ void op_object__ls(struct object_st *res, struct object_st *err, const struct op
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __ls__ operation", 37);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __ls__ operation", 37);
         return;
     }
     struct array_st *args = array_new();
@@ -315,7 +324,7 @@ void op_object__ls(struct object_st *res, struct object_st *err, const struct op
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__rs(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+void op_object__rs(struct object_st *res, struct error_st *err, const struct op_object *obj1, struct object_st *obj2) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -324,8 +333,9 @@ void op_object__rs(struct object_st *res, struct object_st *err, const struct op
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __rs__ operation", 37);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __rs__ operation", 37);
         return;
     }
     struct array_st *args = array_new();
@@ -340,7 +350,7 @@ void op_object__rs(struct object_st *res, struct object_st *err, const struct op
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__neg(struct object_st *res, struct object_st *err, const struct op_object *obj1) {
+void op_object__neg(struct object_st *res, struct error_st *err, const struct op_object *obj1) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -349,8 +359,9 @@ void op_object__neg(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __neg__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __neg__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -366,7 +377,7 @@ void op_object__neg(struct object_st *res, struct object_st *err, const struct o
 }
 
 // Convert Methods
-void op_object__bool(struct object_st *res, struct object_st *err, const struct op_object *obj) {
+void op_object__bool(struct object_st *res, struct error_st *err, const struct op_object *obj) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -390,7 +401,7 @@ void op_object__bool(struct object_st *res, struct object_st *err, const struct 
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__int(struct object_st *res, struct object_st *err, const struct op_object *obj) {
+void op_object__int(struct object_st *res, struct error_st *err, const struct op_object *obj) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -399,8 +410,9 @@ void op_object__int(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __int__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __int__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -414,7 +426,7 @@ void op_object__int(struct object_st *res, struct object_st *err, const struct o
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__float(struct object_st *res, struct object_st *err, const struct op_object *obj) {
+void op_object__float(struct object_st *res, struct error_st *err, const struct op_object *obj) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -423,8 +435,9 @@ void op_object__float(struct object_st *res, struct object_st *err, const struct
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __float__ operation", 40);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __float__ operation", 40);
         return;
     }
     struct array_st *args = array_new();
@@ -438,7 +451,7 @@ void op_object__float(struct object_st *res, struct object_st *err, const struct
     function_call(res, err, func, args);
     array_free(args);
 }
-void op_object__str(struct object_st *res, struct object_st *err, const struct op_object *obj) {
+void op_object__str(struct object_st *res, struct error_st *err, const struct op_object *obj) {
     struct object_st *func = NULL;
     {
         struct string_st *function_name = string_new();
@@ -447,8 +460,9 @@ void op_object__str(struct object_st *res, struct object_st *err, const struct o
         string_free(function_name);
     }
     if (func == NULL) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Object does not have __str__ operation", 38);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Object does not have __str__ operation", 38);
         return;
     }
     struct array_st *args = array_new();
@@ -464,11 +478,11 @@ void op_object__str(struct object_st *res, struct object_st *err, const struct o
 }
 
 // Sub method
-struct object_st *op_object_subscript(struct object_st *err, struct op_object *obj, const struct object_st *obj2) {
+struct object_st *op_object_subscript(struct error_st *err, struct op_object *obj, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__str(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return object_new();
     }
@@ -476,6 +490,6 @@ struct object_st *op_object_subscript(struct object_st *err, struct op_object *o
     object_free(temp);
     return res;
 }
-struct object_st *op_object_attrib(struct object_st *err, const struct op_object *obj, const struct string_st *str) {
+struct object_st *op_object_attrib(struct error_st *err, const struct op_object *obj, const struct string_st *str) {
     return op_object_set_attrib(obj, str);
 }

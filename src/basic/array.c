@@ -129,11 +129,11 @@ void array_sort(struct array_st *res) {
 }
 
 // Math Methods
-void array__mul(struct object_st *res, struct object_st *err, const struct array_st *obj1, const struct object_st *obj2) {
+void array__mul(struct object_st *res, struct error_st *err, const struct array_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
     struct object_st *temp = object_new();
     object__int(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -143,11 +143,12 @@ void array__mul(struct object_st *res, struct object_st *err, const struct array
         array_concat(res->data, obj1);
     object_free(temp);
 }
-void array__add(struct object_st *res, struct object_st *err, const struct array_st *obj1, const struct object_st *obj2) {
+void array__add(struct object_st *res, struct error_st *err, const struct array_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
     if (obj2 == NULL || obj2->type != ARRAY_TYPE) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "list dont have operation add with non list type", 47);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "list dont have operation add with non list type", 47);
         return;
     }
     object_set_type(res, ARRAY_TYPE);
@@ -156,16 +157,16 @@ void array__add(struct object_st *res, struct object_st *err, const struct array
 }
 
 // Convert Methods
-void array__str(struct object_st *res, struct object_st *err, const struct array_st *obj){
+void array__str(struct object_st *res, struct error_st *err, const struct array_st *obj){
     //TODO
 }
 
 // Convert Methods
-struct object_st *array_subscript(struct object_st *err, struct array_st *list, const struct object_st *obj) {
+struct object_st *array_subscript(struct error_st *err, struct array_st *list, const struct object_st *obj) {
     while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
     struct object_st *temp = object_new();
     object__int(temp, err, obj);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return NULL;
     }

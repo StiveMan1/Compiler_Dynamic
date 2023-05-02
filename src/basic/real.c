@@ -33,11 +33,11 @@ int real_is_null(const struct real_st *res) {
 }
 
 // Math Methods
-void real__mul(struct object_st *res, struct object_st *err, const struct real_st *obj1, const struct object_st *obj2) {
+void real__mul(struct object_st *res, struct error_st *err, const struct real_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__float(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -45,11 +45,11 @@ void real__mul(struct object_st *res, struct object_st *err, const struct real_s
     ((struct real_st *)res->data)->data = (obj1->data * ((struct real_st *)temp->data)->data);
     object_free(temp);
 }
-void real__add(struct object_st *res, struct object_st *err, const struct real_st *obj1, const struct object_st *obj2) {
+void real__add(struct object_st *res, struct error_st *err, const struct real_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__float(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -57,11 +57,11 @@ void real__add(struct object_st *res, struct object_st *err, const struct real_s
     ((struct real_st *)res->data)->data = (obj1->data + ((struct real_st *)temp->data)->data);
     object_free(temp);
 }
-void real__sub(struct object_st *res, struct object_st *err, const struct real_st *obj1, const struct object_st *obj2) {
+void real__sub(struct object_st *res, struct error_st *err, const struct real_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__float(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -69,17 +69,18 @@ void real__sub(struct object_st *res, struct object_st *err, const struct real_s
     ((struct real_st *)res->data)->data = (obj1->data - ((struct real_st *)temp->data)->data);
     object_free(temp);
 }
-void real__div(struct object_st *res, struct object_st *err, const struct real_st *obj1, const struct object_st *obj2) {
+void real__div(struct object_st *res, struct error_st *err, const struct real_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__float(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
     if(integer_is_null(temp->data)) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Division by zero", 16);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Division by zero", 16);
         object_free(temp);
         return;
     }
@@ -87,27 +88,28 @@ void real__div(struct object_st *res, struct object_st *err, const struct real_s
     ((struct real_st *)res->data)->data = (obj1->data / ((struct real_st *)temp->data)->data);
     object_free(temp);
 }
-void real__neg(struct object_st *res, struct object_st *err, const struct real_st *obj1) {
+void real__neg(struct object_st *res, struct error_st *err, const struct real_st *obj1) {
     object_set_type(res, REAL_TYPE);
     ((struct real_st *)res->data)->data = -obj1->data;
 }
 
 // Convert Methods
-void real__bool(struct object_st *res, struct object_st *err, struct real_st *obj){
+void real__bool(struct object_st *res, struct error_st *err, struct real_st *obj){
     object_set_type(res, BOOL_TYPE);
     ((struct bool_st *)res->data)->data = !real_is_null(obj);
 }
-void real__int(struct object_st *res, struct object_st *err, struct real_st *obj){
+void real__int(struct object_st *res, struct error_st *err, struct real_st *obj){
     object_set_type(res, REAL_TYPE);
     ((struct integer_st *)res->data)->data = (int)obj->data;
 }
-void real__float(struct object_st *res, struct object_st *err, struct real_st *obj){
+void real__float(struct object_st *res, struct error_st *err, struct real_st *obj){
     object_set_type(res, REAL_TYPE);
     real_set(res->data, obj);
 }
-void real__str(struct object_st *res, struct object_st *err, struct real_st *obj){
+void real__str(struct object_st *res, struct error_st *err, struct real_st *obj){
     // TODO
-    object_set_type(err, STRING_TYPE);
-    string_set_str(err->data, "Not implemented", 15);
+    err->present = 1;
+    string_set_str(err->type, "Execution Error", 15);
+    string_set_str(err->message, "Not implemented", 15);
 }
 

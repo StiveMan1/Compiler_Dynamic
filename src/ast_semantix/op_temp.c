@@ -737,12 +737,13 @@ void interpretation(struct object_st *expr_obj, struct error_st *err) {
             current_object = object_copy(array_get_last(code_operations));
             array_remove_last(code_operations);
 
-            if (state->error_obj != NONE_TYPE)
-            if (current_object->type == NODE_TYPE) {
-                run_an(state, current_object);
-            }
-            if (current_object->type == OP_BLOCK_TYPE) {
-                run_op(state, current_object);
+            if (!state->error_obj->present) {
+                if (current_object->type == NODE_TYPE) {
+                    run_an(state, current_object);
+                }
+                if (current_object->type == OP_BLOCK_TYPE) {
+                    run_op(state, current_object);
+                }
             }
             object_free(current_object);
         }

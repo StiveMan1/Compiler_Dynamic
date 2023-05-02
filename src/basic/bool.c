@@ -33,17 +33,18 @@ int bool_is_null(const struct bool_st *res) {
 }
 
 // Math Methods
-void bool__mod(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__mod(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
     if(integer_is_null(temp->data)) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Division by zero", 16);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Division by zero", 16);
         object_free(temp);
         return;
     }
@@ -51,11 +52,11 @@ void bool__mod(struct object_st *res, struct object_st *err, const struct bool_s
     ((struct bool_st *)res->data)->data = (obj1->data % ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__and(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__and(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -63,11 +64,11 @@ void bool__and(struct object_st *res, struct object_st *err, const struct bool_s
     ((struct bool_st *)res->data)->data = (obj1->data & ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__mul(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__mul(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -75,11 +76,11 @@ void bool__mul(struct object_st *res, struct object_st *err, const struct bool_s
     ((struct bool_st *)res->data)->data = (obj1->data * ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__add(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__add(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -87,11 +88,11 @@ void bool__add(struct object_st *res, struct object_st *err, const struct bool_s
     ((struct bool_st *)res->data)->data = (obj1->data + ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__sub(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__sub(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -99,17 +100,18 @@ void bool__sub(struct object_st *res, struct object_st *err, const struct bool_s
     ((struct bool_st *)res->data)->data = (obj1->data - ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__div(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__div(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
     if(integer_is_null(temp->data)) {
-        object_set_type(err, STRING_TYPE);
-        string_set_str(err->data, "Division by zero", 16);
+        err->present = 1;
+        string_set_str(err->type, "Execution Error", 15);
+        string_set_str(err->message, "Division by zero", 16);
         object_free(temp);
         return;
     }
@@ -117,11 +119,11 @@ void bool__div(struct object_st *res, struct object_st *err, const struct bool_s
     ((struct bool_st *)res->data)->data = (obj1->data / ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__xor(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__xor(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -129,11 +131,11 @@ void bool__xor(struct object_st *res, struct object_st *err, const struct bool_s
     ((struct bool_st *)res->data)->data = (obj1->data ^ ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__or(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__or(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -141,11 +143,11 @@ void bool__or(struct object_st *res, struct object_st *err, const struct bool_st
     ((struct bool_st *)res->data)->data = (obj1->data | ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__ls(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__ls(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -153,11 +155,11 @@ void bool__ls(struct object_st *res, struct object_st *err, const struct bool_st
     ((struct bool_st *)res->data)->data = (obj1->data << ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__rs(struct object_st *res, struct object_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
+void bool__rs(struct object_st *res, struct error_st *err, const struct bool_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
     object__bool(temp, err, obj2);
-    if(err->type != NONE_TYPE) {
+    if(err->present) {
         object_free(temp);
         return;
     }
@@ -165,27 +167,28 @@ void bool__rs(struct object_st *res, struct object_st *err, const struct bool_st
     ((struct bool_st *)res->data)->data = (obj1->data >> ((struct bool_st *)temp->data)->data) % 2;
     object_free(temp);
 }
-void bool__neg(struct object_st *res, struct object_st *err, const struct bool_st *obj1) {
+void bool__neg(struct object_st *res, struct error_st *err, const struct bool_st *obj1) {
     object_set_type(res, BOOL_TYPE);
     ((struct bool_st *)res->data)->data = (obj1->data + 1) % 2;
 }
 
 // Convert Methods
-void bool__bool(struct object_st *res, struct object_st *err, struct bool_st *obj){
+void bool__bool(struct object_st *res, struct error_st *err, struct bool_st *obj){
     object_set_type(res, BOOL_TYPE);
     bool_set(res->data, obj);
 }
-void bool__int(struct object_st *res, struct object_st *err, struct bool_st *obj){
+void bool__int(struct object_st *res, struct error_st *err, struct bool_st *obj){
     object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = obj->data;
 }
-void bool__float(struct object_st *res, struct object_st *err, struct bool_st *obj){
+void bool__float(struct object_st *res, struct error_st *err, struct bool_st *obj){
     object_set_type(res, REAL_TYPE);
     ((struct real_st *)res->data)->data = obj->data;
 }
-void bool__str(struct object_st *res, struct object_st *err, struct bool_st *obj){
+void bool__str(struct object_st *res, struct error_st *err, struct bool_st *obj){
     // TODO
-    object_set_type(err, STRING_TYPE);
-    string_set_str(err->data, "Not implemented", 15);
+    err->present = 1;
+    string_set_str(err->type, "Execution Error", 15);
+    string_set_str(err->message, "Not implemented", 15);
 }
 
