@@ -1,5 +1,7 @@
 #include "ast_analyze.h"
 
+#define set_error_syntactical(message) error_fill_in(parser->error_obj, SYNTAX_ANALYSIS_ERROR, message, expr->line_pos, expr->line_num, expr->pos);
+
 #define expr_cast(expr) { struct object_st *obj = object_new(); object_set_type(obj, NODE_TYPE); \
 node_set(obj->data, expr); node_clear(expr); array_append((expr)->next, obj); object_free(obj); }
 #define expr_add(expr) { struct object_st *obj = object_new(); object_set_type(obj, NODE_TYPE); \
@@ -8,8 +10,8 @@ array_append((expr)->next, obj); expr_next = obj->data; object_free(obj);}
 #define analyze_end \
 end:    if (result != SN_Status_Success) {node_clear(expr);parser->position = current_pointing;} return result; \
 sub:    result = sub_result; goto end; \
-eof:    result = SN_Status_EOF; parser->error_pos = parser->position; goto end; \
-err:    result = SN_Status_Error; parser->error_pos = parser->position; goto end;
+eof:    result = SN_Status_EOF; set_error_syntactical("Unexpected end of file"); goto end; \
+err:    result = SN_Status_Error; set_error_syntactical(""); goto end;
 
 #define check_call(call, check) {sub_result = call; if (sub_result == SN_Status_Nothing) check if (sub_result != SN_Status_Success) goto sub;}
 
