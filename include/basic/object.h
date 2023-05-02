@@ -39,6 +39,10 @@ void object__int(struct object_st *, struct object_st *, const struct object_st 
 void object__float(struct object_st *, struct object_st *, const struct object_st *);
 void object__str(struct object_st *, struct object_st *, const struct object_st *);
 
+// Sub method
+struct object_st *object_subscript(struct object_st *, struct object_st *, const struct object_st *);
+struct object_st *object_attrib(struct object_st *, const struct object_st *, const struct string_st *);
+
 // Print
 void print_obj(const struct object_st *res, int tabs);
 

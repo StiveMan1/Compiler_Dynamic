@@ -2,7 +2,7 @@
 
 struct object_math_op real_math = {NULL, NULL, METHOD_MATH &real__mul, METHOD_MATH &real__add, METHOD_MATH &real__sub, METHOD_MATH &real__div, NULL, NULL, NULL, NULL, METHOD_CONVERT &real__neg};
 struct object_convert real_convert = {METHOD_CONVERT &real__bool, METHOD_CONVERT &real__int, METHOD_CONVERT &real__float, METHOD_CONVERT &real__str};
-struct object_type real_type = {REAL_OP, &real_math, &real_convert};
+struct object_type real_type = {REAL_OP, NULL, &real_convert, &real_math};
 // Standard operations
 struct real_st *real_new() {
     struct real_st *res = malloc(REAL_SIZE);

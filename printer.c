@@ -435,6 +435,7 @@ void print_op_attrib(const struct op_attrib *res, int size) {
     }
 }
 void print_obj(const struct object_st *res, int size) {
+    if(res == NULL) return;
 //    printf("object : (%d)\n", res->counter);
 //    PRINT_PREF
 //    PRINT_NEXT(0)

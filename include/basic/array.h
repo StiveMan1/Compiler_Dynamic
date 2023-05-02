@@ -31,6 +31,9 @@ void array__add(struct object_st *, struct object_st *, const struct array_st *,
 // Convert Methods
 void array__str(struct object_st *, struct object_st *, const struct array_st *);
 
+// Convert Methods
+struct object_st *array_subscript(struct object_st *, struct array_st *, const struct object_st *);
+
 // Print
 void print_array(const struct array_st *, int);
 

@@ -4,9 +4,10 @@
 struct object_math_op object_math = {METHOD_MATH &object__mod, METHOD_MATH &object__and, METHOD_MATH &object__mul,
                                      METHOD_MATH &object__add, METHOD_MATH &object__sub, METHOD_MATH &object__div,
                                      METHOD_MATH &object__xor, METHOD_MATH &object__or, METHOD_MATH &object__ls,
-                                     METHOD_MATH &object__rs};
+                                     METHOD_MATH &object__rs, METHOD_CONVERT &object__neg};
 struct object_convert object_convert = {METHOD_CONVERT &object__bool, METHOD_CONVERT &object__int, METHOD_CONVERT &object__float, METHOD_CONVERT &object__str};
-struct object_type object_type = {OBJECT_OP, &object_math, &object_convert};
+struct object_sub object_sub = {METHOD_SUBSCRIPT &object_subscript, METHOD_ATTRIB &object_attrib};
+struct object_type object_type = {OBJECT_OP, &object_sub, &object_convert, &object_math};
 // Standard operations
 struct object_st *object_new() {
     struct object_st *res = malloc(OBJECT_SIZE);
@@ -193,4 +194,24 @@ void object__str(struct object_st *res, struct object_st *err, const struct obje
     }
     object_set_type(err, STRING_TYPE);
     string_set_str(err->data, "Object does not have __str__ operation", 38);
+}
+
+// Sub method
+struct object_st *object_subscript(struct object_st *err, struct object_st *obj, const struct object_st *obj2) {
+    while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
+    if (obj != NULL && obj->type != NULL && obj->type->sub != NULL && obj->type->sub->_subscript != NULL) {
+        return obj->type->sub->_subscript(err, obj->data, obj2);
+    }
+    object_set_type(err, STRING_TYPE);
+    string_set_str(err->data, "Object does not have __subscript__ operation", 48);
+    return NULL;
+}
+struct object_st *object_attrib(struct object_st *err, const struct object_st *obj, const struct string_st *str) {
+    while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
+    if (obj != NULL && obj->type != NULL && obj->type->sub != NULL && obj->type->sub->_attrib != NULL) {
+        return obj->type->sub->_attrib(err, obj->data, str);
+    }
+    object_set_type(err, STRING_TYPE);
+    string_set_str(err->data, "Object does not have __attrib__ operation", 45);
+    return NULL;
 }

@@ -32,6 +32,9 @@ void string__int(struct object_st *, struct object_st *, const struct string_st 
 void string__float(struct object_st *, struct object_st *, const struct string_st *);
 void string__str(struct object_st *, struct object_st *, const struct string_st *);
 
+// Convert Methods
+struct object_st *string_subscript(struct object_st *, struct string_st *, const struct object_st *);
+
 // Print
 void print_str(const struct string_st *);
 

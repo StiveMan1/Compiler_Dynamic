@@ -1,6 +1,11 @@
 #include "struct.h"
-
-struct object_type op_object_type = {OP_OBJECT_OP};
+struct object_math_op op_object_math = {METHOD_MATH &op_object__mod, METHOD_MATH &op_object__and, METHOD_MATH &op_object__mul,
+                                     METHOD_MATH &op_object__add, METHOD_MATH &op_object__sub, METHOD_MATH &op_object__div,
+                                     METHOD_MATH &op_object__xor, METHOD_MATH &op_object__or, METHOD_MATH &op_object__ls,
+                                     METHOD_MATH &op_object__rs, METHOD_CONVERT &op_object__neg};
+struct object_convert op_object_convert = {METHOD_CONVERT &op_object__bool, METHOD_CONVERT &op_object__int, METHOD_CONVERT &op_object__float, METHOD_CONVERT &op_object__str};
+struct object_sub op_object_sub = {METHOD_SUBSCRIPT &op_object_subscript, METHOD_ATTRIB &op_object_attrib};
+struct object_type op_object_type = {OP_OBJECT_OP, &op_object_sub, &op_object_convert, &op_object_math};
 
 struct op_object *op_object_new() {
     struct op_object *res = malloc(OP_OBJECT_SIZE);
@@ -76,9 +81,401 @@ void op_object_set_function(struct op_object *res, struct node_st *node) {
 
     string_free(attr_name);
 }
-struct object_st *op_object_get_attrib(struct op_object *res, struct string_st *name) {
+struct object_st *op_object_get_attrib(const struct op_object *res, struct string_st *name) {
     return map_get_elm(res->attr, name->data, name->size);
 }
-struct object_st *op_object_set_attrib(struct op_object *res, struct string_st *name) {
+struct object_st *op_object_set_attrib(const struct op_object *res, const struct string_st *name) {
     return map_set_elm(res->attr, name->data, name->size);
+}
+
+void function_call(struct object_st *res, struct object_st *err, struct object_st *func, struct array_st *args);
+// Math Methods
+void op_object__mod(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __mod__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__and(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __and__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__mul(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __mul__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__add(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __add__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__sub(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __sub__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__div(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __div__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__xor(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __xor__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__or(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __or__ operation", 37);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__ls(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __ls__ operation", 37);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__rs(struct object_st *res, struct object_st *err, const struct op_object *obj1, struct object_st *obj2) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __rs__ operation", 37);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    array_append(args, obj2);
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__neg(struct object_st *res, struct object_st *err, const struct op_object *obj1) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj1, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __neg__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj1);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    function_call(res, err, func, args);
+    array_free(args);
+}
+
+// Convert Methods
+void op_object__bool(struct object_st *res, struct object_st *err, const struct op_object *obj) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(res, INTEGER_TYPE);
+        ((struct bool_st *)res->data)->data = 1;
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__int(struct object_st *res, struct object_st *err, const struct op_object *obj) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __int__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__float(struct object_st *res, struct object_st *err, const struct op_object *obj) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __float__ operation", 40);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    function_call(res, err, func, args);
+    array_free(args);
+}
+void op_object__str(struct object_st *res, struct object_st *err, const struct op_object *obj) {
+    struct object_st *func = NULL;
+    {
+        struct string_st *function_name = string_new();
+        string_set_str(function_name, "__mod__", 7);
+        func = op_object_get_attrib(obj, function_name);
+        string_free(function_name);
+    }
+    if (func == NULL) {
+        object_set_type(err, STRING_TYPE);
+        string_set_str(err->data, "Object does not have __str__ operation", 38);
+        return;
+    }
+    struct array_st *args = array_new();
+    {
+        struct object_st *obj_temp = object_new();
+        object_set_type(obj_temp, OP_OBJECT_TYPE);
+        op_object_set(obj_temp->data, obj);
+        array_append(args, obj_temp);
+        object_free(obj_temp);
+    }
+    function_call(res, err, func, args);
+    array_free(args);
+}
+
+// Sub method
+struct object_st *op_object_subscript(struct object_st *err, struct op_object *obj, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    struct object_st *temp = object_new();
+    object__str(temp, err, obj2);
+    if(err->type != NONE_TYPE) {
+        object_free(temp);
+        return object_new();
+    }
+    struct object_st *res = op_object_set_attrib(obj, temp->data);
+    object_free(temp);
+    return res;
+}
+struct object_st *op_object_attrib(struct object_st *err, const struct op_object *obj, const struct string_st *str) {
+    return op_object_set_attrib(obj, str);
 }

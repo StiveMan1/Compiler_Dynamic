@@ -1,8 +1,9 @@
 #include "basic.h"
 
+struct object_sub list_sub = {METHOD_SUBSCRIPT &array_subscript};
 struct object_math_op array_math = {NULL, NULL, METHOD_MATH &array__mul, METHOD_MATH &array__add};
 struct object_convert array_convert = {NULL, NULL, NULL, METHOD_CONVERT &array__str};
-struct object_type array_type = {ARRAY_OP, NULL,  &array_convert, &array_math};
+struct object_type array_type = {ARRAY_OP, &list_sub,  &array_convert, &array_math};
 // Standard operations
 struct array_st *array_new() {
     struct array_st *res = malloc(ARRAY_SIZE);
@@ -157,4 +158,18 @@ void array__add(struct object_st *res, struct object_st *err, const struct array
 // Convert Methods
 void array__str(struct object_st *res, struct object_st *err, const struct array_st *obj){
     //TODO
+}
+
+// Convert Methods
+struct object_st *array_subscript(struct object_st *err, struct array_st *list, const struct object_st *obj) {
+    while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
+    struct object_st *temp = object_new();
+    object__int(temp, err, obj);
+    if(err->type != NONE_TYPE) {
+        object_free(temp);
+        return NULL;
+    }
+    size_t position = ((struct integer_st *)temp->data)->data;
+    object_free(temp);
+    return list->data[position % list->size];
 }

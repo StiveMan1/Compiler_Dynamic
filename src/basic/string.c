@@ -1,9 +1,10 @@
 #include "basic.h"
 
+struct object_sub string_sub = {METHOD_SUBSCRIPT &string_subscript};
 struct object_math_op string_math = {NULL, NULL, METHOD_MATH & string__mul, METHOD_MATH & string__add};
 struct object_convert string_convert = {METHOD_CONVERT & string__bool, METHOD_CONVERT & string__int,
                                         METHOD_CONVERT & string__float, METHOD_CONVERT & string__str};
-struct object_type string_type = {STRING_OP, &string_math, &string_convert};
+struct object_type string_type = {STRING_OP, &string_sub, &string_convert, &string_math};
 // Standard operations
 struct string_st *string_new() {
     struct string_st *res = malloc(STRING_SIZE);
@@ -112,4 +113,22 @@ void string__float(struct object_st *res, struct object_st *err, const struct st
 void string__str(struct object_st *res, struct object_st *err, const struct string_st *obj) {
     object_set_type(res, STRING_TYPE);
     string_set(res->data, obj);
+}
+
+
+// Convert Methods
+struct object_st *string_subscript(struct object_st *err, struct string_st *str, const struct object_st *obj) {
+    while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
+    struct object_st *temp = object_new();
+    object__int(temp, err, obj);
+    if(err->type != NONE_TYPE) {
+        object_free(temp);
+        return NULL;
+    }
+    struct object_st *res = object_new();
+    size_t position = ((struct integer_st *)temp->data)->data % str->size;
+    object_set_type(res, STRING_TYPE);
+    string_set_str(res->data, str->data + position, 1);
+    object_free(temp);
+    return res;
 }

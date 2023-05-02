@@ -319,39 +319,15 @@ void run_op(struct op_state *state, struct object_st *object) {
             struct object_st *obj = object_copy(array_get_last(state->temp_memory));
             array_remove_last(state->temp_memory);
 
-            if (obj->type == OP_OBJECT_TYPE) {
-                struct string_st *ind_str = string_new();
+            struct object_st *res = object_new();
 
-                if (block->subtype == Convert_Bool) string_set_str(ind_str, "__bool__", 8);
-                else if (block->subtype == Convert_Int) string_set_str(ind_str, "__int__", 7);
-                else if (block->subtype == Convert_Float) string_set_str(ind_str, "__float__", 9);
-                else if (block->subtype == Convert_Str) string_set_str(ind_str, "__str__", 7);
+            if (block->subtype == Convert_Bool) object__bool(res, state->error_obj, obj);
+            else if (block->subtype == Convert_Int) object__int(res, state->error_obj, obj);
+            else if (block->subtype == Convert_Float) object__float(res, state->error_obj, obj);
+            else if (block->subtype == Convert_Str) object__str(res, state->error_obj, obj);
 
-                temp = op_object_get_attrib(obj->data, ind_str);
-                string_free(ind_str);
-            }
-
-            if (temp != NULL) {
-                array_append(state->temp_memory, obj);
-                array_append(state->temp_memory, temp);
-
-                array_add_new(code_operations, OP_BLOCK_TYPE);
-                new_block = array_get_last(code_operations)->data;
-                new_block->type = BlockType_Call;
-                new_block->count = 1;
-            } else {
-                struct object_st *res = object_new();
-                struct object_st *err = object_new();
-
-                if (block->subtype == Convert_Bool) object__bool(res, err, obj);
-                else if (block->subtype == Convert_Int) object__int(res, err, obj);
-                else if (block->subtype == Convert_Float) object__float(res, err, obj);
-                else if (block->subtype == Convert_Str) object__str(res, err, obj);
-
-                array_append(state->temp_memory, res);
-                object_free(res);
-                object_free(err);
-            }
+            array_append(state->temp_memory, res);
+            object_free(res);
             object_free(obj);
             object_free(temp);
             break;
@@ -365,52 +341,22 @@ void run_op(struct op_state *state, struct object_st *object) {
                     struct object_st *obj1 = object_copy(array_get_last(state->temp_memory));
                     array_remove_last(state->temp_memory);
 
-                    if (obj1->type == OP_OBJECT_TYPE) {
-                        struct string_st *ind_str = string_new();
+                    struct object_st *res = object_new();
 
-                        if (block->subtype == Special_MOD) string_set_str(ind_str, "__mod__", 7);
-                        else if (block->subtype == Special_AND) string_set_str(ind_str, "__and__", 7);
-                        else if (block->subtype == Special_MUL) string_set_str(ind_str, "__mul__", 7);
-                        else if (block->subtype == Special_ADD) string_set_str(ind_str, "__add__", 7);
-                        else if (block->subtype == Special_SUB) string_set_str(ind_str, "__sub__", 7);
-                        else if (block->subtype == Special_DIV) string_set_str(ind_str, "__div__", 7);
-                        else if (block->subtype == Special_XOR) string_set_str(ind_str, "__xor__", 7);
-                        else if (block->subtype == Special_OR) string_set_str(ind_str, "__or__", 6);
-                        else if (block->subtype == Special_LSHIFT) string_set_str(ind_str, "__ls__", 6);
-                        else if (block->subtype == Special_RSHIFT) string_set_str(ind_str, "__rs__", 6);
+                    if (block->subtype == Special_MOD) object__mod(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == Special_AND) object__and(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == Special_MUL) object__mul(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == Special_ADD) object__add(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == Special_SUB) object__sub(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == Special_DIV) object__div(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == Special_XOR) object__xor(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == Special_OR) object__or(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == Special_LSHIFT) object__ls(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == Special_RSHIFT) object__rs(res, state->error_obj, obj1, obj2);
 
-                        temp = op_object_get_attrib(obj1->data, ind_str);
-                        string_free(ind_str);
-                    }
-
-                    if (temp != NULL) {
-                        array_append(state->temp_memory, obj2);
-                        array_append(state->temp_memory, obj1);
-                        array_append(state->temp_memory, temp);
-
-                        array_add_new(code_operations, OP_BLOCK_TYPE);
-                        new_block = array_get_last(code_operations)->data;
-                        new_block->type = BlockType_Call;
-                        new_block->count = 2;
-                    } else {
-                        struct object_st *res = object_new();
-                        struct object_st *err = object_new();
-
-                        if (block->subtype == Special_MOD) object__mod(res, err, obj1, obj2);
-                        else if (block->subtype == Special_AND) object__and(res, err, obj1, obj2);
-                        else if (block->subtype == Special_MUL) object__mul(res, err, obj1, obj2);
-                        else if (block->subtype == Special_ADD) object__add(res, err, obj1, obj2);
-                        else if (block->subtype == Special_SUB) object__sub(res, err, obj1, obj2);
-                        else if (block->subtype == Special_DIV) object__div(res, err, obj1, obj2);
-                        else if (block->subtype == Special_XOR) object__xor(res, err, obj1, obj2);
-                        else if (block->subtype == Special_OR) object__or(res, err, obj1, obj2);
-                        else if (block->subtype == Special_LSHIFT) object__ls(res, err, obj1, obj2);
-                        else if (block->subtype == Special_RSHIFT) object__rs(res, err, obj1, obj2);
-
-                        array_append(state->temp_memory, res);
-                        object_free(res);
-                        object_free(err);
-                    }
+                    array_append(state->temp_memory, res);
+                    object_free(res);
+                    object_free(state->error_obj);
                     object_free(temp);
                     object_free(obj2);
                     object_free(obj1);
@@ -423,57 +369,23 @@ void run_op(struct op_state *state, struct object_st *object) {
                     struct object_st *obj1 = object_copy(array_get_last(state->temp_memory));
                     array_remove_last(state->temp_memory);
 
-                    if (obj1->type == OP_OBJECT_TYPE) {
-                        struct string_st *ind_str = string_new();
+                    int cmp_res = object_cmp(obj1, obj2);
 
+                    struct object_st *res = object_new();
+                    object_set_type(res, BOOL_TYPE);
 
-                        if (block->subtype == Special_LESS) string_set_str(ind_str, "__lt__", 6);
-                        else if (block->subtype == Special_GREATER) string_set_str(ind_str, "__gt__", 6);
-                        else if (block->subtype == Special_EQ_LESS) string_set_str(ind_str, "__le__", 6);
-                        else if (block->subtype == Special_EQ_GREATER) string_set_str(ind_str, "__ge__", 6);
-                        else if (block->subtype == Special_EQ_NOT || block->subtype == Special_EQ_EQ)
-                            string_set_str(ind_str, "__eq__", 6);
+                    if (
+                            (block->subtype == Special_LESS && cmp_res < 0) ||
+                            (block->subtype == Special_GREATER && cmp_res != 2 && cmp_res > 0) ||
+                            (block->subtype == Special_EQ_LESS && cmp_res <= 0) ||
+                            (block->subtype == Special_EQ_GREATER && cmp_res != 2 && cmp_res >= 0) ||
+                            (block->subtype == Special_EQ_NOT && cmp_res != 0) ||
+                            (block->subtype == Special_EQ_EQ && cmp_res == 0))
+                        ((struct bool_st *)res->data)->data = 1;
+                    else ((struct bool_st *)res->data)->data = 0;
 
-                        temp = op_object_get_attrib(obj1->data, ind_str);
-                        string_free(ind_str);
-                    }
-
-                    if (temp != NULL) {
-                        array_append(state->temp_memory, obj2);
-                        array_append(state->temp_memory, obj1);
-                        array_append(state->temp_memory, temp);
-
-                        if (block->subtype == Special_EQ_NOT) {
-                            array_add_new(code_operations, OP_BLOCK_TYPE);
-                            new_block = array_get_last(code_operations)->data;
-                            new_block->type = BlockType_Arithmetic;
-                            new_block->subtype = KeyWord_NOT;
-                            new_block->count = 1;
-                        }
-
-                        array_add_new(code_operations, OP_BLOCK_TYPE);
-                        new_block = array_get_last(code_operations)->data;
-                        new_block->type = BlockType_Call;
-                        new_block->count = 2;
-                    } else {
-                        int cmp_res = object_cmp(obj1, obj2);
-
-                        struct object_st *res = object_new();
-                        object_set_type(res, BOOL_TYPE);
-
-                        if (
-                                (block->subtype == Special_LESS && cmp_res < 0) ||
-                                (block->subtype == Special_GREATER && cmp_res != 2 && cmp_res > 0) ||
-                                (block->subtype == Special_EQ_LESS && cmp_res <= 0) ||
-                                (block->subtype == Special_EQ_GREATER && cmp_res != 2 && cmp_res >= 0) ||
-                                (block->subtype == Special_EQ_NOT && cmp_res != 0) ||
-                                (block->subtype == Special_EQ_EQ && cmp_res == 0))
-                            ((struct bool_st *)res->data)->data = 1;
-                        else ((struct bool_st *)res->data)->data = 0;
-
-                        array_append(state->temp_memory, res);
-                        object_free(res);
-                    }
+                    array_append(state->temp_memory, res);
+                    object_free(res);
                     object_free(temp);
                     object_free(obj2);
                     object_free(obj1);
@@ -506,33 +418,14 @@ void run_op(struct op_state *state, struct object_st *object) {
                 struct object_st *temp = NULL;
                 struct object_st *obj = object_copy(array_get_last(state->temp_memory));
                 array_remove_last(state->temp_memory);
-                if (obj->type == OP_OBJECT_TYPE) {
-                    struct string_st *ind_str = string_new();
 
-                    string_set_str(ind_str, "__ne__", 6);
+                struct object_st *res = object_new();
 
-                    temp = op_object_get_attrib(obj->data, ind_str);
-                    string_free(ind_str);
-                }
+                object__neg(res, state->error_obj, obj);
 
-                if (temp != NULL) {
-                    array_append(state->temp_memory, obj);
-                    array_append(state->temp_memory, temp);
-
-                    array_add_new(code_operations, OP_BLOCK_TYPE);
-                    new_block = array_get_last(code_operations)->data;
-                    new_block->type = BlockType_Call;
-                    new_block->count = 1;
-                } else {
-                    struct object_st *res = object_new();
-                    struct object_st *err = object_new();
-
-                    object__neg(res, err, obj);
-
-                    array_append(state->temp_memory, res);
-                    object_free(res);
-                    object_free(err);
-                }
+                array_append(state->temp_memory, res);
+                object_free(res);
+                object_free(state->error_obj);
                 object_free(temp);
                 object_free(obj);
                 break;
@@ -545,25 +438,8 @@ void run_op(struct op_state *state, struct object_st *object) {
             struct object_st *obj1 = object_copy(array_get_last(state->temp_memory));
             array_remove_last(state->temp_memory);
 
-            if (obj1->type == OP_OBJECT_TYPE) {
-                struct string_st *ind_str = string_new();
-                string_set_str(ind_str, "__set__", 7);
-                temp = op_object_get_attrib(obj1->data, ind_str);
-                string_free(ind_str);
-            }
-            if (temp != NULL) {
-                array_append(state->temp_memory, obj2);
-                array_append(state->temp_memory, obj1);
-                array_append(state->temp_memory, temp);
-
-                array_add_new(code_operations, OP_BLOCK_TYPE);
-                new_block = array_get_last(code_operations)->data;
-                new_block->type = BlockType_Call;
-                new_block->count = 2;
-            } else {
-                object_set(obj1, obj2);
-                array_append(state->temp_memory, obj2);
-            }
+            object_set(obj1, obj2);
+            array_append(state->temp_memory, obj2);
 
             object_free(temp);
             object_free(obj2);
@@ -664,18 +540,11 @@ void run_op(struct op_state *state, struct object_st *object) {
                 new_block->count++;
             }
 
-            if (obj->type == OP_OBJECT_TYPE) {
-                struct object_st *res = op_object_set_attrib(obj->data, ind_str);
-                array_append(state->temp_memory, res);
-                object_free(res);
-            } else if (obj->type == MAP_TYPE) {
-                struct object_st *res = map_set_elm(obj->data, ind_str->data, ind_str->size);
-                array_append(state->temp_memory, res);
-                object_free(res);
-            } else {
-                array_add_new(state->temp_memory, NONE_TYPE);
-            }
+            struct object_st *res = object_attrib(state->error_obj, obj, ind_str);
+            array_append(state->temp_memory, res);
 
+            object_free(res);
+            object_free(state->error_obj);
             object_free(obj);
             break;
         }
@@ -685,25 +554,11 @@ void run_op(struct op_state *state, struct object_st *object) {
             struct object_st *obj1 = object_copy(array_get_last(state->temp_memory));
             array_remove_last(state->temp_memory);
 
-            if (obj1->type == OP_OBJECT_TYPE) {
-                // TODO error if not string
-                struct object_st *res = op_object_set_attrib(obj1->data, obj2->data);
-                array_append(state->temp_memory, res);
-                object_free(res);
-            } else if(obj1->type == ARRAY_TYPE) {
-                // TODO error if not integer
-                int pos = ((struct integer_st *)obj2->data)->data;
-                struct array_st *array = obj1->data;
-                array_append(state->temp_memory, array->data[pos % array->size]);
-            } else if(obj1->type == MAP_TYPE) {
-                // TODO error if not string
-                struct object_st *res = op_object_set_attrib(obj1->data, obj2->data);
-                array_append(state->temp_memory, res);
-                object_free(res);
-            } else {
-                array_add_new(state->temp_memory, NONE_TYPE);
-            }
+            struct object_st *res = object_subscript(state->error_obj, obj1, obj2);
+            array_append(state->temp_memory, res);
 
+            object_free(res);
+            object_free(state->error_obj);
             object_free(obj1);
             object_free(obj2);
             break;
@@ -799,6 +654,83 @@ void run_op(struct op_state *state, struct object_st *object) {
     }
 }
 
+void function_call(struct object_st *res, struct object_st *err, struct object_st *func, struct array_st *args) {
+    struct object_st *temp = NULL;
+    struct op_state *state = op_state_new();
+    struct string_st *ind_str = string_new();
+    struct op_attrib *attrib = NULL;
+    int ok = 0;
+
+    if (func->type == OP_OBJECT_TYPE) {
+        string_set_str(ind_str, "__params__", 10);
+        temp = op_object_get_attrib(func->data, ind_str);
+    }
+    if (temp != NULL) {
+        struct array_st *temp_array = ((struct node_st *) temp->data)->next;
+        struct node_st *node = NULL;
+        if (temp_array->size == args->size) {
+            ok = 1;
+            for (int i = 0; i < temp_array->size; i++) {
+                node = temp_array->data[i]->data;
+
+                attrib = node->data->data;
+                darray_append(array_get_last(state->stack_memory)->data, node->data, attrib->data);
+                op_attrib_new_data(attrib);
+                object_set(attrib->data, args->data[i]);
+            }
+        }
+    }
+    object_free(temp);
+    temp = NULL;
+
+    if (func->type == OP_OBJECT_TYPE && ok) {
+        string_set_str(ind_str, "__closure__", 11);
+        temp = op_object_get_attrib(func->data, ind_str);
+    }
+    if (temp != NULL && ok) {
+        struct darray_st *temp_array = temp->data;
+        if (temp_array != NULL) {
+            for (int i = 0; i < temp_array->size; i++) {
+                attrib = temp_array->data[0][i]->data;
+                darray_append(array_get_last(state->stack_memory)->data, temp_array->data[0][i],
+                              attrib->data);
+                op_attrib_set_data(attrib, temp_array->data[1][i]);
+            }
+        }
+    }
+    object_free(temp);
+    temp = NULL;
+
+    if (func->type == OP_OBJECT_TYPE && ok) {
+        string_set_str(ind_str, "__call__", 7);
+        temp = op_object_get_attrib(func->data, ind_str);
+    }
+
+    if (temp != NULL && ok) {
+        array_append(state->code_operations, temp);
+    }
+    object_free(temp);
+
+    {
+        struct array_st *code_operations = state->code_operations;
+        struct object_st *current_object = NULL;
+        while (code_operations->size > 0) {
+            current_object = object_copy(array_get_last(code_operations));
+            array_remove_last(code_operations);
+
+            if (current_object->type == NODE_TYPE) {
+                run_an(state, current_object);
+            }
+            if (current_object->type == OP_BLOCK_TYPE) {
+                run_op(state, current_object);
+            }
+            object_free(current_object);
+        }
+    }
+    op_state_free(state);
+    string_free(ind_str);
+}
+
 void interpretation(struct object_st *expr_obj) {
     struct op_state *state = op_state_new();
     array_append(state->code_operations, expr_obj);
@@ -809,6 +741,7 @@ void interpretation(struct object_st *expr_obj) {
             current_object = object_copy(array_get_last(code_operations));
             array_remove_last(code_operations);
 
+            if (state->error_obj != NONE_TYPE)
             if (current_object->type == NODE_TYPE) {
                 run_an(state, current_object);
             }

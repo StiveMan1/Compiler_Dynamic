@@ -1,6 +1,7 @@
 #include "basic.h"
 
-struct object_type map_type = {MAP_OP};
+struct object_sub map_sub = {METHOD_SUBSCRIPT &map_subscript, METHOD_ATTRIB &map_attrib};
+struct object_type map_type = {MAP_OP, &map_sub};
 // Standard operations
 
 struct map_st *map_new() {
@@ -158,4 +159,22 @@ struct object_st *map_get_elm(struct map_st *res, char *name, size_t size) {
         name = &name[temp_size + 1];
         size = size - temp_size - 1;
     }
+}
+
+// Sub method
+struct object_st *map_subscript(struct object_st *err, struct map_st *map, const struct object_st *obj) {
+    while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
+    struct object_st *temp = object_new();
+    object__str(temp, err, obj);
+    if(err->type != NONE_TYPE) {
+        object_free(temp);
+        return NULL;
+    }
+    struct object_st *res = NULL;
+    res = map_set_elm(map, ((struct string_st *)temp->data)->data, ((struct string_st *)temp->data)->size);
+    object_free(temp);
+    return res;
+}
+struct object_st *map_attrib(struct object_st *err, struct map_st *map, const struct string_st *obj) {
+    return map_set_elm(map, obj->data, obj->size);
 }
