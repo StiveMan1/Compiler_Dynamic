@@ -26,6 +26,7 @@ int annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
 
         expr->main_type = MainType_Stmt;
         expr->type = StmtType_Annot;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         result = SN_Status_Success;
 
         expr->data = object_new();
@@ -56,6 +57,7 @@ int declaration_stmt(struct ast_parser *parser, struct node_st *expr) {
         check_call(ident_new_expr(parser, expr_next), goto err;)
 
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_Decl;
         result = SN_Status_Success;
 
@@ -80,6 +82,7 @@ int assignment_stmt(struct ast_parser *parser, struct node_st *expr) {
             goto end;
 
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_Assign;
 
         parser_end goto eof;
@@ -122,6 +125,7 @@ int return_stmt(struct ast_parser *parser, struct node_st *expr) {
         parser->position++;
 
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_Return;
         result = SN_Status_Success;
         expr_add(expr)
@@ -144,6 +148,7 @@ int print_stmt(struct ast_parser *parser, struct node_st *expr) {
         parser->position++;
 
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_Print;
 
         while (parser->position < parser->list->size) {
@@ -193,6 +198,7 @@ int stmt_list(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = StmtType_List;
                 expr->main_type = MainType_Stmt;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -211,6 +217,7 @@ int if_stmt(struct ast_parser *parser, struct node_st *expr) {
         parser->position++;
 
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_If;
 
         expr_add(expr)
@@ -240,6 +247,7 @@ int while_stmt(struct ast_parser *parser, struct node_st *expr) {
         parser->position++;
 
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_While;
 
         expr_add(expr)
@@ -261,6 +269,7 @@ int for_stmt(struct ast_parser *parser, struct node_st *expr) {
         parser->position++;
 
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_For;
 
         expr_add(expr)
@@ -286,6 +295,7 @@ int parameter_list(struct ast_parser *parser, struct node_st *expr) {
     {
         check_call(list_ident(parser, expr), goto end;)
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_Params;
         result = SN_Status_Success;
     }
@@ -301,6 +311,7 @@ int function_stmt(struct ast_parser *parser, struct node_st *expr) {
         parser->position++;
 
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_Func;
 
         expr_add(expr)
@@ -372,6 +383,7 @@ int func_body(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position]->data);
         expr->type = StmtType_Func_Body;
 
         expr_add(expr)
@@ -394,6 +406,7 @@ int body(struct ast_parser *parser, struct node_st *expr, int type_scope) {
         parser->position++;
 
         expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = StmtType_List;
 
         parser_end goto eof;
@@ -432,6 +445,7 @@ int token_analyzer(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
         expr->main_type = MainType_Stmt;
+        if (parser->position < parser->list->size) node_set_position(expr, parser->list->data[parser->position]->data);
         expr->type = StmtType_List;
 
         while (parser->position < parser->list->size) {

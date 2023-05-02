@@ -17,7 +17,7 @@ struct sm_state {
     struct array_st *expr_stack;
 
     int type;
-    int error;
+    struct error_st *error;
 };
 struct sm_state *sm_state_new();
 void sm_state_free(struct sm_state *);
@@ -27,6 +27,6 @@ void sm_state_remove_frame(struct sm_state *);
 struct object_st *sm_state_set_ident(struct sm_state *, struct object_st *);
 struct object_st *sm_state_get_ident(struct sm_state *, struct object_st *);
 
-int semantic_scan(struct object_st *);
+void semantic_scan(struct object_st *, struct error_st *);
 
 #endif //AST_SCOPE_IDENT_H

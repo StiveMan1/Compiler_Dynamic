@@ -18,6 +18,7 @@ void ast_parser_clear(struct ast_parser *);
 void ast_parser_free(struct ast_parser *);
 
 void ast_parser_set_list(struct ast_parser *, struct la_parser *);
+void ast_parser_get_error(struct ast_parser *, struct error_st *);
 
 
 #endif //AST_PARSER_H

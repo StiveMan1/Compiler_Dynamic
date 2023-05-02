@@ -28,3 +28,6 @@ void ast_parser_set_list(struct ast_parser *res, struct la_parser *parser){
     error_clear(res->error_obj);
     array_set(res->list, parser->list);
 }
+void ast_parser_get_error(struct ast_parser *res, struct error_st *error) {
+    error_set(error, res->error_obj);
+}

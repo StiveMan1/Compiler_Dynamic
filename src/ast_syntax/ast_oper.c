@@ -32,6 +32,7 @@ int u_oper(struct ast_parser *parser, struct node_st *expr) {
             expr_add(expr)
             expr->type = ExprType_U;
             expr->main_type = MainType_Oper;
+            node_set_position(expr, parser->list->data[parser->position - 1]->data);
         } else node_clear(expr);
         check_call(primary_expr(parser, expr_next), {
             if (expr_next == expr) goto end;
@@ -64,6 +65,7 @@ int m_oper(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = ExprType_M;
                 expr->main_type = MainType_Oper;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -95,6 +97,7 @@ int a_oper(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = ExprType_A;
                 expr->main_type = MainType_Oper;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -126,6 +129,7 @@ int shift_oper(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = ExprType_Shift;
                 expr->main_type = MainType_Oper;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -155,6 +159,7 @@ int and_oper(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = ExprType_And;
                 expr->main_type = MainType_Oper;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -184,6 +189,7 @@ int xor_oper(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = ExprType_Xor;
                 expr->main_type = MainType_Oper;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -213,6 +219,7 @@ int or_oper(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = ExprType_Or;
                 expr->main_type = MainType_Oper;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -247,6 +254,7 @@ int comp_oper(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = ExprType_Comp;
                 expr->main_type = MainType_Oper;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -270,6 +278,7 @@ int not_test_oper(struct ast_parser *parser, struct node_st *expr) {
             expr_add(expr)
             expr->type = ExprType_NotTest;
             expr->main_type = MainType_Oper;
+            node_set_position(expr, parser->list->data[parser->position - 1]->data);
         } else node_clear(expr);
         check_call(comp_oper(parser, expr_next), {
             if (expr_next == expr) goto end;
@@ -299,6 +308,7 @@ int and_test_oper(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = ExprType_AndTest;
                 expr->main_type = MainType_Oper;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -327,6 +337,7 @@ int or_test_oper(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = ExprType_OrTest;
                 expr->main_type = MainType_Oper;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 times = 1;
             }
             expr_add(expr)
@@ -344,6 +355,7 @@ int tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, sho
         parser->position++;
 
         expr->main_type = MainType_Expr;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = PrimType_Tuple;
 
         parser_end goto eof;
@@ -382,6 +394,7 @@ int list_oper(struct ast_parser *parser, struct node_st *expr, short start, shor
         parser->position++;
 
         expr->main_type = MainType_Expr;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = PrimType_List;
 
         parser_end goto eof;
@@ -420,6 +433,7 @@ int list_ident(struct ast_parser *parser, struct node_st *expr) {
         parser->position++;
 
         expr->main_type = MainType_Expr;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
         expr->type = PrimType_List;
 
         parser_end goto eof;

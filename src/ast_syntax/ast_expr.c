@@ -59,6 +59,7 @@ int ident_new_expr(struct ast_parser *parser, struct node_st *expr) {
     parser->position++;
     expr->type = PrimType_Ident_new;
     expr->main_type = MainType_Expr;
+    node_set_position(expr, parser->list->data[parser->position - 1]->data);
     expr->data = object_new();
     object_set_type(expr->data, STRING_TYPE);
     string_set_str(expr->data->data, token->data, token->size);
@@ -71,6 +72,7 @@ int ident_get_expr(struct ast_parser *parser, struct node_st *expr) {
     parser->position++;
     expr->type = PrimType_Ident_get;
     expr->main_type = MainType_Expr;
+    node_set_position(expr, parser->list->data[parser->position - 1]->data);
     expr->data = object_new();
     object_set_type(expr->data, STRING_TYPE);
     string_set_str(expr->data->data, token->data, token->size);
@@ -84,6 +86,7 @@ int bool_expr(struct ast_parser *parser, struct node_st *expr) {
     parser->position++;
     expr->type = PrimType_Literal;
     expr->main_type = MainType_Expr;
+    node_set_position(expr, parser->list->data[parser->position - 1]->data);
     expr->data = object_new();
     object_set_type(expr->data, BOOL_TYPE);
     if (token->subtype == KeyWord_FALSE) ((struct bool_st *)expr->data->data)->data = 0;
@@ -97,6 +100,7 @@ int number_expr(struct ast_parser *parser, struct node_st *expr) {
     parser->position++;
     expr->type = PrimType_Literal;
     expr->main_type = MainType_Expr;
+    node_set_position(expr, parser->list->data[parser->position - 1]->data);
     expr->data = object_new();
     object_set_type(expr->data, INTEGER_TYPE);
     if(token->subtype == IntType_bin)
@@ -116,6 +120,7 @@ int string_expr(struct ast_parser *parser, struct node_st *expr) {
     parser->position++;
     expr->type = PrimType_Literal;
     expr->main_type = MainType_Expr;
+    node_set_position(expr, parser->list->data[parser->position - 1]->data);
     expr->data = object_new();
     object_set_type(expr->data, STRING_TYPE);
     string_set_str(expr->data->data, token->data, token->size);
@@ -128,6 +133,7 @@ int null_expr(struct ast_parser *parser, struct node_st *expr) {
     parser->position++;
     expr->type = PrimType_Literal;
     expr->main_type = MainType_Expr;
+    node_set_position(expr, parser->list->data[parser->position - 1]->data);
     expr->data = object_new();
     return SN_Status_Success;
 }
@@ -168,6 +174,7 @@ int primary_expr(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = PrimType_Attrib;
                 expr->main_type = MainType_Expr;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 expr_add(expr)
 
                 parser_end goto eof;
@@ -185,6 +192,7 @@ int primary_expr(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = PrimType_Subscript;
                 expr->main_type = MainType_Expr;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 expr_add(expr)
 
                 check_call(or_test_oper(parser, expr_next), goto err;)
@@ -199,6 +207,7 @@ int primary_expr(struct ast_parser *parser, struct node_st *expr) {
                 expr_cast(expr)
                 expr->type = PrimType_Call;
                 expr->main_type = MainType_Expr;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
                 expr_add(expr)
 
                 check_call(list_oper(parser, expr_next, Special_LSB, Special_RSB), goto err;)

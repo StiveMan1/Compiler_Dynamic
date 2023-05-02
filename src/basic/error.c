@@ -13,17 +13,13 @@ struct error_st *error_new() {
     return res;
 }
 void error_set(struct error_st *res, const struct error_st *a) {
-    if (error_is_null(res)) return;
-    error_clear(res);
-    if (error_is_null(a)) return;
-
     res->present = a->present;
     string_set(res->type, a->type);
     string_set(res->message, a->message);
 
     res->pos = a->pos;
-    res->line_num = res->line_num;
-    res->line_pos = res->line_pos;
+    res->line_num = a->line_num;
+    res->line_pos = a->line_pos;
 }
 void error_clear(struct error_st *res) {
     if(res == NULL) return;

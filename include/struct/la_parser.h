@@ -36,5 +36,6 @@ void la_parser_free(struct la_parser *);
 
 void la_parser_set_str(struct la_parser *, char *, size_t);
 void la_parser_set_file(struct la_parser *, char *);
+void la_parser_get_error(struct la_parser *, struct error_st *);
 
 #endif //LA_PARSER_H

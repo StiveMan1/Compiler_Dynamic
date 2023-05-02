@@ -60,6 +60,7 @@ void node_free(struct node_st *res){
     free(res);
 }
 
+
 void node_set_position(struct node_st *res, struct token_st *token) {
     res->pos = token->pos;
     res->line_num = token->line_num;

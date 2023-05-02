@@ -29,4 +29,6 @@ void node_set(struct node_st *, const struct node_st *);
 void node_clear(struct node_st *);
 void node_free(struct node_st *);
 
+void node_set_position(struct node_st *, struct token_st *);
+
 #endif //AST_NODE_H

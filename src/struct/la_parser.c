@@ -63,3 +63,6 @@ void la_parser_set_file(struct la_parser *res, char *file_path) {
     res->str_size = i;
     fclose(fp);
 }
+void la_parser_get_error(struct la_parser *parser, struct error_st *error) {
+    error_set(error, parser->error_obj);
+}
