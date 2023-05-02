@@ -11,6 +11,7 @@
 #include "basic/array.h"
 #include "basic/darray.h"
 #include "basic/map.h"
+#include "basic/error.h"
 
 
 #define POINTER_SIZE        sizeof(struct object_st *)
