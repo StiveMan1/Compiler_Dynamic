@@ -46,8 +46,8 @@ void tokenize(struct la_parser *parser) {
         // If neither space nor comment, then parse
         la_parse(token, parser);
         if (token->type == TokenType_None) {
-            if (string_is_null(parser->error_msg)) {
-                string_set_str(parser->error_msg, "Unrecognized token", 18);
+            if (error_is_null(parser->error_obj)) {
+                string_set_str(parser->error_obj->message, "Unrecognized token", 18);
             }
             goto bad_end;
         }
@@ -64,21 +64,21 @@ void tokenize(struct la_parser *parser) {
                 case Special_LSB:
                     parser->scope_buf[parser->scope_pos++] = Special_LSB;
                     if (parser->scope_pos > MaxBracketNesting) {
-                        string_set_str(parser->error_msg, "Scope length more then max scopes nesting", 41);
+                        string_set_str(parser->error_obj->message, "Scope length more then max scopes nesting", 41);
                         goto bad_end;
                     }
                     break;
                 case Special_LSQB:
                     parser->scope_buf[parser->scope_pos++] = Special_LSQB;
                     if (parser->scope_pos > MaxBracketNesting) {
-                        string_set_str(parser->error_msg, "Scope length more then max scopes nesting", 41);
+                        string_set_str(parser->error_obj->message, "Scope length more then max scopes nesting", 41);
                         goto bad_end;
                     }
                     break;
                 case Special_LCB:
                     parser->scope_buf[parser->scope_pos++] = Special_LCB;
                     if (parser->scope_pos > MaxBracketNesting) {
-                        string_set_str(parser->error_msg, "Scope length more then max scopes nesting", 41);
+                        string_set_str(parser->error_obj->message, "Scope length more then max scopes nesting", 41);
                         goto bad_end;
                     }
                     break;
@@ -86,9 +86,9 @@ void tokenize(struct la_parser *parser) {
                 case Special_RSB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LSB) {
                         if (parser->scope_buf[parser->scope_pos] == Special_LSQB) {
-                            string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ']' using ')'", 47);
+                            string_set_str(parser->error_obj->message, "Scope closed incorrectly. Must be ']' using ')'", 47);
                         } else if (parser->scope_buf[parser->scope_pos] == Special_LCB) {
-                            string_set_str(parser->error_msg, "Scope closed incorrectly. Must be '}' using ')'", 47);
+                            string_set_str(parser->error_obj->message, "Scope closed incorrectly. Must be '}' using ')'", 47);
                         }
                         goto bad_end;
                     }
@@ -96,9 +96,9 @@ void tokenize(struct la_parser *parser) {
                 case Special_RSQB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LSQB) {
                         if (parser->scope_buf[parser->scope_pos] == Special_LSB) {
-                            string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ')' using ']'", 47);
+                            string_set_str(parser->error_obj->message, "Scope closed incorrectly. Must be ')' using ']'", 47);
                         } else if (parser->scope_buf[parser->scope_pos] == Special_LCB) {
-                            string_set_str(parser->error_msg, "Scope closed incorrectly. Must be '}' using ']'", 47);
+                            string_set_str(parser->error_obj->message, "Scope closed incorrectly. Must be '}' using ']'", 47);
                         }
                         goto bad_end;
                     }
@@ -106,9 +106,9 @@ void tokenize(struct la_parser *parser) {
                 case Special_RCB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LCB) {
                         if (parser->scope_buf[parser->scope_pos] == Special_LSQB) {
-                            string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ']' using '}'", 47);
+                            string_set_str(parser->error_obj->message, "Scope closed incorrectly. Must be ']' using '}'", 47);
                         } else if (parser->scope_buf[parser->scope_pos] == Special_LSB) {
-                            string_set_str(parser->error_msg, "Scope closed incorrectly. Must be ')' using '}'", 47);
+                            string_set_str(parser->error_obj->message, "Scope closed incorrectly. Must be ')' using '}'", 47);
                         }
                         goto bad_end;
                     }
@@ -125,7 +125,7 @@ void tokenize(struct la_parser *parser) {
         token_clear(token);
     }
     if (parser->scope_pos != 0) {
-        string_set_str(parser->error_msg, "Scope is not closed...", 22);
+        string_set_str(parser->error_obj->message, "Scope is not closed...", 22);
         goto bad_end;
     }
     token_free(token);
