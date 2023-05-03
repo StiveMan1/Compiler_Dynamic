@@ -24,7 +24,7 @@ int error_cmp(const struct error_st *, const struct error_st *);
 int error_is_null(const struct error_st *);
 
 // Print
-void print_error(const struct error_st *, int);
+void print_error(const struct error_st *);
 
 // Class functions
 void error_fill_in(struct error_st *res, char* type, char* message, size_t line_start, size_t line, size_t line_pos);

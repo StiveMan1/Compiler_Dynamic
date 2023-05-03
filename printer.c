@@ -40,6 +40,14 @@ void print_array(const struct array_st *res, int size) {
     }
 }
 
+void print_error(const struct error_st* error){
+    printf("%s\n", error->type->data);
+    printf("%s\n", error->message->data);
+    printf("%zu\n", error->pos);
+    printf("%zu\n", error->line_num);
+    printf("%zu\n", error->line_pos);
+}
+
 void print_darray(const struct darray_st *res, int size) {
     printf("double list (%zu):\n", res->size);
     if(res->size != 0){

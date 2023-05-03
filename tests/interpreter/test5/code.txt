@@ -1,8 +1,8 @@
 
 func log(a, b) is
     var res := 0
-    while a > b loop
-        a := a / b;
+    while b > a loop
+        b := b / a;
         res := res + 1;
     end
 
