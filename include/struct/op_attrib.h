@@ -19,4 +19,6 @@ void op_attrib_set_data(struct op_attrib *, struct object_st *);
 int op_attrib_cmp_name(struct op_attrib *, struct string_st *);
 struct object_st *op_attrib_get_data(struct op_attrib *);
 
+void print_op_attrib(const struct op_attrib *res, int size);
+
 #endif //OP_ATTRIB_H

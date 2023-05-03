@@ -443,21 +443,21 @@ void print_op_attrib(const struct op_attrib *res, int size) {
     }
 }
 void print_obj(const struct object_st *res, int size) {
-    if(res == NULL) return;
-    printf("object : (%p)\n", res);
-    PRINT_PREF
-    PRINT_NEXT(0)
-    if (res->type == NONE_TYPE) printf("None\n");
+//    printf("object : (%p)\n", res);
+//    PRINT_PREF
+//    PRINT_NEXT(0)
+    if (res == NULL || res->type == NONE_TYPE) printf("None\n");
     else if (res->type == OBJECT_TYPE) return print_obj(res->data, size);
     else if (res->type == STRING_TYPE) return print_str(res->data);
     else if (res->type == INTEGER_TYPE) return print_int(res->data);
     else if (res->type == BOOL_TYPE) return print_bool(res->data);
     else if (res->type == REAL_TYPE) return print_real(res->data);
     else if (res->type == ARRAY_TYPE) return print_array(res->data, size);
-    else if (res->type == DARRAY_TYPE) return print_darray(res->data, size + 2);
+    else if (res->type == DARRAY_TYPE) return print_darray(res->data, size);
     else if (res->type == TOKEN_TYPE) return print_token(res->data, size);
     else if (res->type == NODE_TYPE) return print_node(res->data, size);
-    else if (res->type == OP_ATTRIB_TYPE) return print_op_attrib(res->data, size + 2);
+    else if (res->type == OP_ATTRIB_TYPE) return print_op_attrib(res->data, size);
     else if (res->type == OP_BLOCK_TYPE) printf("block\n");
     else if (res->type == MAP_TYPE) printf("map\n");
+    else printf("something\n");
 }
