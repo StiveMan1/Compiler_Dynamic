@@ -1,0 +1,24 @@
+func swap(arr, a, b) is
+    var temp := arr[a];
+    arr[a] := arr[b];
+    arr[b] := temp;
+end
+
+func sort(arr, len) is
+    var i := 0;
+    while i < len loop
+        var j := i + 1;
+        while j < len loop
+            if arr[i] > arr[j] then
+                swap(arr, i, j);
+            end
+            j := j + 1;
+        end
+        i := i + 1;
+    end
+end
+
+var arr := [5, 2, 8, 6, 4, 1];
+sort(arr, 6);
+
+print arr;

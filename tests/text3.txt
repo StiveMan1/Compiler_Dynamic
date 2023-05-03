@@ -1,0 +1,5 @@
+var t := {a:=1, b:=2, c};
+print t.a;
+
+var h := 100 + t.a + t.b;
+print(h);

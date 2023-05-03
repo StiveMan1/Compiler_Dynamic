@@ -1,4 +1,3 @@
-
 func log(a, b) is
     var res := 0;
     while b >= a loop

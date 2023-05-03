@@ -1,0 +1,7 @@
+var arr := ["t", "o", "r", "t"];
+
+var i := 0;
+while i < 4 loop
+    print(arr[i]);
+    i := i + 1;
+end

@@ -1,5 +1,5 @@
 func fib(x) is
-    if x < 2 then
+    if x < 3 then
         return 1;
     end
     return fib(x - 2) + fib(x - 1);
