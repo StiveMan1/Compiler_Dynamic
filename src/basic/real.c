@@ -5,7 +5,7 @@ struct object_convert real_convert = {METHOD_CONVERT &real__bool, METHOD_CONVERT
 struct object_type real_type = {REAL_OP, NULL, &real_convert, &real_math};
 // Standard operations
 struct real_st *real_new() {
-    struct real_st *res = malloc(REAL_SIZE);
+    struct real_st *res = Malloc(REAL_SIZE);
     res->data = 0;
     return res;
 }
@@ -17,7 +17,7 @@ void real_clear(struct real_st *res) {
     res->data = 0;
 }
 void real_free(struct real_st *res) {
-    free(res);
+    Free(res);
 }
 int real_cmp(const struct real_st *obj1, const struct real_st *obj2) {
     if(obj1->data < obj2->data) return -1;
@@ -107,8 +107,7 @@ void real__float(struct object_st *res, struct error_st *err, struct real_st *ob
     real_set(res->data, obj);
 }
 void real__str(struct object_st *res, struct error_st *err, struct real_st *obj){
-    // TODO
-    object_set_type(res->data, STRING_TYPE);
+    object_set_type(res, STRING_TYPE);
     char buf[32];
     memset(buf, 0, 32);
     sprintf(buf, "%f", obj->data);

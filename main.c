@@ -56,9 +56,12 @@ int main() {
 
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("Time : %f\n", time_spent);
+    printf("Time : %f\t", time_spent);
 
     ast_parser_free(T_parser);
     la_parser_free(F_parser);
+    object_free(expr_obj);
+    error_free(error);
+    printf("Memory : %lld", mem_ctx.filled);
 
 }

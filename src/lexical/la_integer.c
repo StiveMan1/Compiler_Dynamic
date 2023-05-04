@@ -8,7 +8,7 @@
 #define set_error_lexical(message) error_fill_in(parser->error_obj, LEXICAL_ANALYSIS_ERROR, message, parser->position, parser->current_line, parser->line_pos);
 #define ErrInt {set_error_lexical("Error while parsing integer") return;}
 
-#define GetChar {pos++;if (pos == parser->str_size) ErrInt c = parser->data[pos];}
+#define GetChar {if (++pos == parser->str_size) ErrInt c = parser->data[pos];}
 
 void la_integer(struct token_st *token, struct la_parser *parser) {
     size_t pos = parser->position;
@@ -93,4 +93,238 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
             parser->position = pos;
         }
     }
+}
+
+#define set_error_lexical_int(message) error_fill_in(error, LEXICAL_ANALYSIS_ERROR, message, 0, 0, 0);
+#define set_error_lexical_int(message) error_fill_in(error, LEXICAL_ANALYSIS_ERROR, message, 0, 0, 0);
+
+int get_integer(const struct string_st *str, struct error_st *error) {
+    size_t pos = 0;
+    if (CharInt_dec(str->data[pos])) {
+        char c = str->data[pos];
+        if (c == '0') {
+            if (++pos == str->size) return 0;
+            c = str->data[pos];
+            if (c == 'b' || c == 'B') {
+                if (++pos == str->size) return 0;
+                c = str->data[pos];
+                while (c == '_') {
+                    if (++pos == str->size) return 0;
+                    c = str->data[pos];
+                }
+                size_t zero_end = pos;
+                while (CharInt_bin(c)) {
+                    if (++pos == str->size)
+                        return strtol(str->data + zero_end, NULL, 2);
+                    c = str->data[pos];
+                }
+                if (IdentifierStart(c)) {
+                    set_error_lexical_int("Error while parsing integer")
+                    return 0;
+                }
+                return strtol(str->data + zero_end, NULL, 2);
+            } else if (c == 'o' || c == 'O') {
+                if (++pos == str->size) return 0;
+                c = str->data[pos];
+                while (c == '_') {
+                    if (++pos == str->size) return 0;
+                    c = str->data[pos];
+                }
+                size_t zero_end = pos;
+                while (CharInt_oct(c)) {
+                    if (++pos == str->size)
+                        return strtol(str->data + zero_end, NULL, 8);
+                    c = str->data[pos];
+                }
+                if (IdentifierStart(c)) {
+                    set_error_lexical_int("Error while parsing integer")
+                    return 0;
+                }
+                return strtol(str->data + zero_end, NULL, 8);
+            } else if (c == 'x' || c == 'X') {
+                if (++pos == str->size) return 0;
+                c = str->data[pos];
+                while (c == '_') {
+                    if (++pos == str->size) return 0;
+                    c = str->data[pos];
+                }
+                size_t zero_end = pos;
+                while (CharInt_oct(c)) {
+                    if (++pos == str->size)
+                        return strtol(str->data + zero_end, NULL, 16);
+                    c = str->data[pos];
+                }
+                if (IdentifierStart(c)) {
+                    set_error_lexical_int("Error while parsing integer")
+                    return 0;
+                }
+                return strtol(str->data + zero_end, NULL, 16);
+            } else {
+                while (c == '0')  {
+                    if (++pos == str->size) return 0;
+                    c = str->data[pos];
+                }
+                size_t zero_end = pos;
+                while (CharInt_dec(c))  {
+                    if (++pos == str->size)
+                        return strtol(str->data + zero_end, NULL, 10);
+                    c = str->data[pos];
+                }
+
+                if (c == '.') {
+                    if (++pos == str->size)
+                        return strtol(str->data + zero_end, NULL, 10);
+                    c = str->data[pos];
+                    while (CharInt_dec(c))  {
+                        if (++pos == str->size)
+                            return (int) strtof(str->data + zero_end, NULL);
+                        c = str->data[pos];
+                    }
+                }
+                if (IdentifierStart(c))  {
+                    set_error_lexical_int("Error while parsing integer")
+                    return 0;
+                }
+                return strtol(str->data + zero_end, NULL, 10);
+            }
+        } else {
+            while (CharInt_dec(c))  {
+                if (++pos == str->size)
+                    return strtol(str->data, NULL, 10);
+                c = str->data[pos];
+            }
+
+            if (c == '.') {
+                if (++pos == str->size)
+                    return strtol(str->data, NULL, 10);
+                c = str->data[pos];
+                while (CharInt_dec(c))  {
+                    if (++pos == str->size)
+                        return (int) strtof(str->data, NULL);
+                    c = str->data[pos];
+                }
+            }
+            if (IdentifierStart(c)) {
+                set_error_lexical_int("Error while parsing integer")
+                return 0;
+            }
+            return strtol(str->data, NULL, 10);
+        }
+    }
+    return 0;
+}
+float get_float(const struct string_st *str, struct error_st *error) {
+    size_t pos = 0;
+    if (CharInt_dec(str->data[pos])) {
+        char c = str->data[pos];
+        if (c == '0') {
+            if (++pos == str->size) return 0;
+            c = str->data[pos];
+            if (c == 'b' || c == 'B') {
+                if (++pos == str->size) return 0;
+                c = str->data[pos];
+                while (c == '_') {
+                    if (++pos == str->size) return 0;
+                    c = str->data[pos];
+                }
+                size_t zero_end = pos;
+                while (CharInt_bin(c)) {
+                    if (++pos == str->size)
+                        return (float) strtol(str->data + zero_end, NULL, 2);
+                    c = str->data[pos];
+                }
+                if (IdentifierStart(c)) {
+                    set_error_lexical_int("Error while parsing integer")
+                    return 0;
+                }
+                return (float) strtol(str->data + zero_end, NULL, 2);
+            } else if (c == 'o' || c == 'O') {
+                if (++pos == str->size) return 0;
+                c = str->data[pos];
+                while (c == '_') {
+                    if (++pos == str->size) return 0;
+                    c = str->data[pos];
+                }
+                size_t zero_end = pos;
+                while (CharInt_oct(c)) {
+                    if (++pos == str->size)
+                        return (float) strtol(str->data + zero_end, NULL, 8);
+                    c = str->data[pos];
+                }
+                if (IdentifierStart(c)) {
+                    set_error_lexical_int("Error while parsing integer")
+                    return 0;
+                }
+                return (float) strtol(str->data + zero_end, NULL, 8);
+            } else if (c == 'x' || c == 'X') {
+                if (++pos == str->size) return 0;
+                c = str->data[pos];
+                while (c == '_') {
+                    if (++pos == str->size) return 0;
+                    c = str->data[pos];
+                }
+                size_t zero_end = pos;
+                while (CharInt_oct(c)) {
+                    if (++pos == str->size)
+                        return (float) strtol(str->data + zero_end, NULL, 16);
+                    c = str->data[pos];
+                }
+                if (IdentifierStart(c)) {
+                    set_error_lexical_int("Error while parsing integer")
+                    return 0;
+                }
+                return (float) strtol(str->data + zero_end, NULL, 16);
+            } else {
+                while (c == '0')  {
+                    if (++pos == str->size) return 0;
+                    c = str->data[pos];
+                }
+                size_t zero_end = pos;
+                while (CharInt_dec(c))  {
+                    if (++pos == str->size)
+                        return (float) strtol(str->data + zero_end, NULL, 10);
+                    c = str->data[pos];
+                }
+
+                if (c == '.') {
+                    if (++pos == str->size)
+                        return (float) strtol(str->data + zero_end, NULL, 10);
+                    c = str->data[pos];
+                    while (CharInt_dec(c))  {
+                        if (++pos == str->size)
+                            return strtof(str->data + zero_end, NULL);
+                        c = str->data[pos];
+                    }
+                }
+                if (IdentifierStart(c))  {
+                    set_error_lexical_int("Error while parsing integer")
+                    return 0;
+                }
+                return (float) strtol(str->data + zero_end, NULL, 10);
+            }
+        } else {
+            while (CharInt_dec(c))  {
+                if (++pos == str->size)
+                    return (float) strtol(str->data, NULL, 10);
+                c = str->data[pos];
+            }
+
+            if (c == '.') {
+                if (++pos == str->size)
+                    return (float) strtol(str->data, NULL, 10);
+                c = str->data[pos];
+                while (CharInt_dec(c))  {
+                    if (++pos == str->size)
+                        return strtof(str->data, NULL);
+                    c = str->data[pos];
+                }
+            }
+            if (IdentifierStart(c)) {
+                set_error_lexical_int("Error while parsing integer")
+                return 0;
+            }
+            return (float) strtol(str->data, NULL, 10);
+        }
+    }
+    return 0;
 }

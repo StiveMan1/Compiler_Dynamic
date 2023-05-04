@@ -3,7 +3,7 @@
 struct object_type darray_type = {DARRAY_OP};
 
 struct darray_st *darray_new() {
-    struct darray_st *res = malloc(DARRAY_SIZE);
+    struct darray_st *res = Malloc(DARRAY_SIZE);
     res->data[0] = res->data[1] = NULL;
     res->size = res->max_size = 0;
     return res;
@@ -22,10 +22,10 @@ void darray_clear(struct darray_st *res) {
 void darray_free(struct darray_st *res) {
     darray_resize(res, 0);
     if (res->max_size != 0) {
-        free(res->data[0]);
-        free(res->data[1]);
+        Free(res->data[0]);
+        Free(res->data[1]);
     }
-    free(res);
+    Free(res);
 }
 int darray_cmp(const struct darray_st *obj1, const struct darray_st *obj2) {
     if (obj1->size > obj2->size) return 1;
@@ -48,15 +48,15 @@ int darray_is_null(const struct darray_st *res) {
 void darray_resize(struct darray_st *res, size_t size) {
     if (res->data[0] == NULL && size != 0) {
         res->max_size = size;
-        res->data[0] = malloc(POINTER_SIZE * size);
-        res->data[1] = malloc(POINTER_SIZE * size);
+        res->data[0] = Malloc(POINTER_SIZE * size);
+        res->data[1] = Malloc(POINTER_SIZE * size);
         for (size_t i = 0; i < size; i++) {
             res->data[0][i] = NULL;
             res->data[1][i] = NULL;
         }
     } else if (res->max_size < size) {
-        res->data[0] = realloc(res->data[0], POINTER_SIZE * size * 2);
-        res->data[1] = realloc(res->data[1], POINTER_SIZE * size * 2);
+        res->data[0] = Realloc(res->data[0], POINTER_SIZE * size * 2);
+        res->data[1] = Realloc(res->data[1], POINTER_SIZE * size * 2);
         for (size_t i = res->max_size; i < size * 2; i++) {
             res->data[0][i] = NULL;
             res->data[1][i] = NULL;

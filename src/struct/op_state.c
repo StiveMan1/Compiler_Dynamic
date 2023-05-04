@@ -1,7 +1,7 @@
 #include "struct.h"
 
 struct op_state *op_state_new() {
-    struct op_state *res = malloc(sizeof(struct op_state));
+    struct op_state *res = Malloc(sizeof(struct op_state));
     res->stack_memory = array_new();
     res->frame_memory = NULL;
     res->temp_memory = array_new();
@@ -19,5 +19,5 @@ void op_state_free(struct op_state *res) {
     array_free(res->code_operations);
     error_free(res->error_obj);
     if(res->return_obj != NULL) object_free(res->return_obj);
-    free(res);
+    Free(res);
 }

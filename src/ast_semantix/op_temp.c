@@ -30,6 +30,7 @@
 #define BlockType_Subs          0x43
 #define BlockType_Call          0x44
 #define BlockType_Print         0x45
+#define BlockType_ForNext       0x46
 
 
 void run_an(struct op_state *state, struct object_st *object) {
@@ -257,6 +258,12 @@ void run_an(struct op_state *state, struct object_st *object) {
                 }
                 temp_array = node->next;
                 for (size_t i = temp_array->size; i > 0; i--) {
+                    array_add_new(code_operations, OP_BLOCK_TYPE);
+                    new_block = array_get_last(code_operations)->data;
+                    new_block->type = BlockType_Convert;
+                    new_block->subtype = Convert_Str;
+                    op_block_set_position_node(new_block, temp_array->data[i - 1]->data);
+
                     array_append(code_operations, temp_array->data[i - 1]);
                 }
                 break;
@@ -273,6 +280,16 @@ void run_an(struct op_state *state, struct object_st *object) {
                     array_add_new(state->temp_memory, NONE_TYPE);
                 }
 
+                break;
+            }
+            case StmtType_For: {
+                array_add_new(code_operations, OP_BLOCK_TYPE);
+                new_block = array_get_last(code_operations)->data;
+                new_block->type = BlockType_ForNext;
+                new_block->data1 = object_copy(node->next->data[2]);
+
+                array_append(code_operations, node->next->data[0]);
+                array_append(code_operations, node->next->data[1]);
                 break;
             }
         }
@@ -684,15 +701,49 @@ void run_op(struct op_state *state, struct object_st *object) {
             break;
         }
         case BlockType_Print: {
-            struct object_st *obj;
+            struct object_st *obj = NULL;
+            struct string_st *str = NULL;
             for (size_t i = 0; i < block->count; i++) {
                 obj = object_copy(array_get_last(state->temp_memory));
                 array_remove_last(state->temp_memory);
-                print_obj(obj, 0);
+                str = obj->data;
+                for (size_t _i = 0; _i < str->size; _i++) printf("%c", str->data[_i]);
+                if (i + 1 < block->count) printf(" ");
+                object_free(obj);
             }
+            printf("\n");
             break;
         }
+        case BlockType_ForNext: {
+            struct object_st *ident = object_copy(array_get_last(state->temp_memory));
+            array_remove_last(state->temp_memory);
+            struct object_st *list = object_copy(array_get_last(state->temp_memory));
+            array_remove_last(state->temp_memory);
+            struct array_st *array = list->data;
 
+            if (array->size != 0) {
+                struct object_st *next_list = object_new();
+                object_set_type(next_list, ARRAY_TYPE);
+                struct array_st *next_array = next_list->data;
+
+                object_set(ident, array->data[0]);
+
+                array_resize(next_array, array->size - 1);
+                for (size_t i = 0; i < next_array->size; i++) {
+                    next_array->data[i] = object_copy(array->data[i + 1]);
+                }
+
+                array_append(state->temp_memory, next_list);
+                array_append(state->temp_memory, ident);
+
+                array_append(code_operations, object);
+                array_append(code_operations, block->data1);
+                object_free(next_list);
+            }
+            object_free(list);
+            object_free(ident);
+            break;
+        }
     }
 }
 
@@ -814,7 +865,6 @@ void interpretation(struct object_st *expr_obj, struct error_st *error) {
             object_free(current_object);
         }
         error_set(error, state->error_obj);
-        print_array(state->stack_memory, 0);
     }
     op_state_free(state);
 }

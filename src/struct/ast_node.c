@@ -4,7 +4,7 @@
 struct object_type node_type = {NODE_OP};
 
 struct node_st *node_new(){
-    struct node_st *res = malloc(NODE_SIZE);
+    struct node_st *res = Malloc(NODE_SIZE);
     res->main_type = MainType_None;
     res->type = ExprType_None;
 
@@ -57,7 +57,7 @@ void node_free(struct node_st *res){
 
     array_free(res->next);
     array_free(res->tokens);
-    free(res);
+    Free(res);
 }
 
 

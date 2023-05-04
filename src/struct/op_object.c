@@ -8,7 +8,7 @@ struct object_sub op_object_sub = {METHOD_SUBSCRIPT &op_object_subscript, METHOD
 struct object_type op_object_type = {OP_OBJECT_OP, &op_object_sub, &op_object_convert, &op_object_math};
 
 struct op_object *op_object_new() {
-    struct op_object *res = malloc(OP_OBJECT_SIZE);
+    struct op_object *res = Malloc(OP_OBJECT_SIZE);
     res->data = NULL;
 
     res->class = NULL;
@@ -45,7 +45,7 @@ void op_object_free(struct op_object *res) {
     map_free(res->attr);
 
     darray_free(res->closure);
-    free(res);
+    Free(res);
 }
 
 void op_object_set_function(struct op_object *res, struct node_st *node) {

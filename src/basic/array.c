@@ -6,7 +6,7 @@ struct object_convert array_convert = {NULL, NULL, NULL, METHOD_CONVERT &array__
 struct object_type array_type = {ARRAY_OP, &list_sub,  &array_convert, &array_math};
 // Standard operations
 struct array_st *array_new() {
-    struct array_st *res = malloc(ARRAY_SIZE);
+    struct array_st *res = Malloc(ARRAY_SIZE);
     res->data = NULL;
     res->max_size = res->size = 0;
     return res;
@@ -22,8 +22,8 @@ void array_clear(struct array_st *res) {
 }
 void array_free(struct array_st *res) {
     array_resize(res, 0);
-    if (res->data != NULL) free(res->data);
-    free(res);
+    if (res->data != NULL) Free(res->data);
+    Free(res);
 }
 int array_cmp(const struct array_st *obj1, const struct array_st *obj2) {
     if (obj1->size > obj2->size) return 1;
@@ -44,10 +44,10 @@ int array_is_null(const struct array_st *res) {
 void array_resize(struct array_st *res, size_t size) {
     if (res->data == NULL && size != 0) {
         res->max_size = size;
-        res->data = malloc(POINTER_SIZE * size);
+        res->data = Malloc(POINTER_SIZE * size);
         for (size_t i = 0; i < size; i++) res->data[i] = NULL;
     } else if (res->max_size < size) {
-        res->data = realloc(res->data, POINTER_SIZE * size * 2);
+        res->data = Realloc(res->data, POINTER_SIZE * size * 2);
         for (size_t i = res->max_size; i < size * 2; i++) res->data[i] = NULL;
         res->max_size = size * 2;
     }
@@ -189,5 +189,5 @@ struct object_st *array_subscript(struct error_st *err, struct array_st *list, c
     }
     size_t position = ((struct integer_st *)temp->data)->data;
     object_free(temp);
-    return list->data[position % list->size];
+    return object_copy(list->data[position % list->size]);
 }

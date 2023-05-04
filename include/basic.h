@@ -1,7 +1,7 @@
 #ifndef BASIC_H
 #define BASIC_H
 
-#include <malloc.h>
+#include "memory/memory.h"
 
 #include "basic/object.h"
 #include "basic/string.h"

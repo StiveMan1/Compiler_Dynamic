@@ -35,6 +35,9 @@ void string__str(struct object_st *, struct error_st *, const struct string_st *
 // Convert Methods
 struct object_st *string_subscript(struct error_st *, struct string_st *, const struct object_st *);
 
+int get_integer(const struct string_st *str, struct error_st *error);
+float get_float(const struct string_st *str, struct error_st *error);
+
 // Print
 void print_str(const struct string_st *);
 

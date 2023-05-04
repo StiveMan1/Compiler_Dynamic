@@ -2,7 +2,7 @@
 #include "struct.h"
 
 struct la_parser *la_parser_new() {
-    struct la_parser *res = malloc(sizeof(struct la_parser));
+    struct la_parser *res = Malloc(sizeof(struct la_parser));
     res->data = NULL;
     res->position = res->str_size = 0;
 
@@ -16,12 +16,12 @@ struct la_parser *la_parser_new() {
 void la_parser_set(struct la_parser *res, const struct la_parser *a) {
     la_parser_clear(res);
     res->str_size = a->str_size;
-    res->data = malloc(res->str_size);
+    res->data = Malloc(res->str_size);
     memcpy(res->data, a->data, a->str_size);
     error_set(res->error_obj, a->error_obj);
 }
 void la_parser_clear(struct la_parser *res) {
-    if (res->data != NULL) free(res->data);
+    if (res->data != NULL) Free(res->data);
     res->data = NULL;
     res->position = res->str_size = res->line_pos = 0;
 
@@ -31,16 +31,16 @@ void la_parser_clear(struct la_parser *res) {
     error_clear(res->error_obj);
 }
 void la_parser_free(struct la_parser *res) {
-    if (res->data != NULL) free(res->data);
+    if (res->data != NULL) Free(res->data);
     array_free(res->list);
     error_free(res->error_obj);
-    free(res);
+    Free(res);
 }
 
 void la_parser_set_str(struct la_parser *res, char *data, size_t size) {
     la_parser_clear(res);
     res->str_size = size;
-    res->data = malloc(res->str_size + 1);
+    res->data = Malloc(res->str_size + 1);
     memcpy(res->data, data, size);
     res->data[res->str_size] = 0;
 }
@@ -53,7 +53,7 @@ void la_parser_set_file(struct la_parser *res, char *file_path) {
     res->str_size = ftell(fp);
 
     fseek(fp, 0, SEEK_SET);
-    res->data = malloc(res->str_size);
+    res->data = Malloc(res->str_size);
     memset(res->data, 0, res->str_size);
     char c;
     size_t i;

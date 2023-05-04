@@ -3,7 +3,7 @@
 struct object_type token_type = {TOKEN_OP};
 
 struct token_st *token_new(){
-    struct token_st *res = malloc(TOKEN_SIZE);
+    struct token_st *res = Malloc(TOKEN_SIZE);
     res->type = TokenType_None;
     res->subtype = TokenType_None;
 
@@ -32,18 +32,18 @@ void token_clear(struct token_st *res){
 }
 // Completely deleting the object
 void token_free(struct token_st *res){
-    if (res->data != NULL) free(res->data);
-    free(res);
+    if (res->data != NULL) Free(res->data);
+    Free(res);
 }
 
 // Setting the size of array for the token data
 void token_resize(struct token_st *res, size_t size) {
     if (res->data == NULL && size != 0) {
         res->max_size = size;
-        res->data = malloc(size + 1);
+        res->data = Malloc(size + 1);
         if(res->data != NULL) for (size_t i = 0; i < size + 1; i++) res->data[i] = 0;
     } else if (res->max_size < size) {
-        res->data = realloc(res->data, size * 2 + 1);
+        res->data = Realloc(res->data, size * 2 + 1);
         if(res->data != NULL) for (size_t i = res->max_size; i < size * 2 + 1; i++) res->data[i] = 0;
         res->max_size = size * 2;
     }

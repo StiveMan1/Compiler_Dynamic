@@ -7,7 +7,7 @@ struct object_convert string_convert = {METHOD_CONVERT & string__bool, METHOD_CO
 struct object_type string_type = {STRING_OP, &string_sub, &string_convert, &string_math};
 // Standard operations
 struct string_st *string_new() {
-    struct string_st *res = malloc(STRING_SIZE);
+    struct string_st *res = Malloc(STRING_SIZE);
     res->data = NULL;
     res->mx_size = res->size = 0;
     return res;
@@ -21,8 +21,8 @@ void string_clear(struct string_st *res) {
     string_resize(res, 0);
 }
 void string_free(struct string_st *res) {
-    if (res->data != NULL) free(res->data);
-    free(res);
+    if (res->data != NULL) Free(res->data);
+    Free(res);
 }
 int string_cmp(const struct string_st *obj1, const struct string_st *obj2) {
     if (obj1->size > obj2->size) return 1;
@@ -37,10 +37,10 @@ int string_is_null(const struct string_st *res){
 void string_resize(struct string_st *res, size_t size) {
     if (res->data == NULL && size != 0) {
         res->mx_size = size;
-        res->data = malloc(size + 1);
+        res->data = Malloc(size + 1);
         if (res->data != NULL) for (size_t i = 0; i < size + 1; i++) res->data[i] = 0;
     } else if (res->mx_size < size) {
-        res->data = realloc(res->data, size * 2 + 1);
+        res->data = Realloc(res->data, size * 2 + 1);
         if (res->data != NULL) for (size_t i = res->mx_size; i < size * 2 + 1; i++) res->data[i] = 0;
         res->mx_size = size * 2;
     }
@@ -101,57 +101,11 @@ void string__bool(struct object_st *res, struct error_st *err, const struct stri
 }
 void string__int(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     object_set_type(res, INTEGER_TYPE);
-    struct  integer_st *result = integer_new();
-    result->data = 0;
-    for(size_t i = 0; i < obj->size; i++){
-        if('0' <= obj->data[i] && obj->data[i] <= '9'){
-            result->data = result->data * 10 + (obj->data[i] - '0');
-        } else {
-            err->present = 1;
-            string_set_str(err->type, INTERPRETER_ERROR, 15);
-            string_set_str(err->message, "Not implemented", 15);
-            return ;
-        }
-    }
-    integer_set(res->data, result);
-    integer_free(result);
+    ((struct integer_st *)res->data)->data = get_integer(obj, err);
 }
 void string__float(struct object_st *res, struct error_st *err, const struct string_st *obj) {
-    // TODO
-
     object_set_type(res, REAL_TYPE);
-    struct  real_st *result = real_new();
-    short dot = 0;
-    for(size_t i = 0; i < obj->size; i++){
-        if('0' <= obj->data[i] && obj->data[i] <= '9') {
-            result->data = result->data * 10 + (obj->data[i] - '0');
-
-        } else if(obj->data[i] == '.') {
-            dot = 1;
-        } else {
-            err->present = 1;
-            string_set_str(err->type, INTERPRETER_ERROR, 15);
-            string_set_str(err->message, "Not implemented", 15);
-            return ;
-        }
-    }
-    if(dot == 0 || obj->data[obj->size - 1] == '.'){
-        err->present = 1;
-        string_set_str(err->type, INTERPRETER_ERROR, 15);
-        string_set_str(err->message, "Not implemented", 15);
-        return ;
-    }
-    for(size_t i = obj->size; i > 0; i--){
-        if(obj->data[i-1] == '.'){
-            break;
-        }
-        result->data /= 10;
-    }
-    real_set(res->data, result);
-    real_free(result);
-//    err->present = 1;
-//    string_set_str(err->type, INTERPRETER_ERROR, 15);
-//    string_set_str(err->message, "Not implemented", 15);
+    ((struct real_st *)res->data)->data = get_float(obj, err);
 }
 void string__str(struct object_st *res, struct error_st *err, const struct string_st *obj) {
     object_set_type(res, STRING_TYPE);

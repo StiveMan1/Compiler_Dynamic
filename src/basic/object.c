@@ -10,7 +10,7 @@ struct object_sub object_sub = {METHOD_SUBSCRIPT &object_subscript, METHOD_ATTRI
 struct object_type object_type = {OBJECT_OP, &object_sub, &object_convert, &object_math};
 // Standard operations
 struct object_st *object_new() {
-    struct object_st *res = malloc(OBJECT_SIZE);
+    struct object_st *res = Malloc(OBJECT_SIZE);
     res->type = NULL;
     res->data = NULL;
     res->counter = 1;
@@ -32,7 +32,7 @@ void object_free(struct object_st *res) {
             res->type->self._free(res->data);
         res->data = NULL;
     }
-    free(res);
+    Free(res);
 }
 int object_cmp(const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;

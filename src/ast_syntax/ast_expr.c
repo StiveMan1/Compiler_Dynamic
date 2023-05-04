@@ -102,15 +102,20 @@ int number_expr(struct ast_parser *parser, struct node_st *expr) {
     expr->main_type = MainType_Expr;
     node_set_position(expr, parser->list->data[parser->position - 1]->data);
     expr->data = object_new();
-    object_set_type(expr->data, INTEGER_TYPE);
-    if(token->subtype == IntType_bin)
-        ((struct integer_st *)expr->data->data)->data = strtol(token->data, NULL, 2);
-    else if(token->subtype == IntType_hex)
-        ((struct integer_st *)expr->data->data)->data = strtol(token->data, NULL, 16);
-    else if(token->subtype == IntType_oct)
-        ((struct integer_st *)expr->data->data)->data = strtol(token->data, NULL, 8);
-    else if(token->subtype == IntType_dec)
-        ((struct integer_st *)expr->data->data)->data = strtol(token->data, NULL, 10);
+    if(token->subtype == IntType_float) {
+        object_set_type(expr->data, REAL_TYPE);
+        ((struct real_st *)expr->data->data)->data = strtof(token->data, NULL);
+    } else {
+        object_set_type(expr->data, INTEGER_TYPE);
+        if (token->subtype == IntType_bin)
+            ((struct integer_st *) expr->data->data)->data = strtol(token->data, NULL, 2);
+        else if (token->subtype == IntType_hex)
+            ((struct integer_st *) expr->data->data)->data = strtol(token->data, NULL, 16);
+        else if (token->subtype == IntType_oct)
+            ((struct integer_st *) expr->data->data)->data = strtol(token->data, NULL, 8);
+        else if (token->subtype == IntType_dec)
+            ((struct integer_st *) expr->data->data)->data = strtol(token->data, NULL, 10);
+    }
     return SN_Status_Success;
 }
 int string_expr(struct ast_parser *parser, struct node_st *expr) {

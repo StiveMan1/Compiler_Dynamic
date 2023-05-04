@@ -67,7 +67,7 @@ void perform_interpretation(struct object_st *expr_obj){
 char* concat(char* s1, char* s2){
     char* name_with_extension;
     printf("%s %s", s1, s2);
-    name_with_extension = malloc(strlen(s1) + 1 + strlen(s2));
+    name_with_extension = Malloc(strlen(s1) + 1 + strlen(s2));
     strcpy(name_with_extension, s1);
     strcat(name_with_extension, s2);
     return name_with_extension;

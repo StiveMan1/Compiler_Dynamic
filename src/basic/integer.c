@@ -5,7 +5,7 @@ struct object_convert integer_convert = {METHOD_CONVERT &integer__bool, METHOD_C
 struct object_type integer_type = {INTEGER_OP, NULL, &integer_convert, &integer_math};
 // Standard operations
 struct integer_st *integer_new() {
-    struct integer_st *res = malloc(INTEGER_SIZE);
+    struct integer_st *res = Malloc(INTEGER_SIZE);
     res->data = 0;
     return res;
 }
@@ -17,7 +17,7 @@ void integer_clear(struct integer_st *res) {
     res->data = 0;
 }
 void integer_free(struct integer_st *res) {
-    free(res);
+    Free(res);
 }
 int integer_cmp(const struct integer_st *obj1, const struct integer_st *obj2) {
     if(obj1->data < obj2->data) return -1;

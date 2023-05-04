@@ -1,7 +1,7 @@
 #include "struct.h"
 
 struct ast_parser *ast_parser_new(){
-    struct ast_parser *res = malloc(sizeof(struct ast_parser));
+    struct ast_parser *res = Malloc(sizeof(struct ast_parser));
     res->position = 0;
     res->error_obj = error_new();
     res->list = array_new();
@@ -20,7 +20,7 @@ void ast_parser_clear(struct ast_parser *res){
 void ast_parser_free(struct ast_parser *res){
     array_free(res->list);
     error_free(res->error_obj);
-    free(res);
+    Free(res);
 }
 
 void ast_parser_set_list(struct ast_parser *res, struct la_parser *parser){

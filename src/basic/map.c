@@ -5,7 +5,7 @@ struct object_type map_type = {MAP_OP, &map_sub};
 // Standard operations
 
 struct map_st *map_new() {
-    struct map_st *res = malloc(MAP_SIZE);
+    struct map_st *res = Malloc(MAP_SIZE);
 
     res->data = NULL;
     res->name = NULL;
@@ -16,7 +16,7 @@ struct map_st *map_new() {
 void map_set(struct map_st *res, const struct map_st *a) {
     map_clear(res);
     res->size = a->size;
-    res->name = malloc(a->size);
+    res->name = Malloc(a->size);
     memcpy(res->name, a->name, a->size);
     res->data = object_copy(a->data);
     for (int i = 0; i < 64; i++) {
@@ -24,7 +24,7 @@ void map_set(struct map_st *res, const struct map_st *a) {
     }
 }
 void map_clear(struct map_st *res) {
-    if (res->name != NULL) free(res->name);
+    if (res->name != NULL) Free(res->name);
     res->name = NULL;
     if (res->data != NULL) object_free(res->data);
     res->data = NULL;
@@ -35,11 +35,11 @@ void map_clear(struct map_st *res) {
 }
 void map_free(struct map_st *res) {
     if (res->data != NULL) object_free(res->data);
-    if (res->name != NULL) free(res->name);
+    if (res->name != NULL) Free(res->name);
     for (int i = 0; i < 64; i++) {
         if (res->next[i] != NULL) object_free(res->next[i]);
     }
-    free(res);
+    Free(res);
 }
 int map_cmp(const struct map_st *obj1, const struct map_st *obj2) {
     if (obj1 == obj2) return 0;
@@ -67,10 +67,10 @@ unsigned short set_char_64(char x) {
 
 // Class Methods
 void map_set_name_(struct map_st *res, const char *name, size_t size) {
-    if (res->name != NULL) free(res->name);
+    if (res->name != NULL) Free(res->name);
     res->size = size;
     if (size != 0) {
-        res->name = malloc(res->size);
+        res->name = Malloc(res->size);
         memcpy(res->name, name, size);
     } else {
         res->name = NULL;

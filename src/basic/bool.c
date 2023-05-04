@@ -5,7 +5,7 @@ struct object_convert bool_convert = {METHOD_CONVERT &bool__bool, METHOD_CONVERT
 struct object_type bool_type = {BOOL_OP, NULL, &bool_convert, &bool_math};
 // Standard operations
 struct bool_st *bool_new() {
-    struct bool_st *res = malloc(BOOL_SIZE);
+    struct bool_st *res = Malloc(BOOL_SIZE);
     res->data = 0;
     return res;
 }
@@ -17,7 +17,7 @@ void bool_clear(struct bool_st *res) {
     res->data = 0;
 }
 void bool_free(struct bool_st *res) {
-    free(res);
+    Free(res);
 }
 int bool_cmp(const struct bool_st *obj1, const struct bool_st *obj2) {
     if(obj1->data < obj2->data) return -1;

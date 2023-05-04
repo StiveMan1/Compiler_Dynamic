@@ -2,7 +2,7 @@
 
 
 struct sm_state *sm_state_new() {
-    struct sm_state *res = malloc(sizeof(struct sm_state));
+    struct sm_state *res = Malloc(sizeof(struct sm_state));
     res->type = ScopeType_None;
 
     res->memory_frame = array_new();
@@ -18,7 +18,7 @@ void sm_state_free(struct sm_state *res) {
     array_free(res->expr_stack);
 
     error_free(res->error);
-    free(res);
+    Free(res);
 }
 void sm_state_save_type(struct sm_state *res, struct node_st *obj) {
     array_add_new(res->expr_stack, INTEGER_TYPE);
