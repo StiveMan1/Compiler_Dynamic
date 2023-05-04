@@ -74,7 +74,7 @@ void darray_resize(struct darray_st *res, size_t size) {
     res->size = size;
 }
 void darray_append(struct darray_st *res, struct object_st *ptr, struct object_st *ref) {
-    if (res == NULL || ptr == NULL || ref == NULL) return;
+    if (res == NULL || ptr == NULL) return;
 
     size_t pos = res->size;
     darray_resize(res, pos + 1);

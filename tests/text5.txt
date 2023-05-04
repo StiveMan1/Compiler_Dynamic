@@ -1,24 +1,12 @@
-var i := 0;
+
+func swap(arr, a, b) is
+    var temp := arr[a];
+    arr[a] := arr[b];
+    arr[b] := temp;
+end
 
 var arr := [5, 8, 6, 2, 4, 1];
-
-while i < 6 loop
-    arr[i] := i + 1;
-    i := i + 1;
-end
+swap(arr, 2, 4);
+swap(arr, 5, 1);
 
 print arr;
-
-func fill_in() is
-    var rrr := [9, 5, 1, 4, 2];
-    var hh := 0;
-    while hh < 5 loop
-        rrr[hh] := hh + 1;
-        hh := hh + 1;
-    end
-    return rrr;
-end
-
-var map := {f := fill_in()};
-
-print map.f;

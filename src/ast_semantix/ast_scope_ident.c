@@ -116,6 +116,7 @@ void semantic_scan_fields(struct sm_state *state, struct object_st *obj) {
                 break;
             case StmtType_Func_Body:
                 sm_state_save_type(state, node);
+                node->closure = object_new();
                 object_set_type(node->closure, DARRAY_TYPE);
                 sm_state_save_type(state, node);
                 state->type = ScopeType_Func;
