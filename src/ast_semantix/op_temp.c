@@ -563,7 +563,7 @@ void run_op(struct op_state *state, struct object_st *object) {
             struct object_st *obj = object_copy(array_get_last(state->temp_memory));
             array_remove_last(state->temp_memory);
             struct object_st *map = array_get_last(state->temp_memory);
-            struct object_st *temp = map_set_elm(map->data, ((struct string_st *)block->data1->data)->data, ((struct string_st *)block->data1->data)->size);
+            struct object_st *temp = map_set_elm(map->data, block->data1->data);
             object_set(temp, obj);
 
             object_free(temp);

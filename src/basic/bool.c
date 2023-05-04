@@ -43,7 +43,7 @@ void bool__mod(struct object_st *res, struct error_st *err, const struct bool_st
     }
     if(integer_is_null(temp->data)) {
         err->present = 1;
-        string_set_str(err->type, INTERPRETER_ERROR, 15);
+        string_set_str(err->type, INTERPRETER_ERROR, 17);
         string_set_str(err->message, "Division by zero", 16);
         object_free(temp);
         return;
@@ -110,7 +110,7 @@ void bool__div(struct object_st *res, struct error_st *err, const struct bool_st
     }
     if(integer_is_null(temp->data)) {
         err->present = 1;
-        string_set_str(err->type, INTERPRETER_ERROR, 15);
+        string_set_str(err->type, INTERPRETER_ERROR, 17);
         string_set_str(err->message, "Division by zero", 16);
         object_free(temp);
         return;

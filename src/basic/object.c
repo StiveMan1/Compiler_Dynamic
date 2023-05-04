@@ -73,7 +73,7 @@ void object__mod(struct object_st *res, struct error_st *err, const struct objec
     }
     
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __mod__ operation", 38);
 }
 void object__and(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
@@ -83,7 +83,7 @@ void object__and(struct object_st *res, struct error_st *err, const struct objec
     }
     
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __and__ operation", 38);
 }
 void object__mul(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
@@ -93,7 +93,7 @@ void object__mul(struct object_st *res, struct error_st *err, const struct objec
     }
     
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __mul__ operation", 38);
 }
 void object__add(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
@@ -103,7 +103,7 @@ void object__add(struct object_st *res, struct error_st *err, const struct objec
     }
     
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __add__ operation", 38);
 }
 void object__sub(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
@@ -113,7 +113,7 @@ void object__sub(struct object_st *res, struct error_st *err, const struct objec
     }
     
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __sub__ operation", 38);
 }
 void object__div(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
@@ -123,7 +123,7 @@ void object__div(struct object_st *res, struct error_st *err, const struct objec
     }
     
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __div__ operation", 38);
 }
 void object__xor(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
@@ -133,7 +133,7 @@ void object__xor(struct object_st *res, struct error_st *err, const struct objec
     }
     
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __xor__ operation", 38);
 }
 void object__or(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
@@ -141,9 +141,9 @@ void object__or(struct object_st *res, struct error_st *err, const struct object
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_or != NULL) {
         return obj1->type->math->_or(res, err, obj1->data, obj2);
     }
-    
+
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __or__ operation", 37);
 }
 void object__ls(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
@@ -151,9 +151,9 @@ void object__ls(struct object_st *res, struct error_st *err, const struct object
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_ls != NULL) {
         return obj1->type->math->_ls(res, err, obj1->data, obj2);
     }
-    
+
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __ls__ operation", 37);
 }
 void object__rs(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
@@ -161,9 +161,9 @@ void object__rs(struct object_st *res, struct error_st *err, const struct object
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_rs != NULL) {
         return obj1->type->math->_rs(res, err, obj1->data, obj2);
     }
-    
+
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __rs__ operation", 37);
 }
 void object__neg(struct object_st *res, struct error_st *err, const struct object_st *obj1) {
@@ -171,9 +171,9 @@ void object__neg(struct object_st *res, struct error_st *err, const struct objec
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_ne != NULL) {
         return obj1->type->math->_ne(res, err, obj1->data);
     }
-    
+
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __neg__ operation", 38);
 }
 
@@ -198,9 +198,9 @@ void object__int(struct object_st *res, struct error_st *err, const struct objec
     if (obj != NULL && obj->type != NULL && obj->type->convert != NULL && obj->type->convert->_int != NULL) {
         return obj->type->convert->_int(res, err, obj->data);
     }
-    
+
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __int__ operation", 38);
 }
 void object__float(struct object_st *res, struct error_st *err, const struct object_st *obj) {
@@ -208,9 +208,9 @@ void object__float(struct object_st *res, struct error_st *err, const struct obj
     if (obj != NULL && obj->type != NULL && obj->type->convert != NULL && obj->type->convert->_float != NULL) {
         return obj->type->convert->_float(res, err, obj->data);
     }
-    
+
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __float__ operation", 40);
 }
 void object__str(struct object_st *res, struct error_st *err, const struct object_st *obj) {
@@ -220,7 +220,7 @@ void object__str(struct object_st *res, struct error_st *err, const struct objec
     }
     
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __str__ operation", 38);
 }
 
@@ -232,7 +232,7 @@ struct object_st *object_subscript(struct error_st *err, struct object_st *obj, 
     }
     
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __subscript__ operation", 48);
     return NULL;
 }
@@ -241,9 +241,9 @@ struct object_st *object_attrib(struct error_st *err, const struct object_st *ob
     if (obj != NULL && obj->type != NULL && obj->type->sub != NULL && obj->type->sub->_attrib != NULL) {
         return obj->type->sub->_attrib(err, obj->data, str);
     }
-    
+
     err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 15);
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __attrib__ operation", 45);
     return NULL;
 }

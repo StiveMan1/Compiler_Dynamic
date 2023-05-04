@@ -5,11 +5,10 @@
 
 // Map Class
 struct map_st{
-    char *name;
-    size_t size;
+    struct string_st **names;
+    struct object_st **datas;
 
-    struct object_st *data;
-    struct object_st *next[64];
+    size_t size, mx_size;
 };
 // Standard operations
 struct map_st *map_new();
@@ -19,8 +18,15 @@ void map_free(struct map_st *);
 int map_cmp(const struct map_st *, const struct map_st *);
 
 // Class Methods
-struct object_st *map_set_elm(struct map_st *, char *, size_t);
-struct object_st *map_get_elm(struct map_st *, char *, size_t);
+void map_resize(struct map_st *, size_t );
+struct object_st *map_set_elm(struct map_st *, const struct string_st *);
+struct object_st *map_get_elm(struct map_st *, const struct string_st *);
+
+// Math Methods
+void map__add(struct object_st *, struct error_st *, const struct map_st *, const struct object_st *);
+
+// Convert Methods
+void map__str(struct object_st *, struct error_st *, struct map_st *);
 
 // Sub method
 struct object_st *map_subscript(struct error_st *, struct map_st *, const struct object_st *);
