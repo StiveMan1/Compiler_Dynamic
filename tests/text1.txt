@@ -1,0 +1,13 @@
+func log(a, b) is
+    var res := 0;
+    while b >= a loop
+        b := b / a;
+        res := res + 1;
+    end
+
+    return res;
+end
+
+var a := 32;
+
+print log(2, a);
