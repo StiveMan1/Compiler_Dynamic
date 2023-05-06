@@ -1,5 +1,0 @@
-Type: "Token analyser"
-Message: "Some message"
-Pos: 0
-LineNum: 0
-LinePos: 0

@@ -1,0 +1,7 @@
+var t := {a:=1, b:=2, c};
+print t.a;
+
+t := t + {f:=45};
+
+var h := 100 + t.a + t.b + t.f;
+print(h);

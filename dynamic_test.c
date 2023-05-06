@@ -24,11 +24,12 @@ int type_to_step(char* type){
 }
 
 void check_error(struct error_st *error, struct error_st *expected_error, char* type){
+    int is_error_null = error == NULL || error_is_null(error);
     if (expected_error == NULL){
-        if (error == NULL) return;
+        if (is_error_null) return;
         else exit(1);
     }
-    if (error == NULL){
+    if (is_error_null){
         if (type_to_step(type) < type_to_step(expected_error->type->data)) return;
         else exit(1);
     }
@@ -56,11 +57,8 @@ int main(int argc, char *argv[]) {
 
     la_parser_set_file(F_parser, code_file);
 
-    // If result file present, then check output of interpretator
-    if (access(result_file, F_OK) == 0) {
-
-    } // Otherwise, check the error
-    else {
+    // If error file present, then check if there will be an error
+    if (access(error_file, F_OK) == 0) {
         struct la_parser *error_parser = la_parser_new();
         struct token_st *token = NULL;
         la_parser_set_file(error_parser, error_file);
@@ -76,6 +74,9 @@ int main(int argc, char *argv[]) {
         expected_error->line_num = strtol(token->data, NULL, 10);
         token = error_parser->list->data[14]->data;
         expected_error->line_pos = strtol(token->data, NULL, 10);
+    } // Otherwise, check output
+    else {
+
     }
 
     // Lexical
@@ -98,7 +99,7 @@ int main(int argc, char *argv[]) {
     interpretation(expr_obj, error);
     check_error(error, expected_error, INTERPRETER_ERROR);
 
-    // if (strcmp())
+    // TODO : check output
 
     ast_parser_free(T_parser);
     la_parser_free(F_parser);

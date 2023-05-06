@@ -18,13 +18,13 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_NAME}_lib)
 add_executable(dynamic_test dynamic_test.c)
 target_link_libraries(dynamic_test PUBLIC ${PROJECT_NAME}_lib)
 
-#ENABLE_TESTING()
-#
-#include(CTest)
-#
-#FILE(GLOB TEST_FILES "tests/*/test*")
-#foreach(TEST_PATH IN LISTS TEST_FILES)
-#    add_test(NAME ${TEST_PATH} COMMAND dynamic_test ${TEST_PATH})
-#endforeach()
-#
-#set_tests_properties(${TEST_FILES} PROPERTIES WILL_FAIL FALSE)
+ENABLE_TESTING()
+
+INCLUDE(CTest)
+
+FILE(GLOB TEST_FILES "tests/*/*")
+foreach(TEST_PATH IN LISTS TEST_FILES)
+    add_test(NAME ${TEST_PATH} COMMAND dynamic_test ${TEST_PATH})
+endforeach()
+
+set_tests_properties(${TEST_FILES} PROPERTIES WILL_FAIL FALSE)

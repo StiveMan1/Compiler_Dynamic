@@ -1,4 +1,4 @@
-var arr := ["t", "o", "r", "t"];
+var arr := ["t1", "o2", "r3", "t4"];
 
 var i := 0;
 while i < 4 loop
