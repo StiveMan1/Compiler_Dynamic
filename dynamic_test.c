@@ -1,7 +1,6 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/wait.h>
 #include "struct.h"
 #include "lexical_analysis.h"
 #include "ast_semantic.h"
@@ -24,8 +23,11 @@ int type_to_step(char* type){
     return 1;
 }
 
-void check_error(struct error_st *error, struct error_st *expected_error, char* type){
+void check_error(struct error_st *error, struct error_st *expected_error, char* type, struct la_parser* F_parser){
     int is_error_null = error == NULL || error_is_null(error);
+    if (!is_error_null) {
+        print_error_log(error, F_parser);
+    }
     if (expected_error == NULL){
         if (is_error_null) return;
         else exit(1);
@@ -36,13 +38,6 @@ void check_error(struct error_st *error, struct error_st *expected_error, char* 
     }
     if (error_cmp(error, expected_error) == 0) exit(0); // Finishing the execution successfully
     exit(1);
-}
-
-void check_interp_out(struct string_st *interp_out, struct string_st *expected_interp_out){
-    if (string_cmp(interp_out, expected_interp_out) != 0)
-        exit(1);
-    if (string_is_null(interp_out))
-        exit(2);
 }
 
 void read_error( char* error_file, struct error_st *expected_error){
@@ -80,7 +75,6 @@ void read_output(char* result_file, struct string_st *interp_out){
     str_size = i;
     fclose(fp);
 
-    interp_out = string_new();
     string_set_str(interp_out, data, str_size);
 }
 
@@ -112,76 +106,43 @@ int main(int argc, char *argv[]) {
 
     // Lexical
     tokenize(F_parser);
-    check_error(error, expected_error, LEXICAL_ANALYSIS_ERROR);
+    check_error(error, expected_error, LEXICAL_ANALYSIS_ERROR, F_parser);
 
     // AST parser
     object_set_type(expr_obj, NODE_TYPE);
     ast_parser_set_list(T_parser, F_parser);
     token_analyzer(T_parser, expr_obj->data);
-    check_error(error, expected_error, SYNTAX_ANALYSIS_ERROR);
+    check_error(error, expected_error, SYNTAX_ANALYSIS_ERROR, F_parser);
 
     error = error_new();
 
     // Semantic
     semantic_scan(expr_obj, error);
-    check_error(error, expected_error, SEMANTIC_ANALYSIS_ERROR);
+    check_error(error, expected_error, SEMANTIC_ANALYSIS_ERROR, F_parser);
+
+    // Interpretation
+
+    int stdout_bk = dup(fileno(stdout)); // fd for stdout backup
+    int fd[2]; // an array that will hold two file descriptors
+    _pipe(fd, 0, 0);
+
+    dup2(fd[1], fileno(stdout));
+
+    fflush(stdout);//flushall();
+    interpretation(expr_obj, error, fd[1]);
+    check_error(error, expected_error, INTERPRETER_ERROR, F_parser);
+    close(fd[1]);
+    dup2(stdout_bk, fileno(stdout));//restore
 
     ast_parser_free(T_parser);
     la_parser_free(F_parser);
 
-    // Interpretation
-
-    // https://www.rozmichelle.com/pipes-forks-dups/
-    int fd[2]; // an array that will hold two file descriptors
-    if (pipe(fd) == -1) { // populates fds with two file descriptors
-        fprintf(stderr, "Pipe Failed");
-        exit(-1);
+    char ch;
+    int index = 0;
+    while(read(fd[0], &ch, 1) > 0) {
+        if (expected_interp_out->size == index || expected_interp_out->data[index] != ch)
+            exit(1);
+        index++;
     }
-    pid_t pid = fork(); // create child process that is a clone of the parent
-
-    if (pid < 0) {
-        fprintf(stderr, "Fork Failed");
-        exit(-1);
-    }
-    // Child process
-    else if (pid == 0) {
-        // dup2(fd[0], STDIN_FILENO);  // fds[0] (the read end of pipe) donates its data to file descriptor 0
-        close(fd[0]);   // file descriptor no longer needed in child since stdin is a copy
-
-        char buf[128];
-        /*int bytes_to_read, total_read_bytes, read_bytes;
-        bytes_to_read = 128;
-        total_read_bytes = 0;
-
-        while ((read_bytes = read(0, buf + total_read_bytes, bytes_to_read) != 0)) {
-            if (read_bytes < 0) return -1;
-            total_read_bytes += read_bytes;
-        }
-        buf[total_read_bytes] = '\0';*/
-
-        /*read(fd[0], buf, 128);
-
-        struct string_st* interp_out = string_new();
-        string_set_str(interp_out, buf, strlen(buf));
-
-        check_interp_out(interp_out, expected_interp_out);*/
-
-        close(fd[1]);
-    }
-    // Parent process
-    else {
-        close(fd[0]); // file descriptor unused in parent
-
-        interpretation(expr_obj, error, fd[1]);
-
-        // send EOF so child can continue (child blocks until all input has been processed):
-        close(fd[1]);
-
-        check_error(error, expected_error, INTERPRETER_ERROR);
-
-        int status;
-        pid_t wpid = waitpid(pid, &status, 0); // wait for child to finish before exiting
-        printf("%d", status);
-        return wpid == pid && WIFEXITED(status) ? WEXITSTATUS(status) : -1;
-    }
+    if (expected_interp_out->size != index) exit(1);
 }

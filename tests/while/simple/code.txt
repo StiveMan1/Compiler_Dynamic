@@ -1,7 +1,7 @@
 var b := false;
 
-while !b loop
+while not b loop
     b := true;
 end
 
-print("Finished");
+print "Finished";

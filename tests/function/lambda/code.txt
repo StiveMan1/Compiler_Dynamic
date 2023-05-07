@@ -1,2 +1,4 @@
-var _lambda := func(x)=>x+1;
-print _lambda(3);
+var t := []; // empty array declaration
+t[10] := 25;
+t[100] := func(x)=>x+1;
+t[1000] := {a:=1,b:=2.7};

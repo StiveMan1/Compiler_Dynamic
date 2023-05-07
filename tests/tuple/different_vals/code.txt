@@ -1,6 +1,6 @@
-var t := {a:=1, b:="str", c:=5, 12.14, f:=true, r:="2"};
+var t := {a:=1, b:="str", c:=12.14, f:=true, r:="2", d};
 
 print t.a + t.c;
 print t.b + t.r;
 print t.f;
-print t.3;
+print t.d;

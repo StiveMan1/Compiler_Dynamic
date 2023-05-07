@@ -1,26 +1,9 @@
 #include <stdio.h>
-#include <assert.h>
 #include <time.h>
 #include "struct.h"
 #include "lexical_analysis.h"
 #include "ast_semantic.h"
 #include "printer.c"
-
-void print_error_log(struct error_st* error, struct la_parser* F_parser){
-    if (!error->present) return;
-    printf("%s\n", error->type->data);
-    if (error->message->size > 0)
-        printf("%s\n", error->message->data);
-    printf("Line %zu: \n", error->line_num + 1);
-    for (size_t i = error->line_pos; i < F_parser->str_size; i++) {
-        if (F_parser->data[i] == '\n') break;
-        printf("%c", F_parser->data[i]);
-    }
-    printf("\n");
-    for (size_t i = error->line_pos; i < error->pos; i++) printf(" ");
-    printf("^\n");
-    exit(-1);
-}
 
 void interpretation(struct object_st *expr_obj, struct error_st *, int stream);
 

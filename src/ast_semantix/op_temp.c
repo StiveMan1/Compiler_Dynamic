@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "struct.h"
 #include "ast_semantic.h"
 
@@ -707,11 +708,11 @@ void run_op(struct op_state *state, struct object_st *object, int stream) {
                 obj = object_copy(array_get_last(state->temp_memory));
                 array_remove_last(state->temp_memory);
                 str = obj->data;
-                for (size_t _i = 0; _i < str->size; _i++) dprintf(stream, "%c", str->data[_i]);
-                if (i + 1 < block->count) dprintf(stream, " ");
+                write(stream, str->data, str->size);
+                if (i + 1 < block->count) write(stream, " ", 0);
                 object_free(obj);
             }
-            dprintf(stream, "\n");
+            write(stream, "\n", 1);
             break;
         }
         case BlockType_ForNext: {
