@@ -1,0 +1,9 @@
+var int_int_comp := 1 = 2;
+var int_real_comp := 2 < 2.3;
+var real_int_comp := 3.4 >= 2;
+var real_real_comp := 4.1 = 4.1;
+
+print int_int_comp;
+print int_real_comp;
+print real_int_comp;
+print real_real_comp;

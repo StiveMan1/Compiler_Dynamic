@@ -1,0 +1,8 @@
+func fun(r) is
+    print r;
+    if r >= 0 then
+        fun(r - 1);
+    end
+end
+
+fun(5);

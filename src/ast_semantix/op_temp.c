@@ -296,7 +296,7 @@ void run_an(struct op_state *state, struct object_st *object) {
     }
 }
 
-void run_op(struct op_state *state, struct object_st *object) {
+void run_op(struct op_state *state, struct object_st *object, int stream) {
     struct array_st *code_operations = state->code_operations;
     struct op_block *block = object->data;
     struct op_attrib *attrib = NULL;
@@ -707,11 +707,11 @@ void run_op(struct op_state *state, struct object_st *object) {
                 obj = object_copy(array_get_last(state->temp_memory));
                 array_remove_last(state->temp_memory);
                 str = obj->data;
-                for (size_t _i = 0; _i < str->size; _i++) printf("%c", str->data[_i]);
-                if (i + 1 < block->count) printf(" ");
+                for (size_t _i = 0; _i < str->size; _i++) dprintf(stream, "%c", str->data[_i]);
+                if (i + 1 < block->count) dprintf(stream, " ");
                 object_free(obj);
             }
-            printf("\n");
+            dprintf(stream, "\n");
             break;
         }
         case BlockType_ForNext: {
@@ -747,7 +747,7 @@ void run_op(struct op_state *state, struct object_st *object) {
     }
 }
 
-void function_call(struct object_st *res, struct error_st *err, struct object_st *func, struct array_st *args) {
+void function_call(struct object_st *res, struct error_st *err, struct object_st *func, struct array_st *args, int stream) {
     struct object_st *temp = NULL;
     struct op_state *state = op_state_new();
     struct string_st *ind_str = string_new();
@@ -831,7 +831,7 @@ void function_call(struct object_st *res, struct error_st *err, struct object_st
                 run_an(state, current_object);
             }
             if (current_object->type == OP_BLOCK_TYPE) {
-                run_op(state, current_object);
+                run_op(state, current_object, stream);
             }
             object_free(current_object);
         }
@@ -844,7 +844,7 @@ void function_call(struct object_st *res, struct error_st *err, struct object_st
     string_free(ind_str);
 }
 
-void interpretation(struct object_st *expr_obj, struct error_st *error) {
+void interpretation(struct object_st *expr_obj, struct error_st *error, int stream) {
     struct op_state *state = op_state_new();
     array_append(state->code_operations, expr_obj);
     {
@@ -859,7 +859,7 @@ void interpretation(struct object_st *expr_obj, struct error_st *error) {
                     run_an(state, current_object);
                 }
                 if (current_object->type == OP_BLOCK_TYPE) {
-                    run_op(state, current_object);
+                    run_op(state, current_object, stream);
                 }
             }
             object_free(current_object);

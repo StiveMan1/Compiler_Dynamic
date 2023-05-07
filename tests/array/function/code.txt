@@ -1,0 +1,9 @@
+var funcs := [
+    func(x)=>print "1" + x,
+    func(x)=>print "2" + (x + 1),
+    func(x)=>print "3" + (x + 2),
+];
+
+for f in funcs loop
+    f(0);
+end

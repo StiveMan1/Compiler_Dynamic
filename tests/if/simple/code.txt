@@ -1,0 +1,9 @@
+var x := 3;
+
+if x = 1 then
+    print "a";
+else if x = 2 then
+    print "b";
+else
+    print "c";
+end

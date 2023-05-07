@@ -1,0 +1,11 @@
+func fun(arr, x, l, r} is
+    while l <= r loop
+        var m := l + (r - l) / 2;
+        if arr[m] < x then
+            l := m + 1;
+        else
+            r := m - 1;
+        end
+    end
+    return -1;
+end

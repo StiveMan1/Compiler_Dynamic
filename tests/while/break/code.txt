@@ -1,0 +1,10 @@
+var b := 50;
+
+while true loop
+    b := b / 2;
+    if b < 10 then
+        break;
+    end
+end
+
+print(b);

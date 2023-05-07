@@ -1,0 +1,8 @@
+var booleans := [true, true, false, true, true];
+
+for b in booleans loop
+    print b;
+    if b then
+        break;
+    end
+end

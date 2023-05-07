@@ -1,0 +1,6 @@
+var t := {a:=1, b:="str", c:=5, 12.14, f:=true, r:="2"};
+
+print t.a + t.c;
+print t.b + t.r;
+print t.f;
+print t.3;

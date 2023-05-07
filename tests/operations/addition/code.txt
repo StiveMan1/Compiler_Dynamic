@@ -1,0 +1,15 @@
+var int_int_add := 1 + 1;
+var int_real_add := 1 + 1.1;
+var real_int_add := 1.1 + 1;
+var real_real_add := 1.1 + 1.1;
+var str_str_add := "hello" + " everyone";
+var arr_arr_add := [1] + [2];
+var tup_tup_add := {t:=34} + {f:=45};
+
+print int_int_add;
+print int_real_add;
+print real_int_add;
+print real_real_add;
+print str_str_add;
+print arr_arr_add;
+print tup_tup_add;

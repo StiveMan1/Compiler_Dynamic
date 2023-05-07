@@ -1,0 +1,7 @@
+var b := false;
+
+while !b loop
+    b := true;
+end
+
+print("Finished");

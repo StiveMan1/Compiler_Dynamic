@@ -1,0 +1,3 @@
+var t := {a:={b:={c:={d:=true}}}};
+
+print(t.a.b.c.d);

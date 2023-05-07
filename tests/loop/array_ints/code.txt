@@ -1,8 +1,0 @@
-var a := [10, 20, 32];
-var sum := 0;
-
-for i in a loop
-    sum := sum + i;
-end
-
-print sum;

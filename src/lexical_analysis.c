@@ -88,9 +88,9 @@ void tokenize(struct la_parser *parser) {
                 case Special_RSB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LSB) {
                         if (parser->scope_buf[parser->scope_pos] == Special_LSQB) {
-                            set_error_lexical("Scope closed incorrectly. Must be ']' using ')'")
+                            set_error_lexical("Scope closed incorrectly. Must be ']' instead of ')'")
                         } else if (parser->scope_buf[parser->scope_pos] == Special_LCB) {
-                            set_error_lexical("Scope closed incorrectly. Must be '}' using ')'")
+                            set_error_lexical("Scope closed incorrectly. Must be '}' instead of ')'")
                         }
                         goto bad_end;
                     }
@@ -98,9 +98,9 @@ void tokenize(struct la_parser *parser) {
                 case Special_RSQB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LSQB) {
                         if (parser->scope_buf[parser->scope_pos] == Special_LSB) {
-                            set_error_lexical("Scope closed incorrectly. Must be ')' using ']'")
+                            set_error_lexical("Scope closed incorrectly. Must be ')' instead of ']'")
                         } else if (parser->scope_buf[parser->scope_pos] == Special_LCB) {
-                            set_error_lexical("Scope closed incorrectly. Must be '}' using ']'")
+                            set_error_lexical("Scope closed incorrectly. Must be '}' instead of ']'")
                         }
                         goto bad_end;
                     }
@@ -108,9 +108,9 @@ void tokenize(struct la_parser *parser) {
                 case Special_RCB:
                     if (parser->scope_pos - 1 < 0 || parser->scope_buf[--parser->scope_pos] != Special_LCB) {
                         if (parser->scope_buf[parser->scope_pos] == Special_LSQB) {
-                            set_error_lexical("Scope closed incorrectly. Must be ']' using '}'")
+                            set_error_lexical("Scope closed incorrectly. Must be ']' instead of '}'")
                         } else if (parser->scope_buf[parser->scope_pos] == Special_LSB) {
-                            set_error_lexical("Scope closed incorrectly. Must be ')' using '}'")
+                            set_error_lexical("Scope closed incorrectly. Must be ')' instead of '}'")
                         }
                         goto bad_end;
                     }

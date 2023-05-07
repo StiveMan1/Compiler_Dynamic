@@ -1,0 +1,14 @@
+var a := [10, 20, 32];
+var sum := 0;
+
+for i in a loop
+    sum := sum + i;
+end
+
+print sum;
+
+var arr := ["t1", "o2", "r3", "t4"];
+
+for ch in arr loop
+    print ch;
+end

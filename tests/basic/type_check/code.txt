@@ -1,0 +1,31 @@
+if 5 is int then
+    print "int";
+end
+
+if 0.4 is real then
+    print "real";
+end
+
+if true is bool then
+    print "bool";
+end
+
+var _emp;
+if _emp is empty then
+    print "empty";
+end
+
+if [1, 2] is '[' ']' then
+    print "array";
+end
+
+if {} is '{' '}' then
+    print "tuple";
+end
+
+func f() is
+end
+
+if f is func then
+    print "function";
+end

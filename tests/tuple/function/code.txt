@@ -1,0 +1,7 @@
+func fun(r) is
+    return r * r;
+end
+
+var map := {r := fun};
+
+print map.r(5);

@@ -1,0 +1,4 @@
+var a := {a:=1, c};
+
+print a.a;
+print a.2;

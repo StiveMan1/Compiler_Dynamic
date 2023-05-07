@@ -1,0 +1,2 @@
+var _lambda := func(x)=>x+1;
+print _lambda(3);

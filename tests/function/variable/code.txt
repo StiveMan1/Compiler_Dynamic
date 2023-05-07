@@ -1,0 +1,7 @@
+func fun(r) is
+    return r * r;
+end
+
+var funcVariable := fun;
+
+print funcVariable(5);

@@ -1,0 +1,7 @@
+int
+real
+bool
+empty
+array
+tuple
+function

@@ -22,7 +22,7 @@ void print_error_log(struct error_st* error, struct la_parser* F_parser){
     exit(-1);
 }
 
-void interpretation(struct object_st *expr_obj, struct error_st *);
+void interpretation(struct object_st *expr_obj, struct error_st *, int stream);
 
 int main() {
     struct error_st *error = error_new();
@@ -51,7 +51,7 @@ int main() {
 
     clock_t begin = clock();
 
-    interpretation(expr_obj,error);
+    interpretation(expr_obj,error,1);
     print_error_log(error, F_parser);
 
     clock_t end = clock();

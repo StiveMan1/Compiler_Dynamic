@@ -1,0 +1,5 @@
+func fun(r) is
+    print "Hello World: " + r;
+end
+
+fun(5);
