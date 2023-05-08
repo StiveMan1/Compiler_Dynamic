@@ -25,7 +25,7 @@ int type_to_step(char* type){
 void check_error(struct error_st *error, struct error_st *expected_error, char* type, struct la_parser* F_parser){
     int is_error_null = error == NULL || error_is_null(error);
     if (!is_error_null) {
-        print_error(error);
+        print_error_log(error, F_parser);
     }
     if (error_is_null(expected_error)){
         if (is_error_null) return;
