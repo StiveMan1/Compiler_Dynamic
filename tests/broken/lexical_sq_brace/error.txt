@@ -1,1 +1,5 @@
 Lexical error
+Scope closed incorrectly. Must be ')' instead of ']'
+21
+0
+0
