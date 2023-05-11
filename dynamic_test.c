@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
     check_error(error, expected_error, SEMANTIC_ANALYSIS_ERROR, F_parser);
 
     // Interpretation
-
+    // Storing the output from stdout and comparing with expected
     int stdout_bk = dup(fileno(stdout)); // fd for stdout backup
     int fd[2]; // an array that will hold two file descriptors
     _pipe(fd, 0, 0);

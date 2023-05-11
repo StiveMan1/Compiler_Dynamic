@@ -34,8 +34,10 @@ int main() {
     semantic_scan(expr_obj, error);
     PRINT_ERROR
 
+    // Counting the time
     clock_t begin = clock();
 
+    // Running the code from AST
     interpretation(expr_obj,error,1);
     PRINT_ERROR
 
