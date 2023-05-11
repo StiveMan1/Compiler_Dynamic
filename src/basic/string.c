@@ -29,6 +29,22 @@ int string_cmp(const struct string_st *obj1, const struct string_st *obj2) {
     if (obj1->size < obj2->size) return -1;
     return memcmp(obj1->data, obj2->data, obj1->size);
 }
+int string__cmp(struct error_st *err, struct string_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    struct object_st *temp = object_new();
+    object__str(temp, err, obj2);
+    if(err->present) {
+        object_free(temp);
+        return 2;
+    }
+    int result;
+    struct string_st *str = temp->data;
+    if (obj1->size > str->size) result = 1;
+    else if (obj1->size < str->size) result = -1;
+    else result = memcmp(obj1->data, str->data, obj1->size);
+    object_free(temp);
+    return result;
+}
 int string_is_null(const struct string_st *res){
     return (res == NULL || res->size == 0);
 }

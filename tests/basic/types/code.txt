@@ -1,7 +1,7 @@
-int _int := 0;
-real _real := 1.1;
-bool _bool := true;
-string _str := "str";
+var _int := 0;
+var _real := 1.1;
+var _bool := true;
+var _str := "str";
 
 var notype := empty;
 

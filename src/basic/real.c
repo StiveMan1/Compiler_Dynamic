@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "basic.h"
 
 struct object_math_op real_math = {NULL, NULL, METHOD_MATH &real__mul, METHOD_MATH &real__add, METHOD_MATH &real__sub, METHOD_MATH &real__div, NULL, NULL, NULL, NULL, METHOD_CONVERT &real__neg};
@@ -23,6 +24,21 @@ int real_cmp(const struct real_st *obj1, const struct real_st *obj2) {
     if(obj1->data < obj2->data) return -1;
     if(obj1->data > obj2->data) return 1;
     return 0;
+}
+int real__cmp(struct error_st *err, struct real_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    struct object_st *temp = object_new();
+    object__float(temp, err, obj2);
+    if(err->present) {
+        object_free(temp);
+        return 2;
+    }
+    int result = 0;
+    struct real_st *real = temp->data;
+    if(obj1->data < real->data) result = -1;
+    if(obj1->data > real->data) result = 1;
+    object_free(temp);
+    return result;
 }
 
 
@@ -77,7 +93,7 @@ void real__div(struct object_st *res, struct error_st *err, const struct real_st
         object_free(temp);
         return;
     }
-    if(integer_is_null(temp->data)) {
+    if(real_is_null(temp->data)) {
         err->present = 1;
         string_set_str(err->type, INTERPRETER_ERROR, 17);
         string_set_str(err->message, "Division by zero", 16);
@@ -99,7 +115,7 @@ void real__bool(struct object_st *res, struct error_st *err, struct real_st *obj
     ((struct bool_st *)res->data)->data = !real_is_null(obj);
 }
 void real__int(struct object_st *res, struct error_st *err, struct real_st *obj){
-    object_set_type(res, REAL_TYPE);
+    object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = (int)obj->data;
 }
 void real__float(struct object_st *res, struct error_st *err, struct real_st *obj){

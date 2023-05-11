@@ -13,7 +13,8 @@
 #define ExprType_Comp           0x08
 #define ExprType_NotTest        0x09
 #define ExprType_AndTest        0x0a
-#define ExprType_OrTest         0x0b
+#define ExprType_XorTest        0x0b
+#define ExprType_OrTest         0x0c
 
 int u_oper(struct ast_parser *, struct node_st *);
 int m_oper(struct ast_parser *, struct node_st *);
@@ -26,9 +27,9 @@ int or_oper(struct ast_parser *, struct node_st *);
 int comp_oper(struct ast_parser *, struct node_st *);
 int not_test_oper(struct ast_parser *, struct node_st *);
 int and_test_oper(struct ast_parser *, struct node_st *);
+int xor_test_oper(struct ast_parser *, struct node_st *);
 int or_test_oper(struct ast_parser *, struct node_st *);
 int list_oper(struct ast_parser *, struct node_st *, short start, short end);
-int tuple_oper(struct ast_parser *parser, struct node_st *expr, short start, short end);
 
 int list_ident(struct ast_parser *, struct node_st *);
 

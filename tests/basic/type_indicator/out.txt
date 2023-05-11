@@ -1,7 +1,1 @@
-int
-real
-bool
-empty
-array
-tuple
-function
+5

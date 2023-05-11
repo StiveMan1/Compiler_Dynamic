@@ -39,15 +39,38 @@ void map_free(struct map_st *res) {
 int map_cmp(const struct map_st *obj1, const struct map_st *obj2) {
     if (obj1->size != obj2->size) return 2;
     size_t counter = 0;
+    struct error_st err;
     for (size_t i = 0; i < obj1->size; i++) {
         for (size_t j = 0; j < obj2->size; j++) {
             if (string_cmp(obj1->names[i], obj2->names[i]) == 0) {
-                if (object_cmp(obj1->datas[i], obj2->datas[i]) != 0) return 2;
+                if (object_cmp(&err, obj1->datas[i], obj2->datas[i]) != 0) return 2;
                 counter ++;
             }
         }
     }
     if (counter == obj2->size) return 0;
+    return 2;
+}
+int map__cmp(struct error_st *err, struct map_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    if(obj2->type != MAP_TYPE) {
+        err->present = 1;
+        string_set_str(err->type, INTERPRETER_ERROR, 17);
+        string_set_str(err->message, "map can't compare with non map type", 39);
+        return 2;
+    }
+    struct map_st *map = obj2->data;
+    if (obj1->size != map->size) return 2;
+    size_t counter = 0;
+    for (size_t i = 0; i < obj1->size; i++) {
+        for (size_t j = 0; j < map->size; j++) {
+            if (string_cmp(obj1->names[i], map->names[i]) == 0) {
+                if (object_cmp(err, obj1->datas[i], map->datas[i]) != 0) return 2;
+                counter ++;
+            }
+        }
+    }
+    if (counter == obj1->size) return 0;
     return 2;
 }
 
@@ -101,7 +124,7 @@ void map_resize(struct map_st *res, size_t size) {
 }
 struct object_st *map_set_elm(struct map_st *res, const struct string_st *str) {
     for (size_t i = 0; i < res->size; i++) {
-        if (string_cmp(res->names[i], str) == 0) return object_copy(res->datas[i]);
+        if (res->names[i] != NULL && string_cmp(res->names[i], str) == 0) return object_copy(res->datas[i]);
     }
     map_resize(res, res->size + 1);
     res->names[res->size - 1] = string_new();
@@ -110,9 +133,18 @@ struct object_st *map_set_elm(struct map_st *res, const struct string_st *str) {
 }
 struct object_st *map_get_elm(struct map_st *res, const struct string_st *str) {
     for (size_t i = 0; i < res->size; i++) {
-        if (string_cmp(res->names[i], str) == 0) return object_copy(res->datas[i]);
+        if (res->names[i] != NULL && string_cmp(res->names[i], str) == 0) return object_copy(res->datas[i]);
     }
     return NULL;
+}
+
+struct object_st *map_set_elm_int(struct map_st *res, const struct integer_st *int_) {
+    if (int_->data > res->size) map_resize(res, int_->data);
+    if (res->names[int_->data] == NULL) {
+        res->names[int_->data] = string_new();
+        res->datas[int_->data] = object_new();
+    }
+    return object_copy(res->datas[int_->data]);
 }
 
 // Math Methods
@@ -179,17 +211,31 @@ void map__str(struct object_st *res, struct error_st *err, struct map_st *obj) {
 // Sub method
 struct object_st *map_subscript(struct error_st *err, struct map_st *map, const struct object_st *obj) {
     while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
+    if (obj->type == INTEGER_TYPE) {
+        return map_set_elm_int(map, obj->data);
+    }
+    struct object_st *temp = object_new();
+    object__int(temp, err, obj);
+    if(err->present) {
+        object_free(temp);
+        return NULL;
+    }
+    struct object_st *result = map_set_elm(map, obj->data);
+    object_free(temp);
+    return result;
+}
+struct object_st *map_attrib(struct error_st *err, struct map_st *map, const struct object_st *obj) {
+    while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
+    if (obj->type == INTEGER_TYPE) {
+        return map_set_elm_int(map, obj->data);
+    }
     struct object_st *temp = object_new();
     object__str(temp, err, obj);
     if(err->present) {
         object_free(temp);
         return NULL;
     }
-    struct object_st *res = NULL;
-    res = map_set_elm(map, temp->data);
+    struct object_st *result = map_set_elm(map, temp->data);
     object_free(temp);
-    return res;
-}
-struct object_st *map_attrib(struct error_st *err, struct map_st *map, const struct string_st *obj) {
-    return map_set_elm(map, obj);
+    return result;
 }

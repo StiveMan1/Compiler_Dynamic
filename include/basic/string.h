@@ -15,6 +15,7 @@ void string_set(struct string_st *, const struct string_st *);
 void string_clear(struct string_st *);
 void string_free(struct string_st *);
 int string_cmp(const struct string_st *, const struct string_st *);
+int string__cmp(struct error_st *err, struct string_st *, const struct object_st *);
 int string_is_null(const struct string_st *);
 
 // Class methods

@@ -11,23 +11,23 @@ struct error_st;
 #define METHOD_FREE       (void (*)(void *))
 #define METHOD_SET        (void (*)(void *, const void *))
 #define METHOD_CLEAR      (void (*)(void *))
-#define METHOD_CMP        (int (*)(const void *, const void *))
+#define METHOD_CMP        (int (*)(struct error_st *, void *, const void *))
 
 struct object_op {
     void *(*_new)();
     void (*_set)(void *, const void *);
     void (*_clear)(void *);
     void (*_free)(void *);
-    int (*_cmp)(const void *, const void *);
+    int (*_cmp)(struct error_st *, void *, const void *);
 };
 
 
 #define METHOD_SUBSCRIPT  (struct object_st *(*)(struct error_st *, void *, const struct object_st *))
-#define METHOD_ATTRIB (struct object_st *(*)(struct error_st *, void *, const struct string_st *))
+#define METHOD_ATTRIB (struct object_st *(*)(struct error_st *, void *, const struct object_st *))
 
 struct object_sub {
     struct object_st *(*_subscript)(struct error_st *, void *, const struct object_st *);
-    struct object_st *(*_attrib)(struct error_st *, void *, const struct string_st *);
+    struct object_st *(*_attrib)(struct error_st *, void *, const struct object_st *);
 };
 
 

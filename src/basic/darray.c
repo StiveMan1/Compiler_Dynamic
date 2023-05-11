@@ -31,11 +31,12 @@ int darray_cmp(const struct darray_st *obj1, const struct darray_st *obj2) {
     if (obj1->size > obj2->size) return 1;
     if (obj1->size < obj2->size) return -1;
     int res_cmp_sub;
+    struct error_st err;
     for (size_t i = 0; i < obj1->size; i++) {
-        res_cmp_sub = object_cmp(obj1->data[0][i], obj2->data[0][i]);
+        res_cmp_sub = object_cmp(&err, obj1->data[0][i], obj2->data[0][i]);
         if (res_cmp_sub == -1) return -1;
         if (res_cmp_sub == 1) return 1;
-        res_cmp_sub = object_cmp(obj1->data[1][i], obj2->data[1][i]);
+        res_cmp_sub = object_cmp(&err, obj1->data[1][i], obj2->data[1][i]);
         if (res_cmp_sub == -1) return -1;
         if (res_cmp_sub == 1) return 1;
     }

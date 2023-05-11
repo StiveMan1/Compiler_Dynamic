@@ -13,6 +13,7 @@ void array_set(struct array_st *, const struct array_st *);
 void array_clear(struct array_st *);
 void array_free(struct array_st *);
 int array_cmp(const struct array_st *, const struct array_st *);
+int array__cmp(struct error_st *, struct array_st *, const struct object_st *);
 int array_is_null(const struct array_st *);
 
 // Class methods
@@ -22,8 +23,6 @@ void array_concat(struct array_st *, const struct array_st *);
 void array_add_new(struct array_st *, struct object_type *);
 void array_remove_last(struct array_st *);
 struct object_st *array_get_last(struct array_st *);
-
-void array_sort(struct array_st *);
 
 void array__mul(struct object_st *, struct error_st *, const struct array_st *, const struct object_st *);
 void array__add(struct object_st *, struct error_st *, const struct array_st *, const struct object_st *);

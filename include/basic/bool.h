@@ -11,7 +11,8 @@ struct bool_st *bool_new();
 void bool_set(struct bool_st *, const struct bool_st *);
 void bool_clear(struct bool_st *);
 void bool_free(struct bool_st *);
-int bool_cmp(const struct bool_st *obj1, const struct bool_st *obj2);
+int bool_cmp(const struct bool_st *, const struct bool_st *);
+int bool__cmp(struct error_st *, struct bool_st *, const struct object_st *);
 
 // Class methods
 int bool_is_null(const struct bool_st *);

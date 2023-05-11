@@ -34,15 +34,26 @@ void object_free(struct object_st *res) {
     }
     Free(res);
 }
-int object_cmp(const struct object_st *obj1, const struct object_st *obj2) {
+int object_cmp(struct error_st *err, struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
-
+    if (obj2 != NULL && obj2->type == REAL_TYPE && obj1->type != REAL_TYPE) {
+        struct object_st *temp = object_new();
+        object__float(temp, err, obj1);
+        if (err->present) {
+            object_free(temp);
+            return 2;
+        }
+        int res = object_cmp(err, temp, obj2);
+        object_free(temp);
+        return res;
+    }
     if (obj1 == obj2) return 0;
-    if (obj1 == NULL || obj2 == NULL) return 2;
-    if (obj1->type != obj2->type) return 2;
-    if (obj1->type != NULL && obj1->type->self._cmp != NULL) return obj1->type->self._cmp(obj1->data, obj2->data);
-    return 0;
+    if (obj1->type != NULL && obj1->type->self._cmp != NULL) return obj1->type->self._cmp(err, obj1->data, obj2);
+    err->present = 1;
+    string_set_str(err->type, INTERPRETER_ERROR, 17);
+    string_set_str(err->message, "Object does not have __mul__ operation", 38);
+    return 2;
 }
 
 // Class methods
@@ -88,6 +99,18 @@ void object__and(struct object_st *res, struct error_st *err, const struct objec
 }
 void object__mul(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    if (obj2 != NULL && obj2->type == REAL_TYPE && obj1->type != REAL_TYPE) {
+        struct object_st *temp = object_new();
+        object__float(temp, err, obj1);
+        if (err->present) {
+            object_free(temp);
+            return;
+        }
+        object__mul(res, err, temp, obj2);
+        object_free(temp);
+        return;
+    }
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_mul != NULL) {
         return obj1->type->math->_mul(res, err, obj1->data, obj2);
     }
@@ -98,6 +121,18 @@ void object__mul(struct object_st *res, struct error_st *err, const struct objec
 }
 void object__add(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    if (obj2 != NULL && obj2->type == REAL_TYPE && obj1->type != REAL_TYPE) {
+        struct object_st *temp = object_new();
+        object__float(temp, err, obj1);
+        if (err->present) {
+            object_free(temp);
+            return;
+        }
+        object__add(res, err, temp, obj2);
+        object_free(temp);
+        return;
+    }
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_add != NULL) {
         return obj1->type->math->_add(res, err, obj1->data, obj2);
     }
@@ -108,6 +143,18 @@ void object__add(struct object_st *res, struct error_st *err, const struct objec
 }
 void object__sub(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    if (obj2 != NULL && obj2->type == REAL_TYPE && obj1->type != REAL_TYPE) {
+        struct object_st *temp = object_new();
+        object__float(temp, err, obj1);
+        if (err->present) {
+            object_free(temp);
+            return;
+        }
+        object__sub(res, err, temp, obj2);
+        object_free(temp);
+        return;
+    }
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_sub != NULL) {
         return obj1->type->math->_sub(res, err, obj1->data, obj2);
     }
@@ -118,6 +165,18 @@ void object__sub(struct object_st *res, struct error_st *err, const struct objec
 }
 void object__div(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    if (obj2 != NULL && obj2->type == REAL_TYPE && obj1->type != REAL_TYPE) {
+        struct object_st *temp = object_new();
+        object__float(temp, err, obj1);
+        if (err->present) {
+            object_free(temp);
+            return;
+        }
+        object__div(res, err, temp, obj2);
+        object_free(temp);
+        return;
+    }
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_div != NULL) {
         return obj1->type->math->_div(res, err, obj1->data, obj2);
     }
@@ -218,10 +277,8 @@ void object__str(struct object_st *res, struct error_st *err, const struct objec
     if (obj != NULL && obj->type != NULL && obj->type->convert != NULL && obj->type->convert->_str != NULL) {
         return obj->type->convert->_str(res, err, obj->data);
     }
-    
-    err->present = 1;
-    string_set_str(err->type, INTERPRETER_ERROR, 17);
-    string_set_str(err->message, "Object does not have __str__ operation", 38);
+    object_set_type(res, STRING_TYPE);
+    string_set_str(res->data, "empty", 5);
 }
 
 // Sub method
@@ -236,7 +293,7 @@ struct object_st *object_subscript(struct error_st *err, struct object_st *obj, 
     string_set_str(err->message, "Object does not have __subscript__ operation", 48);
     return NULL;
 }
-struct object_st *object_attrib(struct error_st *err, const struct object_st *obj, const struct string_st *str) {
+struct object_st *object_attrib(struct error_st *err, const struct object_st *obj, const struct object_st *str) {
     while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
     if (obj != NULL && obj->type != NULL && obj->type->sub != NULL && obj->type->sub->_attrib != NULL) {
         return obj->type->sub->_attrib(err, obj->data, str);

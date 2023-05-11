@@ -32,6 +32,7 @@
 #define BlockType_Call          0x44
 #define BlockType_Print         0x45
 #define BlockType_ForNext       0x46
+#define BlockType_Is            0x47
 
 
 void run_an(struct op_state *state, struct object_st *object) {
@@ -57,10 +58,10 @@ void run_an(struct op_state *state, struct object_st *object) {
             }
             case PrimType_Tuple: {
                 array_add_new(state->temp_memory, MAP_TYPE);
-                for (size_t i = 0; i < temp_array->size; i++) {
+                for (size_t i = temp_array->size; i > 0; i--) {
                     // temp_array will store StmtType_Annot
                     //  created during AST build
-                    array_append(code_operations, temp_array->data[i]);
+                    array_append(code_operations, temp_array->data[i - 1]);
                 }
                 break;
             }
@@ -115,6 +116,15 @@ void run_an(struct op_state *state, struct object_st *object) {
                 for (size_t i = 0; i < temp_array->size; i++) {
                     array_append(code_operations, temp_array->data[i]);
                 }
+                break;
+            }
+            case PrimType_Is: {
+                array_add_new(code_operations, OP_BLOCK_TYPE);
+                new_block = array_get_last(code_operations)->data;
+                new_block->type = BlockType_Is;
+                new_block->subtype = ((struct node_st *)temp_array->data[1]->data)->type;
+                op_block_set_position_node(new_block, node);
+                array_append(code_operations, temp_array->data[0]);
                 break;
             }
         }
@@ -194,8 +204,8 @@ void run_an(struct op_state *state, struct object_st *object) {
                 break;
             }
             case StmtType_Func_Body: {
-                array_add_new(state->temp_memory, OP_OBJECT_TYPE);
-                op_object_set_function(array_get_last(state->temp_memory)->data, node);
+                array_add_new(state->temp_memory, FUNC_TYPE);
+                func_set_function(array_get_last(state->temp_memory)->data, node);
                 break;
             }
             case StmtType_Assign:
@@ -402,7 +412,12 @@ void run_op(struct op_state *state, struct object_st *object, int stream) {
                     struct object_st *obj1 = object_copy(array_get_last(state->temp_memory));
                     array_remove_last(state->temp_memory);
 
-                    int cmp_res = object_cmp(obj1, obj2);
+                    int cmp_res = object_cmp(state->error_obj, obj1, obj2);
+                    if (state->error_obj->present) {
+                        state->error_obj->pos = block->pos;
+                        state->error_obj->line_num = block->line_num;
+                        state->error_obj->line_pos = block->line_pos;
+                    }
 
                     struct object_st *res = object_new();
                     object_set_type(res, BOOL_TYPE);
@@ -572,18 +587,10 @@ void run_op(struct op_state *state, struct object_st *object, int stream) {
             break;
         }
         case BlockType_Attr: {
-            struct string_st *ind_str = block->data1->data;
             struct object_st *obj = object_copy(array_get_last(state->temp_memory));
+            array_remove_last(state->temp_memory);
 
-            if (array_get_last(code_operations)->type != OP_BLOCK_TYPE ||
-                ((struct op_block *) array_get_last(code_operations)->data)->type != BlockType_Call) {
-                array_remove_last(state->temp_memory);
-            } else {
-                new_block = array_get_last(code_operations)->data;
-                new_block->count++;
-            }
-
-            struct object_st *res = object_attrib(state->error_obj, obj, ind_str);
+            struct object_st *res = object_attrib(state->error_obj, obj, block->data1);
 
             if (state->error_obj->present) {
                 state->error_obj->pos = block->pos;
@@ -632,19 +639,17 @@ void run_op(struct op_state *state, struct object_st *object, int stream) {
                 new_block->subtype = Delete_Scope_Func;
             }
 
-            if (func->type == OP_OBJECT_TYPE) {
+            if (func->type == FUNC_TYPE) {
                 string_set_str(ind_str, "__init__", 8);
-                res = op_object_get_attrib(func->data, ind_str);
+                res = func_get_attrib(func->data, ind_str);
             } else {
                 error_fill_in(state->error_obj, INTERPRETER_ERROR, "variable is not callable", block->pos, block->line_num, block->line_pos);
                 goto end;
             }
             int ok = 0;
             if (res == NULL) {
-                if (func->type == OP_OBJECT_TYPE) {
-                    string_set_str(ind_str, "__params__", 10);
-                    res = op_object_get_attrib(func->data, ind_str);
-                }
+                string_set_str(ind_str, "__params__", 10);
+                res = func_get_attrib(func->data, ind_str);
                 if (res != NULL) {
                     struct array_st *temp_array = ((struct node_st *) res->data)->next;
                     struct node_st *node = NULL;
@@ -667,10 +672,8 @@ void run_op(struct op_state *state, struct object_st *object, int stream) {
                 object_free(res);
                 res = NULL;
 
-                if (func->type == OP_OBJECT_TYPE && ok) {
-                    string_set_str(ind_str, "__closure__", 11);
-                    res = op_object_get_attrib(func->data, ind_str);
-                }
+                string_set_str(ind_str, "__closure__", 11);
+                res = func_get_attrib(func->data, ind_str);
                 if (res != NULL && ok) {
                     struct darray_st *temp_array = res->data;
                     if (temp_array != NULL) {
@@ -684,11 +687,8 @@ void run_op(struct op_state *state, struct object_st *object, int stream) {
                 object_free(res);
                 res = NULL;
 
-                if (func->type == OP_OBJECT_TYPE && ok) {
-                    string_set_str(ind_str, "__call__", 7);
-                    res = op_object_get_attrib(func->data, ind_str);
-                }
-
+                string_set_str(ind_str, "__call__", 7);
+                res = func_get_attrib(func->data, ind_str);
                 if (res != NULL && ok) {
                     array_append(code_operations, res);
                 }
@@ -745,104 +745,58 @@ void run_op(struct op_state *state, struct object_st *object, int stream) {
             object_free(ident);
             break;
         }
-    }
-}
+        case BlockType_Is: {
+            struct object_st *temp = NULL;
+            struct object_st *obj = object_copy(array_get_last(state->temp_memory));
+            array_remove_last(state->temp_memory);
 
-void function_call(struct object_st *res, struct error_st *err, struct object_st *func, struct array_st *args, int stream) {
-    struct object_st *temp = NULL;
-    struct op_state *state = op_state_new();
-    struct string_st *ind_str = string_new();
-    struct op_attrib *attrib = NULL;
-    int ok = 0;
+            struct object_st *res = object_new();
 
-    {
-        array_add_new(state->stack_memory, DARRAY_TYPE);
+            if (block->subtype == Type_bool) object__bool(res, state->error_obj, obj);
+            else if (block->subtype == Type_int) object__int(res, state->error_obj, obj);
+            else if (block->subtype == Type_real) object__float(res, state->error_obj, obj);
+            else if (block->subtype == Type_string) object__str(res, state->error_obj, obj);
+            else if (block->subtype == Type_func) {
+                while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
 
-        array_add_new(state->code_operations, OP_BLOCK_TYPE);
-        struct op_block *new_block = array_get_last(state->code_operations)->data;
-        new_block->type = BlockType_Delete_Scope;
-        new_block->subtype = Delete_Scope_None;
-    }
-
-
-    if (func->type == OP_OBJECT_TYPE) {
-        string_set_str(ind_str, "__params__", 10);
-        temp = op_object_get_attrib(func->data, ind_str);
-    } else {
-        error_fill_in(err, INTERPRETER_ERROR, "variable is not callable", 0, 0, 0);
-        goto end;
-    }
-    if (temp != NULL) {
-        struct array_st *temp_array = ((struct node_st *) temp->data)->next;
-        struct node_st *node = NULL;
-        if (temp_array->size == args->size) {
-            ok = 1;
-            for (int i = 0; i < temp_array->size; i++) {
-                node = temp_array->data[i]->data;
-
-                attrib = node->data->data;
-                darray_append(array_get_last(state->stack_memory)->data, node->data, attrib->data);
-                op_attrib_new_data(attrib);
-                object_set(attrib->data, args->data[i]);
+                if (obj->type != FUNC_TYPE) {
+                    state->error_obj->present = 1;
+                    string_set_str(state->error_obj->type, INTERPRETER_ERROR, 17);
+                    string_set_str(state->error_obj->message, "object can not be converted into func", 37);
+                }
             }
-        } else {
-            error_fill_in(err, INTERPRETER_ERROR, "Miss match arguments", 0, 0, 0);
-            goto end;
+            else if (block->subtype == Type_array) {
+                while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
+
+                if (obj->type != ARRAY_TYPE) {
+                    state->error_obj->present = 1;
+                    string_set_str(state->error_obj->type, INTERPRETER_ERROR, 17);
+                    string_set_str(state->error_obj->message, "object can not be converted into array", 38);
+                }
+            }
+            else if (block->subtype == Type_tuple) {
+                while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
+
+                if (obj->type != MAP_TYPE) {
+                    state->error_obj->present = 1;
+                    string_set_str(state->error_obj->type, INTERPRETER_ERROR, 17);
+                    string_set_str(state->error_obj->message, "object can not be converted into tuple", 38);
+                }
+            }
+
+            if (state->error_obj->present) {
+                state->error_obj->pos = block->pos;
+                state->error_obj->line_num = block->line_num;
+                state->error_obj->line_pos = block->line_pos;
+            }
+
+            array_append(state->temp_memory, res);
+            object_free(res);
+            object_free(obj);
+            object_free(temp);
+            break;
         }
     }
-    object_free(temp);
-    temp = NULL;
-
-    if (func->type == OP_OBJECT_TYPE && ok) {
-        string_set_str(ind_str, "__closure__", 11);
-        temp = op_object_get_attrib(func->data, ind_str);
-    }
-    if (temp != NULL && ok) {
-        struct darray_st *temp_array = temp->data;
-        if (temp_array != NULL) {
-            for (int i = 0; i < temp_array->size; i++) {
-                attrib = temp_array->data[0][i]->data;
-                darray_append(array_get_last(state->stack_memory)->data, temp_array->data[0][i],
-                              attrib->data);
-                op_attrib_set_data(attrib, temp_array->data[1][i]);
-            }
-        }
-    }
-    object_free(temp);
-    temp = NULL;
-
-    if (func->type == OP_OBJECT_TYPE && ok) {
-        string_set_str(ind_str, "__call__", 7);
-        temp = op_object_get_attrib(func->data, ind_str);
-    }
-    if (temp != NULL && ok) {
-        array_append(state->code_operations, temp);
-    }
-    object_free(temp);
-    temp = NULL;
-
-    {
-        struct array_st *code_operations = state->code_operations;
-        struct object_st *current_object = NULL;
-        while (code_operations->size > 0) {
-            current_object = object_copy(array_get_last(code_operations));
-            array_remove_last(code_operations);
-
-            if (current_object->type == NODE_TYPE) {
-                run_an(state, current_object);
-            }
-            if (current_object->type == OP_BLOCK_TYPE) {
-                run_op(state, current_object, stream);
-            }
-            object_free(current_object);
-        }
-        object_set(res, state->return_obj);
-        error_set(err, state->error_obj);
-    }
-    end:
-    object_free(temp);
-    op_state_free(state);
-    string_free(ind_str);
 }
 
 void interpretation(struct object_st *expr_obj, struct error_st *error, int stream) {

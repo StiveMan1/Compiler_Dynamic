@@ -11,7 +11,8 @@ struct integer_st *integer_new();
 void integer_set(struct integer_st *, const struct integer_st *);
 void integer_clear(struct integer_st *);
 void integer_free(struct integer_st *);
-int integer_cmp(const struct integer_st *obj1, const struct integer_st *obj2);
+int integer_cmp(const struct integer_st *, const struct integer_st *);
+int integer__cmp(struct error_st *, struct integer_st *, const struct object_st *);
 
 // Class methods
 int integer_is_null(const struct integer_st *);

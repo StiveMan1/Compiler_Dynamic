@@ -9,6 +9,7 @@
 #define MainType_Expr           0x01
 #define MainType_Oper           0x02
 #define MainType_Stmt           0x03
+#define MainType_Type           0x04
 
 struct node_st{
     short main_type;

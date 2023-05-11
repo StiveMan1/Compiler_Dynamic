@@ -14,7 +14,7 @@ struct object_st *object_new();
 void object_set(struct object_st *, const struct object_st *);
 void object_clear(struct object_st *);
 void object_free(struct object_st *);
-int object_cmp(const struct object_st *, const struct object_st *);
+int object_cmp(struct error_st *, struct object_st *, const struct object_st *);
 
 // Pointer methods
 struct object_st *object_copy(struct object_st *);
@@ -41,7 +41,7 @@ void object__str(struct object_st *, struct error_st *, const struct object_st *
 
 // Sub method
 struct object_st *object_subscript(struct error_st *, struct object_st *, const struct object_st *);
-struct object_st *object_attrib(struct error_st *, const struct object_st *, const struct string_st *);
+struct object_st *object_attrib(struct error_st *, const struct object_st *, const struct object_st *);
 
 // Print
 void print_obj(const struct object_st *res, int tabs);

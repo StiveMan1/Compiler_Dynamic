@@ -24,6 +24,20 @@ int bool_cmp(const struct bool_st *obj1, const struct bool_st *obj2) {
     if(obj1->data > obj2->data) return 1;
     return 0;
 }
+int bool__cmp(struct error_st *err, struct bool_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    struct object_st *temp = object_new();
+    object__bool(temp, err, obj2);
+    if(err->present) {
+        object_free(temp);
+        return 2;
+    }
+    int result = 0;
+    if(obj1->data < ((struct bool_st *)obj2)->data) result = -1;
+    if(obj1->data > ((struct bool_st *)obj2)->data) result = 1;
+    object_free(temp);
+    return result;
+}
 
 
 // Cmp methods

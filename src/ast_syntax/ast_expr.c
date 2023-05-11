@@ -26,9 +26,7 @@ err:    result = SN_Status_Error; set_error(parser, parser->position, "Unexpecte
 #define check_call(call, check) {sub_result = call; if (sub_result == SN_Status_Nothing) check if (sub_result != SN_Status_Success) goto sub;}
 
 int scopes_expr(struct ast_parser *parser, struct node_st *expr) {
-    size_t current_pointing = parser->position;
-    struct token_st *token = NULL;
-    int result = SN_Status_Nothing, sub_result;
+    analyze_start
     {
         parser_end goto eof;
         token = parser->list->data[parser->position]->data;
@@ -47,7 +45,43 @@ int scopes_expr(struct ast_parser *parser, struct node_st *expr) {
 analyze_end
 }
 int tuple_expr(struct ast_parser *parser, struct node_st *expr) {
-    return tuple_oper(parser, expr, Special_LCB, Special_RCB);
+    analyze_start
+    {
+        parser_end goto eof;
+        parser_get
+        if (token->type != TokenType_Special || token->subtype != Special_LCB) goto end;
+        parser->position++;
+
+        expr->main_type = MainType_Expr;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
+        expr->type = PrimType_Tuple;
+
+        parser_end goto eof;
+        parser_get
+        if (token->type == TokenType_Special && token->subtype == Special_RCB) {
+            parser->position++;
+            result = SN_Status_Success;
+            goto end;
+        }
+
+        while (parser->position < parser->list->size) {
+            expr_add(expr)
+
+            check_call(annotation_stmt(parser, expr_next), goto err;)
+            parser_end goto err;
+            parser_get
+            if (token->type == TokenType_Special && token->subtype == Special_RCB) {
+                parser->position++;
+                result = SN_Status_Success;
+                goto end;
+            }
+            parser_end goto err;
+            if (token->type != TokenType_Special || token->subtype != Special_COMMA) break;
+            parser->position++;
+        }
+        goto err;
+    }
+analyze_end
 }
 int list_expr(struct ast_parser *parser, struct node_st *expr) {
     return list_oper(parser, expr, Special_LSQB, Special_RSQB);
@@ -165,10 +199,7 @@ int atom_expr(struct ast_parser *parser, struct node_st *expr) {
     return result;
 }
 int primary_expr(struct ast_parser *parser, struct node_st *expr) {
-    size_t current_pointing = parser->position;
-    struct node_st *expr_next = expr;
-    struct token_st *token = NULL;
-    int result = SN_Status_Nothing, sub_result;
+    analyze_start
     {
         check_call(atom_expr(parser, expr_next), goto end;)
         while(parser->position < parser->list->size){
@@ -183,15 +214,28 @@ int primary_expr(struct ast_parser *parser, struct node_st *expr) {
                 expr_add(expr)
 
                 parser_end goto eof;
-                token = parser->list->data[parser->position]->data;
-                if (token->type != TokenType_Identifier) goto err;
+                parser_get
+                if (token->type != TokenType_Identifier && (token->type != TokenType_Int || token->subtype == IntType_float)) goto err;
                 parser->position++;
 
                 expr->data = object_new();
-                object_set_type(expr->data, STRING_TYPE);
-                string_set_str(expr->data->data, token->data, token->size);
+                if (token->type == TokenType_Identifier) {
+                    object_set_type(expr->data, STRING_TYPE);
+                    string_set_str(expr->data->data, token->data, token->size);
+                } else {
+                    object_set_type(expr->data, INTEGER_TYPE);
+                    if (token->subtype == IntType_bin)
+                        ((struct integer_st *) expr->data->data)->data = strtol(token->data, NULL, 2);
+                    else if (token->subtype == IntType_hex)
+                        ((struct integer_st *) expr->data->data)->data = strtol(token->data, NULL, 16);
+                    else if (token->subtype == IntType_oct)
+                        ((struct integer_st *) expr->data->data)->data = strtol(token->data, NULL, 8);
+                    else if (token->subtype == IntType_dec)
+                        ((struct integer_st *) expr->data->data)->data = strtol(token->data, NULL, 10);
+                }
                 continue;
-            } else if (token->type == TokenType_Special && token->subtype == Special_LSQB) {
+            } // PrimType_Attrib
+            else if (token->type == TokenType_Special && token->subtype == Special_LSQB) {
                 parser->position++;
 
                 expr_cast(expr)
@@ -208,7 +252,8 @@ int primary_expr(struct ast_parser *parser, struct node_st *expr) {
                 parser->position++;
 
                 continue;
-            } else if (token->type == TokenType_Special && token->subtype == Special_LSB) {
+            } // PrimType_Subscript
+            else if (token->type == TokenType_Special && token->subtype == Special_LSB) {
                 expr_cast(expr)
                 expr->type = PrimType_Call;
                 expr->main_type = MainType_Expr;
@@ -216,6 +261,18 @@ int primary_expr(struct ast_parser *parser, struct node_st *expr) {
                 expr_add(expr)
 
                 check_call(list_oper(parser, expr_next, Special_LSB, Special_RSB), goto err;)
+
+                continue;
+            } // PrimType_Call
+            else if (token->type == TokenType_KeyWords && token->subtype == KeyWord_IS) {
+                parser->position++;
+                expr_cast(expr)
+                expr->type = PrimType_Is;
+                expr->main_type = MainType_Expr;
+                node_set_position(expr, parser->list->data[parser->position - 1]->data);
+                expr_add(expr)
+
+                check_call(type_expr(parser, expr_next), goto err;)
 
                 continue;
             }

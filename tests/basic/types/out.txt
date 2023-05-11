@@ -1,8 +1,9 @@
 0
-1.1
+1.100000
 true
-"str"
+str
 empty
 [0, 1, 2]
-{a = 1, b = 4}
-"func"
+{a := 1, b := 4}
+func
+empty

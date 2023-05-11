@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "basic.h"
 
 struct object_math_op integer_math = {METHOD_MATH &integer__mod, METHOD_MATH &integer__and, METHOD_MATH &integer__mul, METHOD_MATH &integer__add, METHOD_MATH &integer__sub, METHOD_MATH &integer__div, METHOD_MATH &integer__xor, METHOD_MATH &integer__or, METHOD_MATH &integer__ls, METHOD_MATH &integer__rs, METHOD_CONVERT &integer__neg};
@@ -23,6 +24,20 @@ int integer_cmp(const struct integer_st *obj1, const struct integer_st *obj2) {
     if(obj1->data < obj2->data) return -1;
     if(obj1->data > obj2->data) return 1;
     return 0;
+}
+int integer__cmp(struct error_st *err, struct integer_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    struct object_st *temp = object_new();
+    object__int(temp, err, obj2);
+    if(err->present) {
+        object_free(temp);
+        return 2;
+    }
+    int result = 0;
+    if(obj1->data < ((struct integer_st *)temp->data)->data) result = -1;
+    if(obj1->data > ((struct integer_st *)temp->data)->data) result = 1;
+    object_free(temp);
+    return result;
 }
 
 // Math Methods

@@ -6,6 +6,7 @@
 #include "ast_syntax/ast_expr.h"
 #include "ast_syntax/ast_oper.h"
 #include "ast_syntax/ast_stmt.h"
+#include "ast_syntax/ast_type.h"
 
 #define SN_Status_Success   0
 #define SN_Status_Nothing   1

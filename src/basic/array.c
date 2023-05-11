@@ -25,16 +25,23 @@ void array_free(struct array_st *res) {
     if (res->data != NULL) Free(res->data);
     Free(res);
 }
-int array_cmp(const struct array_st *obj1, const struct array_st *obj2) {
-    if (obj1->size > obj2->size) return 1;
-    if (obj1->size < obj2->size) return -1;
-    int res_cmp_sub;
-    for (size_t i = 0; i < obj1->size; i++) {
-        res_cmp_sub = object_cmp(obj1->data[i], obj2->data[i]);
-        if (res_cmp_sub == -1) return -1;
-        if (res_cmp_sub == 1) return 1;
+int array__cmp(struct error_st *err, struct array_st *obj1, const struct object_st *obj2) {
+    while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
+    if(obj2->type != ARRAY_TYPE) {
+        err->present = 1;
+        string_set_str(err->type, INTERPRETER_ERROR, 17);
+        string_set_str(err->message, "array can't compare with non array type", 39);
+        return 2;
     }
-    return 0;
+    struct array_st *array = obj2->data;
+    if (obj1->size > array->size) return 1;
+    if (obj1->size < array->size) return -1;
+    int result = 0;
+    for (size_t i = 0; i < obj1->size && result == 0; i++) {
+        result = object_cmp(err, obj1->data[i], array->data[i]);
+        if (err->present) return 2;
+    }
+    return result;
 }
 int array_is_null(const struct array_st *res) {
     return (res == NULL || res->size == 0);
@@ -90,43 +97,6 @@ struct object_st *array_get_last(struct array_st *res) {
     return res->data[res->size - 1];
 }
 
-
-void array_sort_merge(size_t st1, size_t fn1, size_t st2, size_t fn2, struct object_st **data, struct object_st **temp) {
-    size_t st = st1;
-    size_t pos = st1;
-    while (st1 < fn1 || st2 < fn2) {
-        if (st1 == fn1) {
-            temp[pos++] = data[st2++];
-        } else if (st2 == fn2) {
-            temp[pos++] = data[st1++];
-        } else {
-            if (object_cmp(data[st1], data[st2]) <= 0) {
-                temp[pos++] = data[st1++];
-            } else {
-                temp[pos++] = data[st2++];
-            }
-        }
-    }
-    for (; st < fn2; st++) {
-        data[st] = temp[st];
-        temp[st] = NULL;
-    }
-}
-void array_sort_split(size_t st, size_t fn, struct object_st **data, struct object_st **temp) {
-    if (st + 1 >= fn) return;
-    size_t mid = (st + fn) / 2;
-    array_sort_split(st, mid, data, temp);
-    array_sort_split(mid, fn, data, temp);
-    array_sort_merge(st, mid, mid, fn, data, temp);
-}
-void array_sort(struct array_st *res) {
-    if(res == NULL) return;
-
-    struct array_st *temp = array_new();
-    array_resize(temp, res->size);
-    array_sort_split(0, res->size, res->data, temp->data);
-    array_free(temp);
-}
 
 // Math Methods
 void array__mul(struct object_st *res, struct error_st *err, const struct array_st *obj1, const struct object_st *obj2) {

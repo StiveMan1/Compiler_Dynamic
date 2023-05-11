@@ -316,6 +316,9 @@ void print_node(const struct node_st *res, int size) {
         case MainType_Stmt:
             printf("MainType_Stmt ");
             break;
+        case MainType_Type:
+            printf("MainType_Type ");
+            break;
     }
     if (res->main_type == MainType_Expr) {
         switch (res->type) {
@@ -342,6 +345,9 @@ void print_node(const struct node_st *res, int size) {
                 break;
             case PrimType_Call:
                 printf("PrimType_Call ");
+                break;
+            case PrimType_Is:
+                printf("PrimType_Is ");
                 break;
         }
     }
@@ -379,6 +385,9 @@ void print_node(const struct node_st *res, int size) {
                 break;
             case ExprType_OrTest:
                 printf("ExprType_OrTest ");
+                break;
+            case ExprType_XorTest:
+                printf("ExprType_XorTest ");
                 break;
         }
     }
@@ -422,6 +431,31 @@ void print_node(const struct node_st *res, int size) {
                 break;
             case StmtType_Print:
                 printf("StmtType_Print ");
+                break;
+        }
+    }
+    if (res->main_type == MainType_Type) {
+        switch (res->type) {
+            case Type_int:
+                printf("Type_int ");
+                break;
+            case Type_real:
+                printf("Type_real ");
+                break;
+            case Type_bool:
+                printf("Type_bool ");
+                break;
+            case Type_string:
+                printf("Type_string ");
+                break;
+            case Type_array:
+                printf("Type_array ");
+                break;
+            case Type_tuple:
+                printf("Type_tuple ");
+                break;
+            case Type_func:
+                printf("Type_func ");
                 break;
         }
     }

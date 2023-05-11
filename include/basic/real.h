@@ -11,7 +11,8 @@ struct real_st *real_new();
 void real_set(struct real_st *, const struct real_st *);
 void real_clear(struct real_st *);
 void real_free(struct real_st *);
-int real_cmp(const struct real_st *obj1, const struct real_st *obj2);
+int real_cmp(const struct real_st *, const struct real_st *);
+int real__cmp(struct error_st *, struct real_st *, const struct object_st *);
 
 // Class methods
 int real_is_null(const struct real_st *);
