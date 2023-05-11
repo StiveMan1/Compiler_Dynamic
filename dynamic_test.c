@@ -5,7 +5,7 @@
 #include "ast_semantic.h"
 #include "printer.c"
 
-void interpretation(struct object_st *expr_obj, struct error_st *, int stream);
+void interpretation(struct imp_parser *, int stream);
 
 char* concat(char* s1, char* s2){
     char* name_with_extension;
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 
     struct la_parser *F_parser = la_parser_new();
     struct ast_parser *T_parser = ast_parser_new();
-    struct object_st *expr_obj = object_new();
+    struct imp_parser *I_parser = imp_parser_new();
 
     la_parser_set_file(F_parser, code_file);
 
@@ -128,16 +128,15 @@ int main(int argc, char *argv[]) {
     check_error(error, expected_error, LEXICAL_ANALYSIS_ERROR, F_parser);
 
     // AST parser
-    object_set_type(expr_obj, NODE_TYPE);
     ast_parser_set_list(T_parser, F_parser);
-    token_analyzer(T_parser, expr_obj->data);
+    token_analyzer(T_parser, T_parser->tree);
     error = T_parser->error_obj;
     check_error(error, expected_error, SYNTAX_ANALYSIS_ERROR, F_parser);
 
     error = error_new();
 
     // Semantic
-    semantic_scan(expr_obj, error);
+    semantic_scan(T_parser);
     check_error(error, expected_error, SEMANTIC_ANALYSIS_ERROR, F_parser);
 
     // Interpretation
@@ -149,7 +148,8 @@ int main(int argc, char *argv[]) {
     dup2(fd[1], fileno(stdout));
 
     fflush(stdout);//flushall();
-    interpretation(expr_obj, error, fd[1]);
+    imp_parser_set_tree(I_parser, T_parser);
+    interpretation(I_parser, fd[1]);
     check_error(error, expected_error, INTERPRETER_ERROR, F_parser);
     close(fd[1]);
     dup2(stdout_bk, fileno(stdout));//restore

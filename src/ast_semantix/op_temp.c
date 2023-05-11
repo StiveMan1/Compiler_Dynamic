@@ -35,7 +35,7 @@
 #define BlockType_Is            0x47
 
 
-void run_an(struct op_state *state, struct object_st *object) {
+void run_an(struct imp_parser *state, struct object_st *object) {
     struct array_st *code_operations = state->code_operations;
     struct node_st *node = object->data;
     struct op_attrib *attrib = NULL;
@@ -311,7 +311,7 @@ void run_an(struct op_state *state, struct object_st *object) {
     }
 }
 
-void run_op(struct op_state *state, struct object_st *object, int stream) {
+void run_op(struct imp_parser *state, struct object_st *object, int stream) {
     struct array_st *code_operations = state->code_operations;
     struct op_block *block = object->data;
     struct op_attrib *attrib = NULL;
@@ -803,27 +803,24 @@ void run_op(struct op_state *state, struct object_st *object, int stream) {
     }
 }
 
-void interpretation(struct object_st *expr_obj, struct error_st *error, int stream) {
-    struct op_state *state = op_state_new();
-    array_append(state->code_operations, expr_obj);
+void interpretation(struct imp_parser *parser, int stream) {
+    array_append(parser->code_operations, parser->tree);
     {
-        struct array_st *code_operations = state->code_operations;
+        struct array_st *code_operations = parser->code_operations;
         struct object_st *current_object = NULL;
         while (code_operations->size > 0) {
             current_object = object_copy(array_get_last(code_operations));
             array_remove_last(code_operations);
 
-            if (!state->error_obj->present) {
+            if (!parser->error_obj->present) {
                 if (current_object->type == NODE_TYPE) {
-                    run_an(state, current_object);
+                    run_an(parser, current_object);
                 }
                 if (current_object->type == OP_BLOCK_TYPE) {
-                    run_op(state, current_object, stream);
+                    run_op(parser, current_object, stream);
                 }
             }
             object_free(current_object);
         }
-        error_set(error, state->error_obj);
     }
-    op_state_free(state);
 }
