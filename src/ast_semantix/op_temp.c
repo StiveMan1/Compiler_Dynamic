@@ -127,6 +127,10 @@ void run_an(struct op_state *state, struct object_st *object) {
                 array_append(code_operations, temp_array->data[0]);
                 break;
             }
+            case PrimType_Lambda: {
+                array_append(code_operations, temp_array->data[0]);
+                break;
+            }
         }
     }
     if (node->main_type == MainType_Oper) {

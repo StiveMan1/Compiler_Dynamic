@@ -12,6 +12,7 @@
 #define PrimType_Call           0x07
 #define PrimType_Is             0x08
 #define PrimType_Tuple          0x09
+#define PrimType_Lambda         0x0a
 
 void set_error(struct ast_parser *, size_t, char *);
 
@@ -25,6 +26,7 @@ int number_expr(struct ast_parser *, struct node_st *);
 int string_expr(struct ast_parser *, struct node_st *);
 int null_expr(struct ast_parser *, struct node_st *);
 int literal_expr(struct ast_parser *, struct node_st *);
+int lambda_expr(struct ast_parser *, struct node_st *);
 int atom_expr(struct ast_parser *, struct node_st *);
 int primary_expr(struct ast_parser *, struct node_st *);
 

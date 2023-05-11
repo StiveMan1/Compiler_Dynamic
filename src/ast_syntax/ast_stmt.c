@@ -370,10 +370,14 @@ int __func_body(struct ast_parser *parser, struct node_st *expr) {
         expr_add(expr)
         check_call(or_test_oper(parser, expr_next), goto err;)
 
-        parser_end goto eof;
-        parser_get
-        if (token->type != TokenType_Special || token->subtype != Special_SEMI) goto err;
-        parser->position++;
+        expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position]->data);
+        expr->type = StmtType_Return;
+
+        expr_cast(expr)
+        expr->main_type = MainType_Stmt;
+        node_set_position(expr, parser->list->data[parser->position]->data);
+        expr->type = StmtType_List;
 
         result = SN_Status_Success;
     }

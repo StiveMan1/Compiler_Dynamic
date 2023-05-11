@@ -190,12 +190,33 @@ int literal_expr(struct ast_parser *parser, struct node_st *expr) {
     result = tuple_expr(parser, expr);
     return result;
 }
+int lambda_expr(struct ast_parser *parser, struct node_st *expr) {
+    analyze_start
+    {
+        parser_end goto eof;
+        parser_get
+        if (token->type != TokenType_KeyWords || token->subtype != KeyWord_FUNC) goto end;
+        parser->position++;
+
+        expr->main_type = MainType_Expr;
+        node_set_position(expr, parser->list->data[parser->position - 1]->data);
+        expr->type = PrimType_Lambda;
+
+        expr_add(expr)
+        check_call(func_body(parser, expr_next), goto err;)
+
+        result = SN_Status_Success;
+    }
+analyze_end
+}
 int atom_expr(struct ast_parser *parser, struct node_st *expr) {
     int result = ident_get_expr(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = literal_expr(parser, expr);
     if (result != SN_Status_Nothing) return result;
     result = scopes_expr(parser, expr);
+    if (result != SN_Status_Nothing) return result;
+    result = lambda_expr(parser, expr);
     return result;
 }
 int primary_expr(struct ast_parser *parser, struct node_st *expr) {

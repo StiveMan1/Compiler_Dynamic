@@ -349,6 +349,9 @@ void print_node(const struct node_st *res, int size) {
             case PrimType_Is:
                 printf("PrimType_Is ");
                 break;
+            case PrimType_Lambda:
+                printf("PrimType_Lambda ");
+                break;
         }
     }
     if (res->main_type == MainType_Oper) {

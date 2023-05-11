@@ -159,5 +159,6 @@ struct object_st *array_subscript(struct error_st *err, struct array_st *list, c
     }
     size_t position = ((struct integer_st *)temp->data)->data;
     object_free(temp);
+    if (position > list->size) array_resize(list, position);
     return object_copy(list->data[position % list->size]);
 }
