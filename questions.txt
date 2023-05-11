@@ -1,0 +1,19 @@
+* and, or, xor - keywords
+
+* bug in division:
+Interpreter error           
+Division by zero            
+Line 3:                     
+var real_int_div := 5.5 / 2;
+
+* Value operations
+
+* func in tuple:
+Interpreter error   
+Miss match arguments
+Line 7:             
+print map.r(5);
+
+* Type indicators
+
+* Tuple access
