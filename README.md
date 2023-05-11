@@ -11,12 +11,18 @@
 
 [Description](https://github.com/StiveMan1/Compiler_Dynamic/blob/main/ProjectD.pdf)
 
-### Lexical analysis 
+## Lexical analysis
 
-### Syntax analysis
+### Key words
+`if in is or and end for int not var xor bool else func loop real then true empty false print while return string`
 
-### Semantic analysis
 
-### Interpretation 
+### Structures 
+
+## Syntax analysis
+
+## Semantic analysis
+
+## Interpretation 
 
 
