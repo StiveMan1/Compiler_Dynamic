@@ -25,3 +25,31 @@
   - `struct array_st *stack_memory`  
   - `struct array_st *temp_memory`
   - `struct array_st *code_operations`
+  
+- node_st 
+  - `short main_type`
+  - `short type`
+  - `struct object_st *data`
+  - `struct object_st *closure`
+  - `struct array_st *next`
+  - `struct array_st *tokens`
+  - `size_t pos, line_num, line_pos`
+  
+- ast_parser
+  - `size_t position`
+  - `struct array_st *list`
+  - `struct error_st *error_obj`
+  
+- op_attrib 
+  - `struct string_st *name`
+  - `struct object_st *data`
+  
+- ob_block 
+  - `short type`
+  - `short subtype`
+  - `size_t count`
+  - `struct object_st *data1`
+  - `struct object_st *data2`
+  - `size_t pos, line_num, line_pos`
+
+  

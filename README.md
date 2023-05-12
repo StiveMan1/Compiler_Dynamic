@@ -9,19 +9,21 @@
 
 ## Dynamic Language 
 
-[Description](https://github.com/StiveMan1/Compiler_Dynamic/blob/main/ProjectD.pdf)
+[Description](ProjectD.pdf)
 
 ## Lexical analysis
 
 ### Key words
 `if in is or and end for int not var xor bool else func loop real then true empty false print while return string`
 
-
-### Structures 
+The Lexical analysis implemented in folder `src/lexical`.
 
 ## Syntax analysis
 
+We use Bottom-up approach. 
+
 ## Semantic analysis
+
 
 ## Interpretation 
 

@@ -12,7 +12,8 @@
     - `struct object_st *(*_attrib)(struct error_st *, void *, const struct object_st *)`
 
 - object_math_op
-    - `void (*_mod)(struct object_st *, struct error_st *, const void *, const struct object_st *)` - `void (*_and)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
+    - `void (*_mod)(struct object_st *, struct error_st *, const void *, const struct object_st *)` 
+    - `void (*_and)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
     - `void (*_mul)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
     - `void (*_add)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
     - `void (*_sub)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
