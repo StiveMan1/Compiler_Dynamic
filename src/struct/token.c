@@ -2,6 +2,7 @@
 
 struct object_type token_type = {TOKEN_OP};
 
+// Create
 struct token_st *token_new(){
     struct token_st *res = Malloc(TOKEN_SIZE);
     res->type = TokenType_None;

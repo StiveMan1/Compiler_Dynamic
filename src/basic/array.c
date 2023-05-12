@@ -5,26 +5,31 @@ struct object_math_op array_math = {NULL, NULL, METHOD_MATH &array__mul, METHOD_
 struct object_convert array_convert = {NULL, NULL, NULL, METHOD_CONVERT &array__str};
 struct object_type array_type = {ARRAY_OP, &list_sub,  &array_convert, &array_math};
 // Standard operations
+// Create
 struct array_st *array_new() {
     struct array_st *res = Malloc(ARRAY_SIZE);
     res->data = NULL;
     res->max_size = res->size = 0;
     return res;
 }
+// Set value
 void array_set(struct array_st *res, const struct array_st *a) {
     if (a == NULL) return;
     array_resize(res, 0);
     array_resize(res, a->size);
     for (size_t i = 0; i < a->size; i++) res->data[i] = object_copy(a->data[i]);
 }
+// Clear
 void array_clear(struct array_st *res) {
     array_resize(res, 0);
 }
+// Free
 void array_free(struct array_st *res) {
     array_resize(res, 0);
     if (res->data != NULL) Free(res->data);
     Free(res);
 }
+// Cmp
 int array__cmp(struct error_st *err, struct array_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     if(obj2->type != ARRAY_TYPE) {
@@ -43,11 +48,13 @@ int array__cmp(struct error_st *err, struct array_st *obj1, const struct object_
     }
     return result;
 }
+// Check for null
 int array_is_null(const struct array_st *res) {
     return (res == NULL || res->size == 0);
 }
 
 // Class methods
+// Change size of the array
 void array_resize(struct array_st *res, size_t size) {
     if (res->data == NULL && size != 0) {
         res->max_size = size;
@@ -66,12 +73,14 @@ void array_resize(struct array_st *res, size_t size) {
     }
     res->size = size;
 }
+// Append the array
 void array_append(struct array_st *res, struct object_st *obj) {
     if (res == NULL) return;
 
     array_resize(res, res->size + 1);
     res->data[res->size - 1] = object_copy(obj);
 }
+// Concatenate arrays
 void array_concat(struct array_st *res, const struct array_st *a) {
     if (res == NULL || array_is_null(a)) return;
 
@@ -81,6 +90,7 @@ void array_concat(struct array_st *res, const struct array_st *a) {
         res->data[_size + i] = object_copy(a->data[i]);
     }
 }
+// Add new element to the array
 void array_add_new(struct array_st *res, struct object_type *type) {
     if (res == NULL) return;
 
@@ -88,10 +98,12 @@ void array_add_new(struct array_st *res, struct object_type *type) {
     res->data[res->size - 1] = object_new();
     object_set_type(res->data[res->size - 1], type);
 }
+// Remove last element of the array
 void array_remove_last(struct array_st *res) {
     if(res->size <= 0) return;
     array_resize(res, res->size - 1);
 }
+// Return last element of the array
 struct object_st *array_get_last(struct array_st *res) {
     if(res->size <= 0) return NULL;
     return res->data[res->size - 1];
@@ -99,6 +111,7 @@ struct object_st *array_get_last(struct array_st *res) {
 
 
 // Math Methods
+// Multiplication
 void array__mul(struct object_st *res, struct error_st *err, const struct array_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
     struct object_st *temp = object_new();
@@ -113,6 +126,7 @@ void array__mul(struct object_st *res, struct error_st *err, const struct array_
         array_concat(res->data, obj1);
     object_free(temp);
 }
+// Addition
 void array__add(struct object_st *res, struct error_st *err, const struct array_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = res->data;
     if (obj2 == NULL || obj2->type != ARRAY_TYPE) {
@@ -127,6 +141,7 @@ void array__add(struct object_st *res, struct error_st *err, const struct array_
 }
 
 // Convert Methods
+// To string
 void array__str(struct object_st *res, struct error_st *err, const struct array_st *obj){
     object_set_type(res, STRING_TYPE);
     string_set_str(res->data, "[", 1);

@@ -1,13 +1,15 @@
 #include "basic.h"
 
 struct object_type darray_type = {DARRAY_OP};
-
+// Standard operations
+// Create
 struct darray_st *darray_new() {
     struct darray_st *res = Malloc(DARRAY_SIZE);
     res->data[0] = res->data[1] = NULL;
     res->size = res->max_size = 0;
     return res;
 }
+// Set value
 void darray_set(struct darray_st *res, const struct darray_st *a) {
     darray_resize(res, 0);
     darray_resize(res, a->size);
@@ -16,9 +18,11 @@ void darray_set(struct darray_st *res, const struct darray_st *a) {
         res->data[1][i] = object_copy(a->data[1][i]);
     }
 }
+// Clear
 void darray_clear(struct darray_st *res) {
     darray_resize(res, 0);
 }
+// Free
 void darray_free(struct darray_st *res) {
     darray_resize(res, 0);
     if (res->max_size != 0) {
@@ -27,6 +31,7 @@ void darray_free(struct darray_st *res) {
     }
     Free(res);
 }
+// Cmp
 int darray_cmp(const struct darray_st *obj1, const struct darray_st *obj2) {
     if (obj1->size > obj2->size) return 1;
     if (obj1->size < obj2->size) return -1;
@@ -42,10 +47,11 @@ int darray_cmp(const struct darray_st *obj1, const struct darray_st *obj2) {
     }
     return 0;
 }
+// Check for null
 int darray_is_null(const struct darray_st *res) {
     return (res == NULL || res->size == 0);
 }
-
+// Change size of the darray
 void darray_resize(struct darray_st *res, size_t size) {
     if (res->data[0] == NULL && size != 0) {
         res->max_size = size;
@@ -74,6 +80,7 @@ void darray_resize(struct darray_st *res, size_t size) {
     }
     res->size = size;
 }
+// Append the darray
 void darray_append(struct darray_st *res, struct object_st *ptr, struct object_st *ref) {
     if (res == NULL || ptr == NULL) return;
 

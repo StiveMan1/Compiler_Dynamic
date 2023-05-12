@@ -15,6 +15,8 @@ err:    result = SN_Status_Error; set_error(parser, parser->position, "Unexpecte
 
 #define check_call(call, check) {sub_result = call; if (sub_result == SN_Status_Nothing) check if (sub_result != SN_Status_Success) goto sub;}
 
+// Cheking type of operation 
+// Union operation
 int u_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -42,6 +44,7 @@ int u_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// Multiplication and division operations
 int m_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -75,6 +78,7 @@ int m_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// Addision and Substraction operation
 int a_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -107,6 +111,7 @@ int a_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// Shift operation
 int shift_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -139,6 +144,7 @@ int shift_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// And operation
 int and_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -169,6 +175,7 @@ int and_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// XOR operation
 int xor_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -199,6 +206,7 @@ int xor_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// Or operation
 int or_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -229,7 +237,7 @@ int or_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// Сomparison operations
 int comp_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -264,6 +272,7 @@ int comp_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// Not test operations
 int not_test_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -288,6 +297,7 @@ int not_test_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// And test operations
 int and_test_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -318,6 +328,7 @@ int and_test_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// XOR test operations
 int xor_test_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -348,6 +359,7 @@ int xor_test_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// Or test operations
 int or_test_oper(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -378,7 +390,7 @@ int or_test_oper(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// List operations
 int list_oper(struct ast_parser *parser, struct node_st *expr, short start, short end) {
     analyze_start
     {
@@ -417,7 +429,7 @@ int list_oper(struct ast_parser *parser, struct node_st *expr, short start, shor
     }
 analyze_end
 }
-
+// List identifier
 int list_ident(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {

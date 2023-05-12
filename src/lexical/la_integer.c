@@ -12,10 +12,12 @@
 
 void la_integer(struct token_st *token, struct la_parser *parser) {
     size_t pos = parser->position;
+    // Checking subtype 
     if (CharInt_dec(parser->data[pos])) {
         char c = parser->data[pos];
         if (c == '0') {
             GetChar
+            // Binary
             if (c == 'b' || c == 'B') {
                 GetChar
                 while (c == '_') GetChar
@@ -25,6 +27,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
 
                 token->type = TokenType_Int;
                 token->subtype = IntType_bin;
+                // Allocating space for token
                 token_resize(token, pos - zero_end);
                 memcpy(token->data, &parser->data[zero_end], token->size);
                 token_set_pos(token, parser);
@@ -35,9 +38,11 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 size_t zero_end = pos;
                 while (CharInt_oct(c)) GetChar
                 if (IdentifierStart(c)) ErrInt
-
+                
+                // Oct.
                 token->type = TokenType_Int;
                 token->subtype = IntType_oct;
+                // Allocating space for token
                 token_resize(token, pos - zero_end);
                 memcpy(token->data, &parser->data[zero_end], token->size);
                 token_set_pos(token, parser);
@@ -48,9 +53,11 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 size_t zero_end = pos;
                 while (CharInt_hex(c)) GetChar
                 if (IdentifierStart(c)) ErrInt
-
+                
+                // Hexidal
                 token->type = TokenType_Int;
                 token->subtype = IntType_hex;
+                // Allocating space for token
                 token_resize(token, pos - zero_end);
                 memcpy(token->data, &parser->data[zero_end], token->size);
                 token_set_pos(token, parser);
@@ -60,16 +67,20 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
                 size_t zero_end = pos;
                 while (CharInt_dec(c)) GetChar
 
+                // Float
                 if (c == '.') {
                     GetChar
                     while (CharInt_dec(c)) GetChar
                     token->subtype = IntType_float;
                 } else {
+                    // Decimal
                     token->subtype = IntType_dec;
                 }
                 if (IdentifierStart(c)) ErrInt
 
+                // Integer
                 token->type = TokenType_Int;
+                // Allocating space for token
                 token_resize(token, pos - zero_end);
                 memcpy(token->data, &parser->data[zero_end], token->size);
                 token_set_pos(token, parser);
@@ -87,6 +98,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
             if (IdentifierStart(c)) ErrInt
 
             token->type = TokenType_Int;
+            // Allocating space for token
             token_resize(token, pos - parser->position);
             memcpy(token->data, &parser->data[parser->position], token->size);
             token_set_pos(token, parser);
@@ -98,6 +110,7 @@ void la_integer(struct token_st *token, struct la_parser *parser) {
 #define set_error_lexical_int(message) error_fill_in(error, LEXICAL_ANALYSIS_ERROR, message, 0, 0, 0);
 #define set_error_lexical_int(message) error_fill_in(error, LEXICAL_ANALYSIS_ERROR, message, 0, 0, 0);
 
+// Get integer
 int get_integer(const struct string_st *str, struct error_st *error) {
     size_t pos = 0;
     if (CharInt_dec(str->data[pos])) {
@@ -213,6 +226,7 @@ int get_integer(const struct string_st *str, struct error_st *error) {
     }
     return 0;
 }
+// Get float
 float get_float(const struct string_st *str, struct error_st *error) {
     size_t pos = 0;
     if (CharInt_dec(str->data[pos])) {

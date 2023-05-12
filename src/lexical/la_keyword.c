@@ -1,5 +1,6 @@
 #include "lexical_analysis.h"
 
+// Cmp
 int la_keyword_cmp(struct la_parser *parser, const char *data, size_t size) {
     if (parser->str_size - parser->position < size) return 0;
     if (memcmp(&parser->data[parser->position], data, size) != 0) return 0;
@@ -9,7 +10,7 @@ int la_keyword_cmp(struct la_parser *parser, const char *data, size_t size) {
 }
 
 void la_keyword(struct token_st *token, struct la_parser *parser) {
-    // Keywords length 2
+    // Cheking keywords with length 2
     if (la_keyword_cmp(parser, "if", 2)) {
         token->type = TokenType_KeyWords;
         token->subtype = KeyWord_IF;
@@ -39,7 +40,7 @@ void la_keyword(struct token_st *token, struct la_parser *parser) {
         return;
     }
 
-    // Keywords length 3
+    // Cheking keywords with length 3
     if (la_keyword_cmp(parser, "and", 3)) {
         token->type = TokenType_KeyWords;
         token->subtype = KeyWord_AND;
@@ -90,7 +91,7 @@ void la_keyword(struct token_st *token, struct la_parser *parser) {
         return;
     }
 
-    // Keywords length 4
+    // Cheking keywords with length 4
     if (la_keyword_cmp(parser, "bool", 4)) {
         token->type = TokenType_KeyWords;
         token->subtype = KeyWord_BOOL;
@@ -141,7 +142,7 @@ void la_keyword(struct token_st *token, struct la_parser *parser) {
         return;
     }
 
-
+    // Cheking keywords with length 5
     if (la_keyword_cmp(parser, "empty", 5)) {
         token->type = TokenType_KeyWords;
         token->subtype = KeyWord_EMPTY;

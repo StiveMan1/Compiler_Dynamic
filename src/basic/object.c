@@ -9,6 +9,7 @@ struct object_convert object_convert = {METHOD_CONVERT &object__bool, METHOD_CON
 struct object_sub object_sub = {METHOD_SUBSCRIPT &object_subscript, METHOD_ATTRIB &object_attrib};
 struct object_type object_type = {OBJECT_OP, &object_sub, &object_convert, &object_math};
 // Standard operations
+// Create
 struct object_st *object_new() {
     struct object_st *res = Malloc(OBJECT_SIZE);
     res->type = NULL;
@@ -16,15 +17,18 @@ struct object_st *object_new() {
     res->counter = 1;
     return res;
 }
+// Set value 
 void object_set(struct object_st *res, const struct object_st *a) {
     if (res == NULL || a == NULL) return;
     object_set_type(res, a->type);
     if (res->type != NULL && res->type->self._set != NULL) res->type->self._set(res->data, (a)->data);
 }
+// Clear
 void object_clear(struct object_st *res) {
     if (res == NULL) return;
     object_set_type(res, NONE_TYPE);
 }
+// Free
 void object_free(struct object_st *res) {
     if (res == NULL || --res->counter > 0) return;
     if (res->data != NULL) {
@@ -34,6 +38,7 @@ void object_free(struct object_st *res) {
     }
     Free(res);
 }
+// Cmp
 int object_cmp(struct error_st *err, struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
@@ -62,6 +67,7 @@ struct object_st *object_copy(struct object_st *res) {
     res->counter++;
     return res;
 }
+// Set type 
 void object_set_type(struct object_st *res, struct object_type *type) {
     if (res == NULL) return;
     if (res->type == type) return;
@@ -77,6 +83,7 @@ void object_set_type(struct object_st *res, struct object_type *type) {
 }
 
 // Math Methods
+// Mod
 void object__mod(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_mod != NULL) {
@@ -87,6 +94,7 @@ void object__mod(struct object_st *res, struct error_st *err, const struct objec
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __mod__ operation", 38);
 }
+// And
 void object__and(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_and != NULL) {
@@ -97,6 +105,7 @@ void object__and(struct object_st *res, struct error_st *err, const struct objec
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __and__ operation", 38);
 }
+// Multiplication
 void object__mul(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
@@ -119,6 +128,7 @@ void object__mul(struct object_st *res, struct error_st *err, const struct objec
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __mul__ operation", 38);
 }
+// Addition
 void object__add(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
@@ -141,6 +151,7 @@ void object__add(struct object_st *res, struct error_st *err, const struct objec
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __add__ operation", 38);
 }
+// Substraction
 void object__sub(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
@@ -163,6 +174,7 @@ void object__sub(struct object_st *res, struct error_st *err, const struct objec
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __sub__ operation", 38);
 }
+// Division
 void object__div(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
@@ -185,6 +197,7 @@ void object__div(struct object_st *res, struct error_st *err, const struct objec
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __div__ operation", 38);
 }
+// XOR
 void object__xor(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_xor != NULL) {
@@ -195,6 +208,7 @@ void object__xor(struct object_st *res, struct error_st *err, const struct objec
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __xor__ operation", 38);
 }
+// OR
 void object__or(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_or != NULL) {
@@ -205,6 +219,7 @@ void object__or(struct object_st *res, struct error_st *err, const struct object
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __or__ operation", 37);
 }
+// LS
 void object__ls(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_ls != NULL) {
@@ -215,6 +230,7 @@ void object__ls(struct object_st *res, struct error_st *err, const struct object
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __ls__ operation", 37);
 }
+// RS
 void object__rs(struct object_st *res, struct error_st *err, const struct object_st *obj1, const struct object_st *obj2) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_rs != NULL) {
@@ -225,6 +241,7 @@ void object__rs(struct object_st *res, struct error_st *err, const struct object
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __rs__ operation", 37);
 }
+// Negative
 void object__neg(struct object_st *res, struct error_st *err, const struct object_st *obj1) {
     while (obj1 != NULL && obj1->type == OBJECT_TYPE) obj1 = obj1->data;
     if (obj1 != NULL && obj1->type != NULL && obj1->type->math != NULL && obj1->type->math->_ne != NULL) {
@@ -237,6 +254,7 @@ void object__neg(struct object_st *res, struct error_st *err, const struct objec
 }
 
 // Convert Methods
+// To bool
 void object__bool(struct object_st *res, struct error_st *err, const struct object_st *obj) {
     while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
     if (obj == NULL || obj->type == NULL) {
@@ -252,6 +270,7 @@ void object__bool(struct object_st *res, struct error_st *err, const struct obje
         return;
     }
 }
+// To integer
 void object__int(struct object_st *res, struct error_st *err, const struct object_st *obj) {
     while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
     if (obj != NULL && obj->type != NULL && obj->type->convert != NULL && obj->type->convert->_int != NULL) {
@@ -262,6 +281,7 @@ void object__int(struct object_st *res, struct error_st *err, const struct objec
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __int__ operation", 38);
 }
+// To float
 void object__float(struct object_st *res, struct error_st *err, const struct object_st *obj) {
     while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
     if (obj != NULL && obj->type != NULL && obj->type->convert != NULL && obj->type->convert->_float != NULL) {
@@ -272,6 +292,7 @@ void object__float(struct object_st *res, struct error_st *err, const struct obj
     string_set_str(err->type, INTERPRETER_ERROR, 17);
     string_set_str(err->message, "Object does not have __float__ operation", 40);
 }
+// To string
 void object__str(struct object_st *res, struct error_st *err, const struct object_st *obj) {
     while (obj != NULL && obj->type == OBJECT_TYPE) obj = obj->data;
     if (obj != NULL && obj->type != NULL && obj->type->convert != NULL && obj->type->convert->_str != NULL) {

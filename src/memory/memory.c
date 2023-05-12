@@ -14,6 +14,7 @@ struct mem_ctx mem_ctx = {NULL, 0};
 
 #define POOL_INIT (struct mem_pool) {0, 0, 0, NULL}
 
+// Memory pool
 struct mem_pool {
     char pool_flag;
     unsigned short pool_size;
@@ -55,6 +56,7 @@ struct mem_arena {
     struct mem_pool pools[POOL_NUMBER];
 };
 
+// Create 
 struct mem_arena *arena_new() {
     struct mem_arena *res = malloc(sizeof(struct mem_arena));
     res->ctx = malloc(POOL_SIZE * POOL_NUMBER);
@@ -65,6 +67,7 @@ struct mem_arena *arena_new() {
     return res;
 }
 
+// Malloc arena
 void *arena_malloc(struct mem_arena *arena, size_t size) {
     int pool_id = -1;
     for (int i = 0; i < POOL_NUMBER; i++) {
@@ -83,6 +86,7 @@ void *arena_malloc(struct mem_arena *arena, size_t size) {
 
 #define CTX_LOOP for (struct mem_arena *cur_arena = ctx->first_arena; cur_arena != NULL; cur_arena = cur_arena->left)
 
+// Malloc SKR
 void *SKR_malloc(struct mem_ctx *ctx, size_t size) {
     if (size == 0) return NULL;
     unsigned short need_size = (size / 8 + (size % 8 != 0)) * 8;
@@ -101,6 +105,7 @@ void *SKR_malloc(struct mem_ctx *ctx, size_t size) {
     return arena_malloc(ctx->first_arena, need_size);
 }
 
+// Realloc SKR
 void *SKR_realloc(struct mem_ctx *ctx, void *data, size_t size) {
     ctx->filled--; // DEBUG
     void *res = SKR_malloc(ctx, size);
@@ -115,6 +120,7 @@ void *SKR_realloc(struct mem_ctx *ctx, void *data, size_t size) {
     return res;
 }
 
+// Free SKR
 void SKR_free(struct mem_ctx *ctx, void *data) {
     ctx->filled--; // DEBUG
 

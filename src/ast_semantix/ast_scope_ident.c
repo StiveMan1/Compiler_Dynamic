@@ -1,6 +1,6 @@
 #include "ast_semantic.h"
 
-
+// Semantic scan fields
 void semantic_scan_fields(struct ast_parser *parser, struct object_st *obj) {
     struct node_st *node = obj->data;
 
@@ -25,6 +25,7 @@ void semantic_scan_fields(struct ast_parser *parser, struct object_st *obj) {
         }
     }
     if (node->main_type == MainType_Stmt) {
+        // Checking for different statements
         switch (node->type) {
             case StmtType_Params:
             case StmtType_Return:
@@ -50,13 +51,13 @@ void semantic_scan_fields(struct ast_parser *parser, struct object_st *obj) {
                 break;
         }
     }
-
+    // Array append
     for (size_t i = 0; i < node->next->size; i++) {
         array_append(parser->expr_stack, node->next->data[node->next->size - i - 1]);
     }
 
 }
-
+// Semantic scan
 void semantic_scan(struct ast_parser *parser) {
     struct object_st *obj = object_new();
     object_set_type(obj, NODE_TYPE);

@@ -1,5 +1,6 @@
 #include "ast_analyze.h"
 
+// Error
 void set_error(struct ast_parser *parser, size_t position, char *msg) {
     error_fill_in(
             parser->error_obj,
@@ -25,6 +26,7 @@ err:    result = SN_Status_Error; set_error(parser, parser->position, "Unexpecte
 
 #define check_call(call, check) {sub_result = call; if (sub_result == SN_Status_Nothing) check if (sub_result != SN_Status_Success) goto sub;}
 
+// Scopes expressions
 int scopes_expr(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -44,6 +46,7 @@ int scopes_expr(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// Tuple expressions
 int tuple_expr(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -83,9 +86,11 @@ int tuple_expr(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// List expressions
 int list_expr(struct ast_parser *parser, struct node_st *expr) {
     return list_oper(parser, expr, Special_LSQB, Special_RSQB);
 }
+// Identifier new expressions
 int ident_new_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -99,6 +104,7 @@ int ident_new_expr(struct ast_parser *parser, struct node_st *expr) {
     string_set_str(expr->data->data, token->data, token->size);
     return SN_Status_Success;
 }
+// Identifier get expressions
 int ident_get_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -112,6 +118,7 @@ int ident_get_expr(struct ast_parser *parser, struct node_st *expr) {
     string_set_str(expr->data->data, token->data, token->size);
     return SN_Status_Success;
 }
+// Bool expressions
 int bool_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -127,6 +134,7 @@ int bool_expr(struct ast_parser *parser, struct node_st *expr) {
     else ((struct bool_st *)expr->data->data)->data = 1;
     return SN_Status_Success;
 }
+// Number expressions: float, integer
 int number_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -152,6 +160,7 @@ int number_expr(struct ast_parser *parser, struct node_st *expr) {
     }
     return SN_Status_Success;
 }
+// String expressions
 int string_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -165,6 +174,7 @@ int string_expr(struct ast_parser *parser, struct node_st *expr) {
     string_set_str(expr->data->data, token->data, token->size);
     return SN_Status_Success;
 }
+// Null expression
 int null_expr(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -176,6 +186,7 @@ int null_expr(struct ast_parser *parser, struct node_st *expr) {
     expr->data = object_new();
     return SN_Status_Success;
 }
+// Literal expressions
 int literal_expr(struct ast_parser *parser, struct node_st *expr) {
     int result = null_expr(parser, expr);
     if (result != SN_Status_Nothing) return result;
@@ -190,6 +201,7 @@ int literal_expr(struct ast_parser *parser, struct node_st *expr) {
     result = tuple_expr(parser, expr);
     return result;
 }
+// Lambda expressions
 int lambda_expr(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -209,6 +221,7 @@ int lambda_expr(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
+// Atom expressions
 int atom_expr(struct ast_parser *parser, struct node_st *expr) {
     int result = ident_get_expr(parser, expr);
     if (result != SN_Status_Nothing) return result;
@@ -219,6 +232,7 @@ int atom_expr(struct ast_parser *parser, struct node_st *expr) {
     result = lambda_expr(parser, expr);
     return result;
 }
+// Primary expressions
 int primary_expr(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {

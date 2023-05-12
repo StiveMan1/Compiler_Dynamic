@@ -1,6 +1,7 @@
 #include "basic.h"
 
 // Standard operations
+// Create
 struct error_st *error_new() {
     struct error_st *res = Malloc(sizeof (struct error_st));
     res->present = 0;
@@ -12,6 +13,7 @@ struct error_st *error_new() {
     res->line_pos = 0;
     return res;
 }
+// Set value
 void error_set(struct error_st *res, const struct error_st *a) {
     res->present = a->present;
     string_set(res->type, a->type);
@@ -21,6 +23,7 @@ void error_set(struct error_st *res, const struct error_st *a) {
     res->line_num = a->line_num;
     res->line_pos = a->line_pos;
 }
+// Clear
 void error_clear(struct error_st *res) {
     if(res == NULL) return;
     res->present = 0;
@@ -31,12 +34,14 @@ void error_clear(struct error_st *res) {
     res->line_num = 0;
     res->line_pos = 0;
 }
+// Free
 void error_free(struct error_st *res) {
     if(res == NULL) return;
     string_free(res->type);
     string_free(res->message);
     Free(res);
 }
+// Cmp
 int error_cmp(const struct error_st *obj1, const struct error_st *obj2) {
     if (obj1->present > obj2->present) return 1;
     if (obj1->present < obj2->present) return -1;
@@ -57,6 +62,7 @@ int error_cmp(const struct error_st *obj1, const struct error_st *obj2) {
     }
     return res_cmp_sub;
 }
+// Check for null 
 int error_is_null(const struct error_st *res) {
     return (res == NULL || res->present == 0);
 }

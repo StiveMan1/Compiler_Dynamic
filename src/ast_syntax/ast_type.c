@@ -31,6 +31,7 @@ int type_expr(struct ast_parser *parser, struct node_st *expr) {
     result = type_func(parser, expr);
     return result;
 }
+// Integer type
 int type_int(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -41,6 +42,7 @@ int type_int(struct ast_parser *parser, struct node_st *expr) {
     node_set_position(expr, parser->list->data[parser->position - 1]->data);
     return SN_Status_Success;
 }
+// Real type
 int type_real(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -51,6 +53,7 @@ int type_real(struct ast_parser *parser, struct node_st *expr) {
     node_set_position(expr, parser->list->data[parser->position - 1]->data);
     return SN_Status_Success;
 }
+// Bool type
 int type_bool(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -61,6 +64,7 @@ int type_bool(struct ast_parser *parser, struct node_st *expr) {
     node_set_position(expr, parser->list->data[parser->position - 1]->data);
     return SN_Status_Success;
 }
+// String type
 int type_string(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -71,6 +75,7 @@ int type_string(struct ast_parser *parser, struct node_st *expr) {
     node_set_position(expr, parser->list->data[parser->position - 1]->data);
     return SN_Status_Success;
 }
+// Array type 
 int type_array(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -84,6 +89,7 @@ int type_array(struct ast_parser *parser, struct node_st *expr) {
     node_set_position(expr, parser->list->data[parser->position - 1]->data);
     return SN_Status_Success;
 }
+// Tuple type
 int type_tuple(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;
@@ -97,6 +103,7 @@ int type_tuple(struct ast_parser *parser, struct node_st *expr) {
     node_set_position(expr, parser->list->data[parser->position - 1]->data);
     return SN_Status_Success;
 }
+// Function type
 int type_func(struct ast_parser *parser, struct node_st *expr) {
     parser_end return SN_Status_EOF;
     struct token_st *token = parser->list->data[parser->position]->data;

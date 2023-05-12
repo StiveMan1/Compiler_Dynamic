@@ -1,5 +1,6 @@
 #include "lexical_analysis.h"
 
+// Identifier token type
 void la_identifier(struct token_st *token, struct la_parser *parser) {
     if (IdentifierStart(parser->data[parser->position])) {
         size_t pos = parser->position;

@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "struct.h"
 
+// Create new parser for lexical analysis
+// It stores information about the input text, 
+// the current position of the parser, 
+// the current line, the token list, and the error object
 struct la_parser *la_parser_new() {
     struct la_parser *res = Malloc(sizeof(struct la_parser));
     res->data = NULL;
@@ -13,6 +17,7 @@ struct la_parser *la_parser_new() {
     res->error_obj = error_new();
     return res;
 }
+// Set value
 void la_parser_set(struct la_parser *res, const struct la_parser *a) {
     la_parser_clear(res);
     res->str_size = a->str_size;
@@ -20,6 +25,7 @@ void la_parser_set(struct la_parser *res, const struct la_parser *a) {
     memcpy(res->data, a->data, a->str_size);
     error_set(res->error_obj, a->error_obj);
 }
+// Clear
 void la_parser_clear(struct la_parser *res) {
     if (res->data != NULL) Free(res->data);
     res->data = NULL;
@@ -30,13 +36,14 @@ void la_parser_clear(struct la_parser *res) {
     array_clear(res->list);
     error_clear(res->error_obj);
 }
+// Free
 void la_parser_free(struct la_parser *res) {
     if (res->data != NULL) Free(res->data);
     array_free(res->list);
     error_free(res->error_obj);
     Free(res);
 }
-
+// Set string
 void la_parser_set_str(struct la_parser *res, char *data, size_t size) {
     la_parser_clear(res);
     res->str_size = size;
@@ -44,6 +51,7 @@ void la_parser_set_str(struct la_parser *res, char *data, size_t size) {
     memcpy(res->data, data, size);
     res->data[res->str_size] = 0;
 }
+// Set from file
 void la_parser_set_file(struct la_parser *res, char *file_path) {
     la_parser_clear(res);
 
@@ -63,6 +71,7 @@ void la_parser_set_file(struct la_parser *res, char *file_path) {
     res->str_size = i;
     fclose(fp);
 }
+// Get error
 void la_parser_get_error(struct la_parser *parser, struct error_st *error) {
     error_set(error, parser->error_obj);
 }

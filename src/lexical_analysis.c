@@ -2,6 +2,7 @@
 
 #define set_error_lexical(message) error_fill_in(parser->error_obj, LEXICAL_ANALYSIS_ERROR, message, parser->position - 1, parser->current_line, parser->line_pos);
 
+// Running several subparsers for different token types 
 void la_parse(struct token_st *token, struct la_parser *parser) {
     la_special(token, parser);
     if (token->type != TokenType_None) return;
@@ -14,6 +15,7 @@ void la_parse(struct token_st *token, struct la_parser *parser) {
     la_identifier(token, parser);
 }
 
+// tokenize function 
 void tokenize(struct la_parser *parser) {
     parser->position = parser->current_line = 0;
     struct token_st *token = token_new();

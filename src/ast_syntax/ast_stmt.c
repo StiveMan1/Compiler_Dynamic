@@ -15,7 +15,7 @@ eof:    result = SN_Status_EOF; set_error(parser, parser->position - 1, ""); got
 err:    result = SN_Status_Error; set_error(parser, parser->position, "Unexpected end of file"); goto end;
 
 #define check_call(call, check) {sub_result = call; if (sub_result == SN_Status_Nothing) check if (sub_result != SN_Status_Success) goto sub;}
-
+// Annotation statement
 int annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -43,7 +43,7 @@ int annotation_stmt(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// Declarations statement
 int declaration_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -71,7 +71,7 @@ int declaration_stmt(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// Assignment statement
 int assignment_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -115,7 +115,7 @@ int assignment_stmt(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// Return statement
 int return_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -138,7 +138,7 @@ int return_stmt(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// Print statement
 int print_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -164,7 +164,7 @@ int print_stmt(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// Simple statements
 int simple_stmt(struct ast_parser *parser, struct node_st *expr) {
     int result = return_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
@@ -177,7 +177,7 @@ int simple_stmt(struct ast_parser *parser, struct node_st *expr) {
     result = or_test_oper(parser, expr);
     return result;
 }
-
+// Statement list
 int stmt_list(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -207,7 +207,7 @@ int stmt_list(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// If statement
 int if_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -237,7 +237,7 @@ int if_stmt(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// While statement
 int while_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -259,7 +259,7 @@ int while_stmt(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// For statement
 int for_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -301,7 +301,7 @@ int parameter_list(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// Function statement
 int function_stmt(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
@@ -324,7 +324,7 @@ int function_stmt(struct ast_parser *parser, struct node_st *expr) {
     }
 analyze_end
 }
-
+// Compound statement
 int compound_stmt(struct ast_parser *parser, struct node_st *expr) {
     int result = if_stmt(parser, expr);
     if (result != SN_Status_Nothing) return result;
@@ -444,7 +444,7 @@ int body(struct ast_parser *parser, struct node_st *expr, int type_scope) {
     }
 analyze_end
 }
-
+// Token_analyzer
 int token_analyzer(struct ast_parser *parser, struct node_st *expr) {
     analyze_start
     {
