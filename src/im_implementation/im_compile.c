@@ -112,8 +112,12 @@ void run_an(struct imp_parser *state, struct object_st *object) {
             new_block->count = count;
             op_block_set_position_token(new_block, temp_array->data[i]->data);
 
-            if (((struct token_st *) temp_array->data[i]->data)->type == TokenType_KeyWords)
+            if (((struct token_st *) temp_array->data[i]->data)->type == TokenType_KeyWords) {
+                if (ExprType_XorTest == node->type) new_block->subtype = Special_XOR;
+                if (ExprType_AndTest == node->type) new_block->subtype = Special_AND;
+                if (ExprType_OrTest == node->type) new_block->subtype = Special_OR;
                 is_bool = 1;
+            }
 
         }
         temp_array = node->next;
@@ -423,9 +427,15 @@ void run_op(struct imp_parser *state, struct object_st *object, int stream) {
                     object_free(obj1);
 
                     struct object_st *res = object_new();
-                    object_set_type(res, BOOL_TYPE);
-                    if (block->subtype == KeyWord_AND) ((struct bool_st *)res->data)->data = (bool1 && bool2);
-                    if (block->subtype == KeyWord_OR) ((struct bool_st *)res->data)->data = (bool1 || bool2);
+                    if (block->subtype == KeyWord_AND) object__and(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == KeyWord_XOR) object__xor(res, state->error_obj, obj1, obj2);
+                    else if (block->subtype == KeyWord_OR) object__or(res, state->error_obj, obj1, obj2);
+
+                    if (state->error_obj->present) {
+                        state->error_obj->pos = block->pos;
+                        state->error_obj->line_num = block->line_num;
+                        state->error_obj->line_pos = block->line_pos;
+                    }
 
                     array_append(state->temp_memory, res);
                     object_free(res);

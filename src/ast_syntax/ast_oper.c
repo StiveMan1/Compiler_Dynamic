@@ -312,6 +312,7 @@ int and_test_oper(struct ast_parser *parser, struct node_st *expr) {
                 times = 1;
             }
             expr_add(expr)
+            array_append(expr->tokens, token_ptr);
         }
         result = SN_Status_Success;
     }
@@ -341,6 +342,7 @@ int xor_test_oper(struct ast_parser *parser, struct node_st *expr) {
                 times = 1;
             }
             expr_add(expr)
+            array_append(expr->tokens, token_ptr);
         }
         result = SN_Status_Success;
     }
@@ -370,6 +372,7 @@ int or_test_oper(struct ast_parser *parser, struct node_st *expr) {
                 times = 1;
             }
             expr_add(expr)
+            array_append(expr->tokens, token_ptr);
         }
         result = SN_Status_Success;
     }

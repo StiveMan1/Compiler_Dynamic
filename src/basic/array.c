@@ -159,6 +159,7 @@ struct object_st *array_subscript(struct error_st *err, struct array_st *list, c
     }
     size_t position = ((struct integer_st *)temp->data)->data;
     object_free(temp);
-    if (position > list->size) array_resize(list, position);
+    if (position + 1 > list->size) array_resize(list, position + 1);
+    if (list->data[position % list->size] == NULL) list->data[position % list->size] = object_new();
     return object_copy(list->data[position % list->size]);
 }

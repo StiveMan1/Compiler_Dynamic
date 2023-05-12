@@ -139,11 +139,10 @@ struct object_st *map_get_elm(struct map_st *res, const struct string_st *str) {
 }
 
 struct object_st *map_set_elm_int(struct map_st *res, const struct integer_st *int_) {
-    if (int_->data > res->size) map_resize(res, int_->data);
+    if (int_->data >= res->size) map_resize(res, int_->data + 1);
     if (res->names[int_->data] == NULL) {
         res->names[int_->data] = string_new();
-        res->datas[int_->data] = object_new();
-    }
+        res->datas[int_->data] = object_new();    }
     return object_copy(res->datas[int_->data]);
 }
 
