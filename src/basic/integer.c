@@ -5,11 +5,13 @@ struct object_math_op integer_math = {METHOD_MATH &integer__mod, METHOD_MATH &in
 struct object_convert integer_convert = {METHOD_CONVERT &integer__bool, METHOD_CONVERT &integer__int, METHOD_CONVERT &integer__float, METHOD_CONVERT &integer__str};
 struct object_type integer_type = {INTEGER_OP, NULL, &integer_convert, &integer_math};
 // Standard operations
+// Create
 struct integer_st *integer_new() {
     struct integer_st *res = Malloc(INTEGER_SIZE);
     res->data = 0;
     return res;
 }
+// Set value
 void integer_set(struct integer_st *res, const struct integer_st *a) {
     if (integer_is_null(a)) return integer_clear(res);
     res->data = a->data;
@@ -17,9 +19,11 @@ void integer_set(struct integer_st *res, const struct integer_st *a) {
 void integer_clear(struct integer_st *res) {
     res->data = 0;
 }
+// Free
 void integer_free(struct integer_st *res) {
     Free(res);
 }
+// Cmp
 int integer_cmp(const struct integer_st *obj1, const struct integer_st *obj2) {
     if(obj1->data < obj2->data) return -1;
     if(obj1->data > obj2->data) return 1;
@@ -41,6 +45,7 @@ int integer__cmp(struct error_st *err, struct integer_st *obj1, const struct obj
 }
 
 // Math Methods
+// Mod
 void integer__mod(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -60,6 +65,7 @@ void integer__mod(struct object_st *res, struct error_st *err, const struct inte
     ((struct integer_st *)res->data)->data = (obj1->data % ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// And
 void integer__and(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -72,6 +78,7 @@ void integer__and(struct object_st *res, struct error_st *err, const struct inte
     ((struct integer_st *)res->data)->data = (obj1->data & ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// Multiplication
 void integer__mul(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -84,6 +91,7 @@ void integer__mul(struct object_st *res, struct error_st *err, const struct inte
     ((struct integer_st *)res->data)->data = (obj1->data * ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// Addition
 void integer__add(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -96,6 +104,7 @@ void integer__add(struct object_st *res, struct error_st *err, const struct inte
     ((struct integer_st *)res->data)->data = (obj1->data + ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// Subtraction
 void integer__sub(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -108,6 +117,7 @@ void integer__sub(struct object_st *res, struct error_st *err, const struct inte
     ((struct integer_st *)res->data)->data = (obj1->data - ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// Division
 void integer__div(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -127,6 +137,7 @@ void integer__div(struct object_st *res, struct error_st *err, const struct inte
     ((struct integer_st *)res->data)->data = (obj1->data / ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// XOR
 void integer__xor(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -139,6 +150,7 @@ void integer__xor(struct object_st *res, struct error_st *err, const struct inte
     ((struct integer_st *)res->data)->data = (obj1->data ^ ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// OR
 void integer__or(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -151,6 +163,7 @@ void integer__or(struct object_st *res, struct error_st *err, const struct integ
     ((struct integer_st *)res->data)->data = (obj1->data | ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// LS
 void integer__ls(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -163,6 +176,7 @@ void integer__ls(struct object_st *res, struct error_st *err, const struct integ
     ((struct integer_st *)res->data)->data = (obj1->data << ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// RS
 void integer__rs(struct object_st *res, struct error_st *err, const struct integer_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     struct object_st *temp = object_new();
@@ -175,24 +189,29 @@ void integer__rs(struct object_st *res, struct error_st *err, const struct integ
     ((struct integer_st *)res->data)->data = (obj1->data >> ((struct integer_st *)temp->data)->data);
     object_free(temp);
 }
+// Negative
 void integer__neg(struct object_st *res, struct error_st *err, const struct integer_st *obj1) {
     object_set_type(res, INTEGER_TYPE);
     ((struct integer_st *)res->data)->data = - obj1->data;
 }
 
 // Convert Methods
+// To bool
 void integer__bool(struct object_st *res, struct error_st *err, struct integer_st *obj){
     object_set_type(res, BOOL_TYPE);
     ((struct bool_st *)res->data)->data = !integer_is_null(obj);
 }
+// To integer
 void integer__int(struct object_st *res, struct error_st *err, struct integer_st *obj){
     object_set_type(res, INTEGER_TYPE);
     integer_set(res->data, obj);
 }
+// To float
 void integer__float(struct object_st *res, struct error_st *err, struct integer_st *obj){
     object_set_type(res, REAL_TYPE);
     ((struct real_st *)res->data)->data = obj->data;
 }
+// To string
 void integer__str(struct object_st *res, struct error_st *err, struct integer_st *obj){
     object_set_type(res, STRING_TYPE);
     char buf[32];

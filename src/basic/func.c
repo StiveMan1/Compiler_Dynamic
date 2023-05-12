@@ -1,7 +1,8 @@
 #include "basic.h"
 
 struct object_type func_type = {FUNC_OP};
-
+// Standard operations
+// Create
 struct func_st *func_new() {
     struct func_st *res = Malloc(FUNC_SIZE);
     res->params = object_new();
@@ -9,24 +10,27 @@ struct func_st *func_new() {
     res->body = object_new();
     return res;
 }
+// Set value
 void func_set(struct func_st *res, const struct func_st *a) {
     func_clear(res);
     object_set(res->params, a->params);
     object_set(res->closure, a->closure);
     object_set(res->body, a->body);
 }
+// Clear
 void func_clear(struct func_st *res) {
     object_clear(res->params);
     object_clear(res->closure);
     object_clear(res->body);
 }
+// Free
 void func_free(struct func_st *res) {
     object_free(res->params);
     object_free(res->closure);
     object_free(res->body);
     Free(res);
 }
-
+// Set function 
 void func_set_function(struct func_st *res, struct node_st *node) {
     func_clear(res);
 

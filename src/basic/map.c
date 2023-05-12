@@ -5,7 +5,7 @@ struct object_convert map_convert = {NULL, NULL, NULL, METHOD_CONVERT &map__str}
 struct object_sub map_sub = {METHOD_SUBSCRIPT &map_subscript, METHOD_ATTRIB &map_attrib};
 struct object_type map_type = {MAP_OP, &map_sub, &map_convert, &map_math};
 // Standard operations
-
+// Create
 struct map_st *map_new() {
     struct map_st *res = Malloc(MAP_SIZE);
     res->names = NULL;
@@ -15,6 +15,7 @@ struct map_st *map_new() {
     res->mx_size = 0;
     return res;
 }
+// Set value
 void map_set(struct map_st *res, const struct map_st *a) {
     map_clear(res);
     map_resize(res, a->size);
@@ -27,15 +28,18 @@ void map_set(struct map_st *res, const struct map_st *a) {
             res->datas[i] = object_copy(a->datas[i]);
     }
 }
+// Clear
 void map_clear(struct map_st *res) {
     map_resize(res, 0);
 }
+// Free
 void map_free(struct map_st *res) {
     map_resize(res, 0);
     if (res->names != NULL) Free(res->names);
     if (res->datas != NULL) Free(res->datas);
     Free(res);
 }
+// Cmp
 int map_cmp(const struct map_st *obj1, const struct map_st *obj2) {
     if (obj1->size != obj2->size) return 2;
     size_t counter = 0;
@@ -73,7 +77,7 @@ int map__cmp(struct error_st *err, struct map_st *obj1, const struct object_st *
     if (counter == obj1->size) return 0;
     return 2;
 }
-
+// Checking type of char
 unsigned short set_char_64(char x) {
     if (x >= '0' && x <= '9') {
         return (unsigned short) (x - '0');
@@ -94,6 +98,7 @@ unsigned short set_char_64(char x) {
 }
 
 // Class Methods
+// Change size of the map
 void map_resize(struct map_st *res, size_t size) {
     if (res->datas == NULL && size != 0) {
         res->names = Malloc(sizeof (struct string_st *) * size);
@@ -122,6 +127,7 @@ void map_resize(struct map_st *res, size_t size) {
     }
     res->size = size;
 }
+// Setter
 struct object_st *map_set_elm(struct map_st *res, const struct string_st *str) {
     for (size_t i = 0; i < res->size; i++) {
         if (res->names[i] != NULL && string_cmp(res->names[i], str) == 0) return object_copy(res->datas[i]);
@@ -131,13 +137,14 @@ struct object_st *map_set_elm(struct map_st *res, const struct string_st *str) {
     string_set(res->names[res->size - 1], str);
     return object_copy(res->datas[res->size - 1] = object_new());
 }
+// Getter
 struct object_st *map_get_elm(struct map_st *res, const struct string_st *str) {
     for (size_t i = 0; i < res->size; i++) {
         if (res->names[i] != NULL && string_cmp(res->names[i], str) == 0) return object_copy(res->datas[i]);
     }
     return NULL;
 }
-
+// Set element 
 struct object_st *map_set_elm_int(struct map_st *res, const struct integer_st *int_) {
     if (int_->data > res->size) map_resize(res, int_->data);
     if (res->names[int_->data] == NULL) {
@@ -148,6 +155,7 @@ struct object_st *map_set_elm_int(struct map_st *res, const struct integer_st *i
 }
 
 // Math Methods
+// Addition
 void map__add(struct object_st *res, struct error_st *err, const struct map_st *obj1, const struct object_st *obj2) {
     while (obj2 != NULL && obj2->type == OBJECT_TYPE) obj2 = obj2->data;
     if (obj2->type != MAP_TYPE) {
@@ -179,6 +187,7 @@ void map__add(struct object_st *res, struct error_st *err, const struct map_st *
 }
 
 // Convert Methods
+// To string
 void map__str(struct object_st *res, struct error_st *err, struct map_st *obj) {
     object_set_type(res, STRING_TYPE);
     string_set_str(res->data, "{", 1);

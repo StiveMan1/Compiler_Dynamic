@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "lexical_analysis.h"
 
+// Special chars with length 1
 short Special_OneChar(char c1) {
     switch (c1) {
         // Special Chars OP
@@ -56,6 +57,7 @@ short Special_OneChar(char c1) {
     return Special_None;
 }
 
+// Special chars with length 2
 short Special_TwoChar(char c1, char c2) {
     switch (c1) {
         case '*':
