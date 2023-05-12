@@ -2,6 +2,7 @@
 #define AST_SEMANTIC_H
 
 #include "ast_analyze.h"
-#include "ast_semantix/ast_scope_ident.h"
+
+void semantic_scan(struct ast_parser *);
 
 #endif //AST_SEMANTIC_H
