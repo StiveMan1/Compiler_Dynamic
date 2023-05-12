@@ -7,7 +7,7 @@ struct ast_parser *ast_parser_new() {
     res->list = array_new();
     res->tree = node_new();
 
-    res->type = ScopeType_None;
+    res->scope_type = ScopeType_None;
 
     res->memory_frame = array_new();
     res->memory_closure = array_new();
@@ -48,7 +48,7 @@ void ast_parser_get_error(struct ast_parser *res, struct error_st *error) {
 
 void ast_parser_save_type(struct ast_parser *res, struct node_st *obj) {
     array_add_new(res->expr_stack, INTEGER_TYPE);
-    ((struct integer_st *)res->expr_stack->data[res->expr_stack->size - 1]->data)->data = res->type;
+    ((struct integer_st *)res->expr_stack->data[res->expr_stack->size - 1]->data)->data = res->scope_type;
 
     array_add_new(res->memory_frame, ARRAY_TYPE);
     array_append(res->memory_closure, obj->closure);

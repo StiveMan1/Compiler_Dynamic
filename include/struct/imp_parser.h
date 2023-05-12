@@ -15,7 +15,6 @@ struct imp_parser{
 
     short flag;
 
-    struct object_st *frame_memory; // Not used. For recursion
     struct array_st *stack_memory;  // Stack of variables
     struct array_st *temp_memory;   // Temporary objects
 

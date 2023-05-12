@@ -28,7 +28,7 @@ void semantic_scan_fields(struct ast_parser *parser, struct object_st *obj) {
         switch (node->type) {
             case StmtType_Params:
             case StmtType_Return:
-                if (((parser->type) & ScopeType_Func) != ScopeType_Func) {
+                if (((parser->scope_type) & ScopeType_Func) != ScopeType_Func) {
                     error_fill_in(parser->error_obj, SEMANTIC_ANALYSIS_ERROR, "Return Statement not in Function Scopes", node->pos, node->line_num, node->line_pos);
                     return;
                 }
@@ -38,12 +38,12 @@ void semantic_scan_fields(struct ast_parser *parser, struct object_st *obj) {
                 node->closure = object_new();
                 object_set_type(node->closure, DARRAY_TYPE);
                 ast_parser_save_type(parser, node);
-                parser->type = ScopeType_Func;
+                parser->scope_type = ScopeType_Func;
                 break;
             case StmtType_For:
             case StmtType_While:
                 ast_parser_save_type(parser, node);
-                parser->type |= ScopeType_Loop;
+                parser->scope_type |= ScopeType_Loop;
                 break;
             case StmtType_List:
                 ast_parser_save_type(parser, node);
@@ -71,7 +71,7 @@ void semantic_scan(struct ast_parser *parser) {
         if (obj->type == NODE_TYPE) {
             semantic_scan_fields(parser, obj);
         } else if (obj->type == INTEGER_TYPE) {
-            parser->type = ((struct integer_st *)obj->data)->data;
+            parser->scope_type = ((struct integer_st *)obj->data)->data;
             ast_parser_remove_frame(parser);
         }
 

@@ -3,7 +3,6 @@
 struct imp_parser *imp_parser_new() {
     struct imp_parser *res = Malloc(sizeof(struct imp_parser));
     res->stack_memory = array_new();
-    res->frame_memory = NULL;
     res->temp_memory = array_new();
     res->code_operations = array_new();
 
@@ -16,7 +15,6 @@ struct imp_parser *imp_parser_new() {
 void imp_parser_free(struct imp_parser *res) {
     array_free(res->stack_memory);
 
-    if(res->frame_memory != NULL) object_free(res->frame_memory);
     array_free(res->temp_memory);
     array_free(res->code_operations);
     error_free(res->error_obj);

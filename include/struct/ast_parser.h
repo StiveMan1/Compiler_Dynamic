@@ -24,7 +24,7 @@ struct ast_parser{
     struct array_st *memory_closure;
     struct array_st *expr_stack;
 
-    int type;
+    int scope_type;
 };
 
 struct ast_parser *ast_parser_new();
