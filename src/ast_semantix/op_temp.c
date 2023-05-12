@@ -629,7 +629,6 @@ void run_op(struct imp_parser *state, struct object_st *object, int stream) {
         }
         case BlockType_Call: {
             struct object_st *res = NULL;
-            struct string_st *ind_str = string_new();
             struct object_st *func = object_copy(array_get_last(state->temp_memory));
             array_remove_last(state->temp_memory);
 
@@ -643,18 +642,14 @@ void run_op(struct imp_parser *state, struct object_st *object, int stream) {
                 new_block->subtype = Delete_Scope_Func;
             }
 
-            if (func->type == FUNC_TYPE) {
-                string_set_str(ind_str, "__init__", 8);
-                res = func_get_attrib(func->data, ind_str);
-            } else {
+            if (func->type != FUNC_TYPE) {
                 error_fill_in(state->error_obj, INTERPRETER_ERROR, "variable is not callable", block->pos, block->line_num, block->line_pos);
                 goto end;
             }
             int ok = 0;
-            if (res == NULL) {
-                string_set_str(ind_str, "__params__", 10);
-                res = func_get_attrib(func->data, ind_str);
-                if (res != NULL) {
+            {
+                res = ((struct func_st *)func->data)->params;
+                if (res != NULL && res->type != NONE_TYPE) {
                     struct array_st *temp_array = ((struct node_st *) res->data)->next;
                     struct node_st *node = NULL;
                     if (temp_array->size == block->count) {
@@ -673,12 +668,10 @@ void run_op(struct imp_parser *state, struct object_st *object, int stream) {
                         goto end;
                     }
                 }
-                object_free(res);
                 res = NULL;
 
-                string_set_str(ind_str, "__closure__", 11);
-                res = func_get_attrib(func->data, ind_str);
-                if (res != NULL && ok) {
+                res = ((struct func_st *)func->data)->closure;
+                if (res != NULL && ok && res->type != NONE_TYPE) {
                     struct darray_st *temp_array = res->data;
                     if (temp_array != NULL) {
                         for (int i = 0; i < temp_array->size; i++) {
@@ -688,20 +681,16 @@ void run_op(struct imp_parser *state, struct object_st *object, int stream) {
                         }
                     }
                 }
-                object_free(res);
                 res = NULL;
 
-                string_set_str(ind_str, "__call__", 7);
-                res = func_get_attrib(func->data, ind_str);
-                if (res != NULL && ok) {
+                res = ((struct func_st *)func->data)->body;
+                if (res != NULL && ok && res->type != NONE_TYPE) {
                     array_append(code_operations, res);
                 }
-                object_free(res);
                 res = NULL;
             }
             end:
             object_free(res);
-            string_free(ind_str);
             object_free(func);
             break;
         }

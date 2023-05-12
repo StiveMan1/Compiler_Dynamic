@@ -1,75 +1,60 @@
 # Structures
 
-- object_op
-    - `void *(*_new)()`
-    - `void (*_set)(void *, const void *)`
-    - `void (*_clear)(void *)`
-    - `void (*_free)(void *)`
-    - `int (*_cmp)(struct error_st *, void *, const void *)`
+### object_type
+This object is created for save standard(addition, multiplications) function of simple types (int, bool, real, list, ...)
+  - `struct object_op self` - struct of initializing and deallocation of structures with can be stored inside `object_st`
+  - `struct object_sub *sub` - struct to store function for attribute and subscript 
+  - `struct object_convert *convert` - struct to store functions for conversions
+  - `struct object_math_op *math` - struct to store functions for math operations
 
-- object_sub
-    - `struct object_st *(*_subscript)(struct error_st *, void *, const struct object_st *)`
-    - `struct object_st *(*_attrib)(struct error_st *, void *, const struct object_st *)`
+### array_st
+This struct is implementation of simple class array
+- `struct object_st **data` - array of pointers to mapping the objects of different types
+- `size_t size, max_size` - sizes to manage when we need reallocate array of data
+  
+### bool_st
+This struct is implementation of simple class boolean
+  - `int data` - the data where store boolean value
+  
+### darray_st
+This struct used for closures in function declaration while program is running
+- `struct object_st **data[2]` - the data where store integer value
+- `size_t max_size, size` - sizes to manage when we need reallocate array of data
+  
+### error_st
+This struct used for get errors in different stages in the program
+  - `int precent` - indicator that error is specified
+  - `struct string_st* type` - string to store type of error
+  - `struct string_st* message` - string to store message of error
+  - `size_t pos, line_num, line_pos` - positioning in source code
+  
+### func_st
+This struct is implementation of simple class boolean
+  - `struct object_st *params` - array of parameters
+  - `struct object_st *body` - element to saved function body
+  - `struct object_st *closure` - map of elements saved for closure
+    
+### integer_st
+This struct is implementation of simple class boolean
+  - `long int data` - the data where store integer value
 
-- object_math_op
-    - `void (*_mod)(struct object_st *, struct error_st *, const void *, const struct object_st *)` 
-    - `void (*_and)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
-    - `void (*_mul)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
-    - `void (*_add)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
-    - `void (*_sub)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
-    - `void (*_div)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
-    - `void (*_xor)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
-    - `void (*_or)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
-    - `void (*_ls)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
-    - `void (*_rs)(struct object_st *, struct error_st *, const void *, const struct object_st *)`
-    - `void (*_ne)(struct object_st *, struct error_st *, const void *)`
+### map_st
+This struct is implementation of simple class tuple
+  - `struct string_st **names` - array where we store names of the elements
+  - `struct object_st **datas` - array where we store data of the elements
+  - `size_t size, mx_size` - sizes to manage when we need reallocate array of data
+  
+### object_st
+This struct is implementation of dynamic object witch can be converted and be replaced into different types
+  - `struct object_type *type`
+  - `short counter` - object counter to manage when we must delete the object
+  - `void *data` - pointer to any other structures including `object_st`
 
+### real_st
+This struct is implementation of simple class real number (float)
+  - `double data` - the data where store real value
 
-- object_type 
-    - `struct object_op self`
-    - `struct object_sub *sub`
-    - `struct object_convert *convert`
-    - `struct object_math_op *math`
-
-- array_st
-    - `struct object_st **data`
-    - `size_t size, max_size`
-    
-- bool_st
-    - `int data`
-    
-- darray_st 
-    - `struct object_st **data[2]`
-    - `size_t max_size, size`
-    
-- error_st 
-    - `int precent`
-    - `struct string_st* type`
-    - `struct string_st* message`
-    - `size_t pos, line_num, line_pos`
-    
-- func_st
-    - `struct object_st *data`
-    - `struct object_st *class`
-    - `struct map_st *attr`
-    - `struct darray_st *closure`
-    
-- integer_st 
-    - `long int data`
-    
-- map_st 
-    - `struct string_st **names`
-    - `struct object_st **datas`
-    - `size_t size, mx_size`
-    
-- object_st 
-    - `struct object_type *type`
-    - `short counter`
-    - `void *data`
-    
-- real_st 
-    - `double data`
-    
-- string_st
-    - `char *data`
-    - `size_t mx_size, size`
+### string_st
+This struct is implementation of simple class string
+  - `char *data` - char array to store string vector
+  - `size_t mx_size, size` - sizes to manage when we need reallocate array of data
