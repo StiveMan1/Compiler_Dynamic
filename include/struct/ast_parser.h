@@ -20,13 +20,11 @@ struct ast_parser{
 
     struct node_st *tree;
 
-
     struct array_st *memory_frame;
     struct array_st *memory_closure;
     struct array_st *expr_stack;
 
     int type;
-    struct error_st *error;
 };
 
 struct ast_parser *ast_parser_new();

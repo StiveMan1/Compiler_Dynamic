@@ -4,6 +4,8 @@
 #include "ast_semantic.h"
 #include "printer.c"
 
+#define PRINT_ERROR print_error_log(error, F_parser); if (error->present) exit(1);
+
 void interpretation(struct imp_parser *parser, int stream);
 
 int main() {
@@ -18,25 +20,25 @@ int main() {
     tokenize(F_parser);
     la_parser_get_error(F_parser, error);
     // Print Tokenize Result
-    print_error_log(error, F_parser);
+    PRINT_ERROR
 
     ast_parser_set_list(T_parser, F_parser);
     // AST Analyze
     token_analyzer(T_parser, T_parser->tree);
     ast_parser_get_error(T_parser, error);
     // Print AST Analyze Result
-    print_error_log(error, F_parser);
+    PRINT_ERROR
 
     semantic_scan(T_parser);
     ast_parser_get_error(T_parser, error);
-    print_error_log(error, F_parser);
+    PRINT_ERROR
 
     imp_parser_set_tree(I_parser, T_parser);
     clock_t begin = clock();
 
     interpretation(I_parser, 1);
     imp_parser_get_error(I_parser, error);
-    print_error_log(error, F_parser);
+    PRINT_ERROR
 
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

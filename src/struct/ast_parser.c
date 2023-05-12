@@ -12,8 +12,6 @@ struct ast_parser *ast_parser_new() {
     res->memory_frame = array_new();
     res->memory_closure = array_new();
     res->expr_stack = array_new();
-
-    res->error = error_new();
     return res;
 }
 void ast_parser_set(struct ast_parser *res, const struct ast_parser *a) {
@@ -36,8 +34,6 @@ void ast_parser_free(struct ast_parser *res) {
     array_free(res->memory_frame);
     array_free(res->memory_closure);
     array_free(res->expr_stack);
-
-    error_free(res->error);
     Free(res);
 }
 

@@ -130,17 +130,18 @@ int main(int argc, char *argv[]) {
     // AST parser
     ast_parser_set_list(T_parser, F_parser);
     token_analyzer(T_parser, T_parser->tree);
-    error = T_parser->error_obj;
+    ast_parser_get_error(T_parser, error);
     check_error(error, expected_error, SYNTAX_ANALYSIS_ERROR, F_parser);
 
     error = error_new();
 
     // Semantic
     semantic_scan(T_parser);
+    ast_parser_get_error(T_parser, error);
     check_error(error, expected_error, SEMANTIC_ANALYSIS_ERROR, F_parser);
 
     // Interpretation
-
+    // Storing the output from stdout and comparing with expected
     int stdout_bk = dup(fileno(stdout)); // fd for stdout backup
     int fd[2]; // an array that will hold two file descriptors
     _pipe(fd, 0, 0);
@@ -150,6 +151,7 @@ int main(int argc, char *argv[]) {
     fflush(stdout);//flushall();
     imp_parser_set_tree(I_parser, T_parser);
     interpretation(I_parser, fd[1]);
+    imp_parser_get_error(I_parser, error);
     check_error(error, expected_error, INTERPRETER_ERROR, F_parser);
     close(fd[1]);
     dup2(stdout_bk, fileno(stdout));//restore

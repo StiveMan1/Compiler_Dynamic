@@ -61,7 +61,6 @@ void print_error_log(struct error_st* error, struct la_parser* F_parser){
     printf("\n");
     for (size_t i = error->line_pos; i < error->pos; i++) printf(" ");
     printf("^\n");
-    exit(-1);
 }
 
 void print_darray(const struct darray_st *res, int size) {
