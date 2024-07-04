@@ -11,33 +11,31 @@
 
 [Description](ProjectD.pdf)
 
-## Lexical analysis
+## Language
+The project involves the construction of a compiler for a custom language designed specifically for educational purposes in a Compiler Construction course.
 
-### Key words
-`if in is or and end for int not var xor bool else func loop real then true empty false print while return string`
+## Lexical Analysis
+### Key Words
+if, in, is, or, and, end, for, int, not, var, xor, bool, else, func, loop, real, then, true, empty, false, print, while, return, string
 
-The Lexical analysis implemented in folder `src/lexical`.
+Lexical analysis is implemented in the folder `src/lexical`. This component handles the process of converting source code into tokens, recognizing keywords, identifiers, and other lexical units.
 
-## Syntax analysis
+## Syntax Analysis
+Our Abstract Syntax Tree (AST) parser employs a bottom-up approach. Implementation required a set of functions for each expression type, facilitating recursive parsing of nested structures.
 
-Our AST parser utilizes bottom-up approach. For this we had to implement a list of functions for all expression types that recursively call each other.
+## Semantics
+Semantic analysis involves a function that accepts the AST as a parameter. It initializes a state structure that manages expressions on the stack, frame information, closures, and related fields.
 
-In the tree each node represents a construct met in the text. Each node has child tokens and other nodes as well as its value if there is any.
+## Interpreter
+Following semantic analysis, the interpreter is invoked using the `run_interpreter` function. This interpreter accepts the AST and initializes an execution state (`op_state`), responsible for managing operations, error handling, return objects, and memory (frame, stack, temp).
 
-## Semantic analysis
+The interpreter traverses nodes and operations, executing actions based on their type:
 
-Semantic scan function accepts AST as a parameter. At the beginning it creates a new state.
+* For nodes, actions correspond to main type expressions, operations, and statements.
+* For blocks, it checks constructs like conversions, arithmetic operations (e.g., add, multiply), and their subtypes.
 
-State - struct that stores expressions in the stack, information about frame, closure and other fields.
+## Dynamic Language
+The project's language is designed to be dynamic, supporting various constructs and types, with a focus on educational aspects of compiler construction.
 
-## Interpretation 
-
-After performing a semantic analysis, we launch an interpreter by calling run_interpreter function. It accepts AST as a parameter and copies its content to newly created op_state.
-
-State stores a list of operations to traverse, informations about error and return objects, and memories for frame, stack and temp.
-
-Then, it starts traversing nodes and operations, and performs actions depending on their type: Node or Block.
-
-For Node we deal with MainType expressions, operations and statements.
-
-For Block we check such BlockType constructs as Convert, Arithmetics, etc. Some of them can have subtypes, for example, in Arithmetics we have add, multiply, etc.
+## Description
+This repository contains the implementation of a compiler for a custom language developed as part of a Compiler Construction course. It includes components for lexical analysis (src/lexical), syntax analysis utilizing a bottom-up AST parser, semantic analysis for validating code semantics, and an interpreter for executing parsed code. The language supports dynamic features and is designed to facilitate learning key concepts in compiler design and implementation.
